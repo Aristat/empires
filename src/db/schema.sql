@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS resources (
     iron INTEGER DEFAULT 200,
     tools INTEGER DEFAULT 100,
     wine INTEGER DEFAULT 0,
+    people INTEGER DEFAULT 10,
     FOREIGN KEY (player_id) REFERENCES players(id)
 );
 

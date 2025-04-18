@@ -34,6 +34,10 @@ const Resource = sequelize.define('Resource', {
     wine: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+    },
+    people: {
+        type: DataTypes.INTEGER,
+        defaultValue: 10
     }
 }, {
     tableName: 'resources',
