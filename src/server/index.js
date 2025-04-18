@@ -16,14 +16,15 @@ const port = process.env.PORT || 3000;
 
 // Session configuration
 app.use(session({
-    store: new SQLiteStore({
-        db: 'src/db/game.db',
-        table: 'sessions'
-    }),
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    secret: 'your-secret-key',
     resave: false,
     saveUninitialized: false,
+    store: new SQLiteStore({
+        db: process.env.NODE_ENV === 'test' ? 'src/db/test.db' : 'src/db/game.db',
+        table: 'sessions'
+    }),
     cookie: {
+        secure: process.env.NODE_ENV === 'production',
         maxAge: 24 * 60 * 60 * 1000 // 24 hours
     }
 }));
