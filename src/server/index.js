@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
@@ -20,7 +21,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: new SQLiteStore({
-        db: process.env.NODE_ENV === 'test' ? 'src/db/test.db' : 'src/db/game.db',
+        db: path.join(__dirname, '../db', process.env.DB_NAME),
         table: 'sessions'
     }),
     cookie: {

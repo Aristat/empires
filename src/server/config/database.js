@@ -2,8 +2,7 @@ const { Sequelize } = require('sequelize');
 const path = require('path');
 
 function getDatabasePath() {
-    const dbName = process.env.NODE_ENV === 'test' ? 'test.db' : 'game.db';
-    return path.join(__dirname, '../../db', dbName);
+    return path.join(__dirname, '../../db', process.env.DB_NAME);
 }
 
 const sequelize = new Sequelize({
