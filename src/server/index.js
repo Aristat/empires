@@ -42,6 +42,8 @@ const requireAuth = (req, res, next) => {
 
 // Routes
 app.get('/', (req, res) => {
+    console.log(req.session.userId);
+
     if (req.session.userId) {
         res.redirect('/game');
     } else {
@@ -57,7 +59,7 @@ app.post('/register', async (req, res) => {
     const { loginname, password, name, civ, email } = req.body;
     
     try {
-        const result = await dataManager.createPlayer(loginname, password, name, civ, email);
+        await dataManager.createPlayer(loginname, password, name, civ, email);
         res.render('login', { 
             message: { 
                 type: 'success', 
@@ -80,15 +82,6 @@ app.post('/login', async (req, res) => {
         if (!user) {
             return res.render('login', { message: 'Invalid login name or password' });
         }
-        
-        // Update last load time and log login
-        await dataManager.updateLastLoad(user.id);
-        await dataManager.logLogin(
-            user.id,
-            req.ip,
-            req.headers.referer || '',
-            req.headers['user-agent'] || ''
-        );
         
         // Set session
         req.session.userId = user.id;
