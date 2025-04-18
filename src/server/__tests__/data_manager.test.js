@@ -1,84 +1,80 @@
 const { Player } = require('../models');
 const dataManager = require('../data_manager');
 
+const playerData = {
+  loginname: 'testplayer',
+  password: 'testpass',
+  name: 'Test Player',
+  civ: 1,
+  email: 'test@example.com'
+};
+
 describe('DataManager', () => {
   describe('createPlayer', () => {
     it('should create a new player successfully', async () => {
-      const loginname = 'testplayer';
-      const password = 'testpass';
-      const name = 'Test Player';
-      const civ = 1;
-      const email = 'test@example.com';
-
-      const result = await dataManager.createPlayer(loginname, password, name, civ, email);
+      const result = await dataManager.createPlayer(
+        playerData.loginname,
+        playerData.password,
+        playerData.name,
+        playerData.civ,
+        playerData.email
+      );
       
-      expect(result.success).toBe(true);
-      expect(result.player).toBeDefined();
-      expect(result.player.login).toBe(playerData.login);
-      expect(result.player.email).toBe(playerData.email);
-      expect(result.player.civilization_id).toBe(playerData.civilization_id);
+      expect(result.id).toBeDefined();
     });
 
     it('should fail when creating a player with duplicate login', async () => {
-      const playerData = {
-        login: 'testplayer',
-        password: 'testpass',
-        email: 'test@example.com',
-        civilization_id: 1
-      };
+      await dataManager.createPlayer(
+        playerData.loginname,
+        playerData.password,
+        playerData.name,
+        playerData.civ,
+        playerData.email
+      );
 
-      // Create first player
-      await dataManager.createPlayer(playerData);
-
-      // Try to create second player with same login
-      const result = await dataManager.createPlayer(playerData);
-      
-      expect(result.success).toBe(false);
-      expect(result.error).toBeDefined();
+      await expect(dataManager.createPlayer(
+        playerData.loginname,
+        playerData.password,
+        playerData.name,
+        playerData.civ,
+        playerData.email
+      )).rejects.toThrow('Login name already exists');
     });
   });
 
   describe('authenticatePlayer', () => {
     it('should authenticate a valid player', async () => {
-      const playerData = {
-        login: 'testplayer',
-        password: 'testpass',
-        email: 'test@example.com',
-        civilization_id: 1
-      };
+      const player = await dataManager.createPlayer(
+        playerData.loginname,
+        playerData.password,
+        playerData.name,
+        playerData.civ,
+        playerData.email
+      );
 
-      // Create player first
-      await dataManager.createPlayer(playerData);
-
-      const result = await dataManager.authenticatePlayer(playerData.login, playerData.password);
+      const result = await dataManager.authenticatePlayer(playerData.loginname, playerData.password);
       
-      expect(result.success).toBe(true);
-      expect(result.player).toBeDefined();
-      expect(result.player.login).toBe(playerData.login);
+      expect(result.id).toBe(player.id);
     });
 
     it('should fail authentication with wrong password', async () => {
-      const playerData = {
-        login: 'testplayer',
-        password: 'testpass',
-        email: 'test@example.com',
-        civilization_id: 1
-      };
+      await dataManager.createPlayer(
+        playerData.loginname,
+        playerData.password,
+        playerData.name,
+        playerData.civ,
+        playerData.email
+      );
 
-      // Create player first
-      await dataManager.createPlayer(playerData);
-
-      const result = await dataManager.authenticatePlayer(playerData.login, 'wrongpass');
+      const result = await dataManager.authenticatePlayer(playerData.loginname, 'wrongpass');
       
-      expect(result.success).toBe(false);
-      expect(result.error).toBeDefined();
+      expect(result).toBeNull();
     });
 
     it('should fail authentication for non-existent player', async () => {
-      const result = await dataManager.authenticatePlayer('nonexistent', 'password');
+      const result = await dataManager.authenticatePlayer(playerData.loginname, playerData.password);
       
-      expect(result.success).toBe(false);
-      expect(result.error).toBeDefined();
+      expect(result).toBeNull();
     });
   });
 }); 
