@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const Player = require('./models/Player');
+const { Player, Resource, Building, Military, MilitaryEquipment, Land } = require('./models');
 const sequelize = require('./config/database');
 
 class DataManager {
@@ -26,46 +26,52 @@ class DataManager {
             const hashedPassword = await bcrypt.hash(password, 10);
             const validationCode = Math.random().toString(36).substring(2, 15);
 
-            const player = await Player.create({
-                loginname,
-                password: hashedPassword,
-                name,
-                civ,
-                email,
-                validation_code: validationCode
+            // Create player and all related records in a transaction
+            const result = await sequelize.transaction(async (t) => {
+                const player = await Player.create({
+                    loginname,
+                    password: hashedPassword,
+                    name,
+                    civ,
+                    email,
+                    validation_code: validationCode
+                }, { transaction: t });
+
+                // Create related records
+                await Promise.all([
+                    Resource.create({
+                        player_id: player.id,
+                        gold: 1000,
+                        food: 500,
+                        wood: 300,
+                        iron: 200,
+                        tools: 100,
+                        wine: 0
+                    }, { transaction: t }),
+                    Building.create({
+                        player_id: player.id
+                    }, { transaction: t }),
+                    Military.create({
+                        player_id: player.id
+                    }, { transaction: t }),
+                    MilitaryEquipment.create({
+                        player_id: player.id
+                    }, { transaction: t }),
+                    Land.create({
+                        player_id: player.id
+                    }, { transaction: t })
+                ]);
+
+                return player;
             });
 
-            // Initialize all required tables for new player
-            // Note: In Sequelize, we would typically define these as models and use associations
-            // For now, we'll keep the raw SQL for these tables as they were in the original code
-            const initPromises = [
-                sequelize.query(
-                    'INSERT INTO resources (player_id, gold, food, wood, iron, tools, wine) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    { replacements: [player.id, 1000, 500, 300, 200, 100, 0] }
-                ),
-                sequelize.query(
-                    'INSERT INTO military (player_id) VALUES (?)',
-                    { replacements: [player.id] }
-                ),
-                sequelize.query(
-                    'INSERT INTO military_equipment (player_id) VALUES (?)',
-                    { replacements: [player.id] }
-                ),
-                sequelize.query(
-                    'INSERT INTO land (player_id) VALUES (?)',
-                    { replacements: [player.id] }
-                )
-            ];
-
-            await Promise.all(initPromises);
-
             return {
-                id: player.id,
-                loginname: player.loginname,
-                name: player.name,
-                civ: player.civ,
-                email: player.email,
-                validationCode: player.validation_code
+                id: result.id,
+                loginname: result.loginname,
+                name: result.name,
+                civ: result.civ,
+                email: result.email,
+                validationCode: result.validation_code
             };
         } catch (err) {
             console.error('Error creating player:', err);
@@ -76,7 +82,14 @@ class DataManager {
     async authenticatePlayer(loginname, password) {
         try {
             const player = await Player.findOne({
-                where: { loginname }
+                where: { loginname },
+                include: [
+                    { model: Resource },
+                    { model: Building },
+                    { model: Military },
+                    { model: MilitaryEquipment },
+                    { model: Land }
+                ]
             });
 
             if (!player) {
@@ -99,18 +112,134 @@ class DataManager {
                     name: player.name,
                     civ: player.civ,
                     email: player.email,
-                    validated: player.validated,
-                    is_admin: player.is_admin,
-                    alliance_id: player.alliance_id,
                     score: player.score,
                     turn: player.turn,
                     turns_free: player.turns_free,
-                    last_turn: player.last_turn
+                    alliance_id: player.alliance_id,
+                    resources: player.Resource,
+                    buildings: player.Building,
+                    military: player.Military,
+                    equipment: player.MilitaryEquipment,
+                    land: player.Land
                 }
             };
         } catch (err) {
             console.error('Error authenticating player:', err);
-            return { success: false, message: 'Authentication error' };
+            throw err;
+        }
+    }
+
+    async getPlayerData(playerId) {
+        try {
+            const player = await Player.findOne({
+                where: { id: playerId },
+                include: [
+                    { model: Resource },
+                    { model: Building },
+                    { model: Military },
+                    { model: MilitaryEquipment },
+                    { model: Land }
+                ]
+            });
+
+            if (!player) {
+                throw new Error('Player not found');
+            }
+
+            return {
+                id: player.id,
+                loginname: player.loginname,
+                name: player.name,
+                civ: player.civ,
+                email: player.email,
+                score: player.score,
+                turn: player.turn,
+                turns_free: player.turns_free,
+                alliance_id: player.alliance_id,
+                resources: player.Resource,
+                buildings: player.Building,
+                military: player.Military,
+                equipment: player.MilitaryEquipment,
+                land: player.Land
+            };
+        } catch (err) {
+            console.error('Error getting player data:', err);
+            throw err;
+        }
+    }
+
+    async updatePlayerResources(playerId, resourceUpdates) {
+        try {
+            const resource = await Resource.findOne({ where: { player_id: playerId } });
+            if (!resource) {
+                throw new Error('Resource record not found');
+            }
+
+            await resource.update(resourceUpdates);
+            return resource;
+        } catch (err) {
+            console.error('Error updating player resources:', err);
+            throw err;
+        }
+    }
+
+    async updatePlayerBuildings(playerId, buildingUpdates) {
+        try {
+            const building = await Building.findOne({ where: { player_id: playerId } });
+            if (!building) {
+                throw new Error('Building record not found');
+            }
+
+            await building.update(buildingUpdates);
+            return building;
+        } catch (err) {
+            console.error('Error updating player buildings:', err);
+            throw err;
+        }
+    }
+
+    async updatePlayerMilitary(playerId, militaryUpdates) {
+        try {
+            const military = await Military.findOne({ where: { player_id: playerId } });
+            if (!military) {
+                throw new Error('Military record not found');
+            }
+
+            await military.update(militaryUpdates);
+            return military;
+        } catch (err) {
+            console.error('Error updating player military:', err);
+            throw err;
+        }
+    }
+
+    async updatePlayerEquipment(playerId, equipmentUpdates) {
+        try {
+            const equipment = await MilitaryEquipment.findOne({ where: { player_id: playerId } });
+            if (!equipment) {
+                throw new Error('Equipment record not found');
+            }
+
+            await equipment.update(equipmentUpdates);
+            return equipment;
+        } catch (err) {
+            console.error('Error updating player equipment:', err);
+            throw err;
+        }
+    }
+
+    async updatePlayerLand(playerId, landUpdates) {
+        try {
+            const land = await Land.findOne({ where: { player_id: playerId } });
+            if (!land) {
+                throw new Error('Land record not found');
+            }
+
+            await land.update(landUpdates);
+            return land;
+        } catch (err) {
+            console.error('Error updating player land:', err);
+            throw err;
         }
     }
 }

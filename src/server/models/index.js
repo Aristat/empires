@@ -4,7 +4,6 @@ const Building = require('./Building');
 const Military = require('./Military');
 const MilitaryEquipment = require('./MilitaryEquipment');
 const Land = require('./Land');
-const Alliance = require('./Alliance');
 
 // Set up relationships
 Player.hasOne(Resource, { foreignKey: 'player_id' });
@@ -28,6 +27,5 @@ module.exports = {
     Building,
     Military,
     MilitaryEquipment,
-    Land,
-    Alliance
+    Land
 }; 

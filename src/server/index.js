@@ -135,10 +135,24 @@ app.get('/logout', async (req, res) => {
 
 app.get('/game', requireAuth, async (req, res) => {
     try {
+        const playerData = await dataManager.getPlayerData(req.session.userId);
+        
         res.render('game', {
             user: {
-                id: req.session.userId,
-                loginname: "test"
+                id: playerData.id,
+                loginname: playerData.loginname,
+                name: playerData.name,
+                civ: playerData.civ,
+                email: playerData.email,
+                score: playerData.score,
+                turn: playerData.turn,
+                turns_free: playerData.turns_free,
+                alliance_id: playerData.alliance_id,
+                resources: playerData.resources,
+                buildings: playerData.buildings,
+                military: playerData.military,
+                equipment: playerData.equipment,
+                land: playerData.land
             }
         });
     } catch (error) {

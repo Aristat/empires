@@ -10,9 +10,189 @@
     <header>
         <h1>1000 A.D.</h1>
         <div class="user-info">
-            <span>Welcome, <%= user.loginname %></span>
+            <span>Welcome, <%= user.name %> (<%= user.loginname %>)</span>
+            <span class="score">Score: <%= user.score %></span>
+            <span class="turns">Turns: <%= user.turn %> (<%= user.turns_free %> free)</span>
             <a href="/logout" class="logout-btn">Logout</a>
         </div>
     </header>
+
+    <main>
+        <section class="resources">
+            <h2>Resources</h2>
+            <div class="resource-grid">
+                <div class="resource-item">
+                    <span class="resource-name">Gold:</span>
+                    <span class="resource-value"><%= user.resources.gold %></span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-name">Food:</span>
+                    <span class="resource-value"><%= user.resources.food %></span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-name">Wood:</span>
+                    <span class="resource-value"><%= user.resources.wood %></span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-name">Iron:</span>
+                    <span class="resource-value"><%= user.resources.iron %></span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-name">Tools:</span>
+                    <span class="resource-value"><%= user.resources.tools %></span>
+                </div>
+                <div class="resource-item">
+                    <span class="resource-name">Wine:</span>
+                    <span class="resource-value"><%= user.resources.wine %></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="buildings">
+            <h2>Buildings</h2>
+            <div class="building-grid">
+                <div class="building-item">
+                    <span class="building-name">Woodcutter:</span>
+                    <span class="building-value"><%= user.buildings.woodcutter %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Hunter:</span>
+                    <span class="building-value"><%= user.buildings.hunter %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Farmer:</span>
+                    <span class="building-value"><%= user.buildings.farmer %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">House:</span>
+                    <span class="building-value"><%= user.buildings.house %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Iron Mine:</span>
+                    <span class="building-value"><%= user.buildings.iron_mine %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Gold Mine:</span>
+                    <span class="building-value"><%= user.buildings.gold_mine %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Tool Maker:</span>
+                    <span class="building-value"><%= user.buildings.tool_maker %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Weapon Smith:</span>
+                    <span class="building-value"><%= user.buildings.weapon_smith %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Fort:</span>
+                    <span class="building-value"><%= user.buildings.fort %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Tower:</span>
+                    <span class="building-value"><%= user.buildings.tower %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Town Center:</span>
+                    <span class="building-value"><%= user.buildings.town_center %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Market:</span>
+                    <span class="building-value"><%= user.buildings.market %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Warehouse:</span>
+                    <span class="building-value"><%= user.buildings.warehouse %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Stable:</span>
+                    <span class="building-value"><%= user.buildings.stable %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Winery:</span>
+                    <span class="building-value"><%= user.buildings.winery %></span>
+                </div>
+                <div class="building-item">
+                    <span class="building-name">Wall:</span>
+                    <span class="building-value"><%= user.buildings.wall %></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="military">
+            <h2>Military</h2>
+            <div class="military-grid">
+                <div class="military-item">
+                    <span class="military-name">Swordsmen:</span>
+                    <span class="military-value"><%= user.military.swordsman %></span>
+                </div>
+                <div class="military-item">
+                    <span class="military-name">Archers:</span>
+                    <span class="military-value"><%= user.military.archers %></span>
+                </div>
+                <div class="military-item">
+                    <span class="military-name">Horsemen:</span>
+                    <span class="military-value"><%= user.military.horseman %></span>
+                </div>
+                <div class="military-item">
+                    <span class="military-name">Catapults:</span>
+                    <span class="military-value"><%= user.military.catapults %></span>
+                </div>
+                <div class="military-item">
+                    <span class="military-name">Macemen:</span>
+                    <span class="military-value"><%= user.military.macemen %></span>
+                </div>
+                <div class="military-item">
+                    <span class="military-name">Trained Peasants:</span>
+                    <span class="military-value"><%= user.military.trained_peasants %></span>
+                </div>
+                <div class="military-item">
+                    <span class="military-name">Thieves:</span>
+                    <span class="military-value"><%= user.military.thieves %></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="equipment">
+            <h2>Equipment</h2>
+            <div class="equipment-grid">
+                <div class="equipment-item">
+                    <span class="equipment-name">Swords:</span>
+                    <span class="equipment-value"><%= user.equipment.swords %></span>
+                </div>
+                <div class="equipment-item">
+                    <span class="equipment-name">Bows:</span>
+                    <span class="equipment-value"><%= user.equipment.bows %></span>
+                </div>
+                <div class="equipment-item">
+                    <span class="equipment-name">Horses:</span>
+                    <span class="equipment-value"><%= user.equipment.horses %></span>
+                </div>
+                <div class="equipment-item">
+                    <span class="equipment-name">Maces:</span>
+                    <span class="equipment-value"><%= user.equipment.maces %></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="land">
+            <h2>Land</h2>
+            <div class="land-grid">
+                <div class="land-item">
+                    <span class="land-name">Fertile Land:</span>
+                    <span class="land-value"><%= user.land.f_land %></span>
+                </div>
+                <div class="land-item">
+                    <span class="land-name">Mountain Land:</span>
+                    <span class="land-value"><%= user.land.m_land %></span>
+                </div>
+                <div class="land-item">
+                    <span class="land-name">Plains Land:</span>
+                    <span class="land-value"><%= user.land.p_land %></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/game.js"></script>
 </body>
 </html> 
