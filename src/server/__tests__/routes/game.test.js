@@ -4,7 +4,9 @@ const dataManager = require('../../data_manager');
 const { createTestApp } = require('../../test_utils/test_helper');
 
 // Mock dependencies
-jest.mock('../../data_manager');
+jest.mock('../../data_manager', () => ({
+    getPlayerData: jest.fn(),
+}));
 
 describe('Game Routes', () => {
     let app;
@@ -91,9 +93,12 @@ describe('Game Routes', () => {
             const response = await request(app)
                 .get('/game')
                 .set('Cookie', ['connect.sid=test-session'])
+                .set('X-Test-Session', '1')
                 .expect(200);
 
-            expect(response.text).toContain('game');
+            expect(response.text).toContain('Game Menu');
+            expect(response.text).toContain('Score: 100');
+            expect(response.text).toContain('Population: 10');
             expect(dataManager.getPlayerData).toHaveBeenCalledWith(1);
         });
 
@@ -103,9 +108,10 @@ describe('Game Routes', () => {
             const response = await request(app)
                 .get('/game')
                 .set('Cookie', ['connect.sid=test-session'])
+                .set('X-Test-Session', '1')
                 .expect(500);
 
-            expect(response.text).toContain('Error loading game data');
+            expect(response.text).toContain('Database error');
         });
     });
 });

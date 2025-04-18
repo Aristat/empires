@@ -37,7 +37,7 @@ router.get('/game', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('Error loading game data:', error);
-        res.status(500).render('error', { message: 'Error loading game data' });
+        res.status(500).send(error.message);
     }
 });
 
