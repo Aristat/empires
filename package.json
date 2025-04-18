@@ -28,12 +28,12 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "setupFilesAfterEnv": ["./src/server/jest.setup.js"],
     "coverageDirectory": "./coverage",
-    "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/**/*.test.js",
-      "!src/public/**/*.js"
+      "src/server/**/*.js",
+      "!src/server/**/*.test.js",
+      "!src/server/public/**/*.js"
     ]
   }
 } 
