@@ -1,5 +1,4 @@
 require('dotenv').config({ path: '.env.test' });
-const { afterEach } = require('@jest/globals');
 const sequelize = require('./config/database');
 const dataManager = require('./data_manager');
 
