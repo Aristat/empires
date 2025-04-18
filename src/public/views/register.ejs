@@ -48,14 +48,9 @@
                     <div class="form-group">
                         <label for="civ">Choose Your Civilization:</label>
                         <select id="civ" name="civ" required>
-                            <option value="1">Vikings</option>
-                            <option value="2">Franks</option>
-                            <option value="3">Japanese</option>
-                            <option value="4">Byzantines</option>
-                            <option value="5">Mongols</option>
-                            <option value="6">Incas</option>
-                            <option value="7">Chinese</option>
-                            <option value="8">Barbarians</option>
+                            <% civilizations.forEach(function(civ) { %>
+                                <option value="<%= civ.id %>"><%= civ.name %> - <%= civ.description %></option>
+                            <% }); %>
                         </select>
                         <small>Each civilization has unique bonuses</small>
                     </div>
@@ -96,14 +91,22 @@
                 <div class="info-box">
                     <h3>Civilization Bonuses</h3>
                     <ul>
-                        <li>Vikings: +10% Attack Power</li>
-                        <li>Franks: +10% Defense Power</li>
-                        <li>Japanese: +10% Military Training Speed</li>
-                        <li>Byzantines: +10% Research Speed</li>
-                        <li>Mongols: +10% Cavalry Strength</li>
-                        <li>Incas: +10% Resource Production</li>
-                        <li>Chinese: +10% Building Speed</li>
-                        <li>Barbarians: +10% Raiding Bonus</li>
+                        <% civilizations.forEach(function(civ) { %>
+                            <li>
+                                <strong><%= civ.name %>:</strong>
+                                <ul>
+                                    <% if (civ.bonuses.military !== 1) { %>
+                                        <li>Military: <%= (civ.bonuses.military * 100 - 100) %>%</li>
+                                    <% } %>
+                                    <% if (civ.bonuses.construction !== 1) { %>
+                                        <li>Construction: <%= (civ.bonuses.construction * 100 - 100) %>%</li>
+                                    <% } %>
+                                    <% if (civ.bonuses.research !== 1) { %>
+                                        <li>Research: <%= (civ.bonuses.research * 100 - 100) %>%</li>
+                                    <% } %>
+                                </ul>
+                            </li>
+                        <% }); %>
                     </ul>
                 </div>
             </div>

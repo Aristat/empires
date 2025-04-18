@@ -4,6 +4,7 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
 const dataManager = require('./data_manager');
+const configManager = require('./config/config_manager');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -52,20 +53,42 @@ app.get('/', (req, res) => {
 });
 
 app.get('/register', (req, res) => {
-    res.render('register', { message: '' });
+    const civilizations = configManager.getAllCivilizations();
+    res.render('register', { 
+        message: '',
+        civilizations 
+    });
 });
 
 app.post('/register', async (req, res) => {
     const { loginname, password, name, civ, email } = req.body;
     
+    // Validate civilization ID
+    if (!configManager.validateCivilizationId(parseInt(civ))) {
+        return res.render('register', { 
+            message: { 
+                type: 'error', 
+                text: 'Invalid civilization selected' 
+            },
+            civilizations: configManager.getAllCivilizations()
+        });
+    }
+    
     try {
-        await dataManager.createPlayer(loginname, password, name, civ, email);
+        await dataManager.createPlayer(loginname, password, name, parseInt(civ), email);
         res.render('login', { 
-            message: 'Account created successfully! Please check your email for validation code.'
+            message: { 
+                type: 'success', 
+                text: 'Account created successfully! Please check your email for validation code.' 
+            } 
         });
     } catch (error) {
         res.render('register', { 
-            message: { type: 'error', text: 'An error occurred during registration' } 
+            message: { 
+                type: 'error', 
+                text: 'An error occurred during registration' 
+            },
+            civilizations: configManager.getAllCivilizations()
         });
     }
 });
