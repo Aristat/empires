@@ -61,10 +61,7 @@ app.post('/register', async (req, res) => {
     try {
         await dataManager.createPlayer(loginname, password, name, civ, email);
         res.render('login', { 
-            message: { 
-                type: 'success', 
-                text: 'Account created successfully! Please check your email for validation code.' 
-            } 
+            message: 'Account created successfully! Please check your email for validation code.'
         });
     } catch (error) {
         res.render('register', { 
@@ -77,28 +74,34 @@ app.post('/login', async (req, res) => {
     const { loginname, password } = req.body;
     
     try {
-        const user = await dataManager.authenticatePlayer(loginname, password);
+        const result = await dataManager.authenticatePlayer(loginname, password);
         
-        if (!user) {
-            return res.render('login', { message: 'Invalid login name or password' });
+        if (!result.success) {
+            return res.render('login', { 
+                message: { 
+                    type: 'error', 
+                    text: result.message || 'Invalid login name or password' 
+                } 
+            });
         }
         
         // Set session
-        req.session.userId = user.id;
-        req.session.loginname = user.loginname;
+        req.session.userId = result.player.id;
+        req.session.loginname = result.player.loginname;
         
         res.redirect('/game');
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).render('login', { message: 'An error occurred during login' });
+        res.status(500).render('login', { 
+            message: { 
+                type: 'error', 
+                text: 'An error occurred during login' 
+            } 
+        });
     }
 });
 
-app.get('/logout', async (req, res) => {
-    if (req.session.userId) {
-        await dataManager.updateLastLoad(req.session.userId);
-    }
-    
+app.get('/logout', async (req, res) => {    
     req.session.destroy(err => {
         if (err) {
             console.error('Error destroying session:', err);
@@ -109,20 +112,11 @@ app.get('/logout', async (req, res) => {
 
 app.get('/game', requireAuth, async (req, res) => {
     try {
-        const [resources, buildings, military] = await Promise.all([
-            dataManager.getPlayerResources(req.session.userId),
-            dataManager.getPlayerBuildings(req.session.userId),
-            dataManager.getPlayerMilitary(req.session.userId)
-        ]);
-        
         res.render('game', {
             user: {
                 id: req.session.userId,
-                loginname: req.session.loginname
-            },
-            resources,
-            buildings,
-            military
+                loginname: "test"
+            }
         });
     } catch (error) {
         console.error('Error loading game data:', error);
