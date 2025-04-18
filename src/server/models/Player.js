@@ -9,8 +9,8 @@ const Player = sequelize.define('Player', {
     },
     loginname: {
         type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
+        allowNull: false,
+        unique: true
     },
     password: {
         type: DataTypes.STRING,
@@ -25,7 +25,8 @@ const Player = sequelize.define('Player', {
         allowNull: false
     },
     email: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
     },
     created_on: {
         type: DataTypes.DATE,
@@ -36,7 +37,8 @@ const Player = sequelize.define('Player', {
         defaultValue: false
     },
     validation_code: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
     },
     last_load: {
         type: DataTypes.DATE,
@@ -47,7 +49,8 @@ const Player = sequelize.define('Player', {
         defaultValue: false
     },
     alliance_id: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     score: {
         type: DataTypes.INTEGER,
@@ -70,11 +73,12 @@ const Player = sequelize.define('Player', {
         defaultValue: 0
     },
     killed_by_name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: true
     }
 }, {
-    timestamps: false,
-    tableName: 'players'
+    tableName: 'players',
+    timestamps: false
 });
 
 module.exports = Player; 

@@ -54,10 +54,6 @@ class DataManager {
                 sequelize.query(
                     'INSERT INTO land (player_id) VALUES (?)',
                     { replacements: [player.id] }
-                ),
-                sequelize.query(
-                    'INSERT INTO research (player_id) VALUES (?)',
-                    { replacements: [player.id] }
                 )
             ];
 
