@@ -20,7 +20,8 @@
     "express-session": "^1.17.3",
     "js-yaml": "^4.1.0",
     "sequelize": "^6.37.1",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "eslint": "^8.57.1",

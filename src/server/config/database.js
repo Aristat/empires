@@ -1,16 +1,24 @@
 const { Sequelize } = require('sequelize');
 const path = require('path');
+const logger = require('../services/logger');
 
 function getDatabasePath() {
-    console.log('Database path:', path.join(__dirname, '../../db', process.env.DB_NAME));
-
-    return path.join(__dirname, '../../db', process.env.DB_NAME);
+    const dbPath = path.join(__dirname, '../../db', process.env.DB_NAME);
+    logger.debug('Database path:', dbPath);
+    return dbPath;
 }
 
-const sequelize = new Sequelize({
+const params = {
     dialect: 'sqlite',
     storage: getDatabasePath(),
-    logging: process.env.NODE_ENV === 'test' ? false : console.log,
-});
+}
+
+if (process.env.NODE_ENV === 'test') {
+    params.logging = false;
+} else {
+    params.logging =  (msg) => logger.debug(msg);
+}
+
+const sequelize = new Sequelize(params);    
 
 module.exports = sequelize;

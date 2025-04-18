@@ -1,22 +1,22 @@
 const express = require('express');
-
 const router = express.Router();
 const dataManager = require('../data_manager');
 const configManager = require('../config/config_manager');
+const logger = require('../services/logger');
 
 // GET routes
 router.get('/', (req, res) => {
     if (req.session.userId) {
         res.redirect('/game');
     } else {
-        res.render('login', { message: '' });
+        res.render('login', { message: null });
     }
 });
 
 router.get('/register', (req, res) => {
     const civilizations = configManager.getAllCivilizations();
     res.render('register', {
-        message: '',
+        message: null,
         civilizations,
     });
 });
@@ -24,7 +24,7 @@ router.get('/register', (req, res) => {
 router.get('/logout', async (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            console.error('Error destroying session:', err);
+            logger.error('Error destroying session:', err);
         }
         res.redirect('/');
     });
@@ -36,7 +36,9 @@ router.post('/register', async (req, res) => {
         loginname, password, name, civ, email,
     } = req.body;
 
+    // Validate civilization ID
     if (!configManager.validateCivilizationId(parseInt(civ, 10))) {
+        logger.warn(`Invalid civilization ID ${civ} selected during registration`);
         return res.render('register', {
             message: {
                 type: 'error',
@@ -48,6 +50,7 @@ router.post('/register', async (req, res) => {
 
     try {
         await dataManager.createPlayer(loginname, password, name, parseInt(civ, 10), email);
+        logger.info(`New player registered: ${loginname}`);
         return res.render('login', {
             message: {
                 type: 'success',
@@ -55,6 +58,7 @@ router.post('/register', async (req, res) => {
             },
         });
     } catch (error) {
+        logger.error('Registration error:', error);
         return res.render('register', {
             message: {
                 type: 'error',
@@ -72,6 +76,7 @@ router.post('/login', async (req, res) => {
         const result = await dataManager.authenticatePlayer(loginname, password);
 
         if (!result) {
+            logger.warn(`Failed login attempt for user: ${loginname}`);
             return res.render('login', {
                 message: {
                     type: 'error',
@@ -83,10 +88,11 @@ router.post('/login', async (req, res) => {
         // Set session
         req.session.userId = result.id;
         req.session.loginname = result.loginname;
+        logger.info(`User logged in: ${loginname}`);
 
         return res.redirect('/game');
     } catch (error) {
-        console.error('Login error:', error);
+        logger.error(`Login error for user ${loginname}:`, error);
         return res.status(500).render('login', {
             message: {
                 type: 'error',

@@ -1,6 +1,7 @@
+const yaml = require('js-yaml');
 const fs = require('fs');
 const path = require('path');
-const yaml = require('js-yaml');
+const logger = require('../services/logger');
 
 class ConfigManager {
     constructor() {
@@ -14,9 +15,9 @@ class ConfigManager {
             const fileContents = fs.readFileSync(configPath, 'utf8');
             const config = yaml.load(fileContents);
             this.civilizations = config.civilizations;
-            console.log('Civilizations configuration loaded successfully');
+            logger.info('Civilizations configuration loaded successfully');
         } catch (err) {
-            console.error('Error loading civilizations configuration:', err);
+            logger.error('Error loading civilizations configuration:', err);
             throw err;
         }
     }

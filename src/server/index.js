@@ -5,6 +5,7 @@ const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
 const dataManager = require('./data_manager');
+const logger = require('./services/logger');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -15,7 +16,8 @@ dataManager.initializeDatabase();
 const app = express();
 const port = process.env.PORT || 3000;
 
-console.log('Enviroment variables:', process.env);
+logger.info('Environment variables loaded');
+logger.debug('Environment:', process.env);
 
 // Session configuration
 app.use(session({
@@ -47,5 +49,5 @@ app.use('/', gameRoutes);
 
 // Start server
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    logger.info(`Server running at http://localhost:${port}`);
 });

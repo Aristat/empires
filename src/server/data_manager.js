@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { Player } = require('./models');
 const sequelize = require('./config/database');
+const logger = require('./services/logger');
 
 class DataManager {
     constructor() {
@@ -11,13 +12,13 @@ class DataManager {
     async initializeDatabase() {
         try {
             await this.sequelize.authenticate();
-            console.log('Connected to the SQLite database.');
+            logger.info('Connected to the SQLite database.');
 
             // Sync all models with the database
             await this.sequelize.sync();
-            console.log('Database schema synchronized successfully');
+            logger.info('Database schema synchronized successfully');
         } catch (err) {
-            console.error('Error initializing database:', err);
+            logger.error('Error initializing database:', err);
             throw err;
         }
     }
@@ -179,7 +180,7 @@ class DataManager {
                 p_land: player.p_land,
             };
         } catch (error) {
-            console.error('Error authenticating player:', error);
+            logger.error('Error authenticating player:', error);
             throw error;
         }
     }
@@ -194,7 +195,7 @@ class DataManager {
             await player.update(updates);
             return player;
         } catch (error) {
-            console.error('Error updating player:', error);
+            logger.error('Error updating player:', error);
             throw error;
         }
     }
