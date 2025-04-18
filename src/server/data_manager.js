@@ -3,10 +3,6 @@ const { Player, Resource, Building, Military, MilitaryEquipment, Land } = requir
 const sequelize = require('./config/database');
 
 class DataManager {
-    constructor() {
-        this.initializeDatabase();
-    }
-
     async initializeDatabase() {
         try {
             await sequelize.authenticate();

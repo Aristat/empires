@@ -3,10 +3,13 @@ const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
+const dataManager = require('./data_manager');
 
 // Import routes
 const authRoutes = require('./routes/auth');
 const gameRoutes = require('./routes/game');
+
+dataManager.initializeDatabase();
 
 const app = express();
 const port = process.env.PORT || 3000;

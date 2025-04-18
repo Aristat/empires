@@ -1,15 +1,9 @@
 const sequelize = require('./config/database');
+const dataManager = require('./data_manager');
 
 beforeAll(async () => {
     try {
-        // Disable logging during tests
-        sequelize.options.logging = false;
-        
-        // Test the database connection
-        await sequelize.authenticate();
-        
-        // Sync the database
-        await sequelize.sync({ force: true });
+        await dataManager.initializeDatabase();
     } catch (error) {
         console.error('Unable to connect to the database:', error);
         throw error;
