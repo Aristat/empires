@@ -2,3 +2,5 @@
 node_modules
 old_solution/*
 coverage/*
+src/db/test.db
+src/db/development.db
