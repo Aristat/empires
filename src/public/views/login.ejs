@@ -17,7 +17,7 @@
             <div class="login-container">
                 <h2>Welcome to 1000 A.D.</h2>
                 <% if (message) { %>
-                    <div class="message"><%= message %></div>
+                    <div class="message <%= message.type || 'error' %>"><%= message.text %></div>
                 <% } %>
                 
                 <form action="/login" method="POST" class="login-form">

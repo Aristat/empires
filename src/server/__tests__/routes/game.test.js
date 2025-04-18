@@ -1,9 +1,7 @@
 const request = require('supertest');
-const express = require('express');
-const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
 const gameRoutes = require('../../routes/game');
 const dataManager = require('../../data_manager');
+const { createTestApp } = require('../../test_utils/test_helper');
 
 // Mock dependencies
 jest.mock('../../data_manager');
@@ -12,18 +10,7 @@ describe('Game Routes', () => {
     let app;
 
     beforeEach(() => {
-        app = express();
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
-        app.use(session({
-            secret: 'test-secret',
-            resave: false,
-            saveUninitialized: false,
-            store: new SQLiteStore({
-                db: ':memory:',
-                table: 'sessions',
-            }),
-        }));
+        app = createTestApp();
         app.use('/', gameRoutes);
     });
 

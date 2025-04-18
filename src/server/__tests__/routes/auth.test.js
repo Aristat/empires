@@ -1,11 +1,9 @@
 const request = require('supertest');
-const express = require('express');
-const session = require('express-session');
-const SQLiteStore = require('connect-sqlite3')(session);
 const path = require('path');
 const authRoutes = require('../../routes/auth');
 const dataManager = require('../../data_manager');
 const configManager = require('../../config/config_manager');
+const { createTestApp } = require('../../test_utils/test_helper');
 
 // Mock dependencies
 jest.mock('../../data_manager');
@@ -15,23 +13,7 @@ describe('Auth Routes', () => {
     let app;
 
     beforeEach(() => {
-        app = express();
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
-        app.use(session({
-            secret: 'test-secret',
-            resave: false,
-            saveUninitialized: false,
-            store: new SQLiteStore({
-                db: ':memory:',
-                table: 'sessions',
-            }),
-        }));
-
-        // Set up view engine
-        app.set('view engine', 'ejs');
-        app.set('views', path.join(__dirname, '../../../public/views'));
-
+        app = createTestApp();
         app.use('/', authRoutes);
     });
 
@@ -40,6 +22,7 @@ describe('Auth Routes', () => {
             const response = await request(app)
                 .get('/')
                 .set('Cookie', ['connect.sid=test-session'])
+                .set('X-Test-Session', '1')
                 .expect(302);
 
             expect(response.header.location).toBe('/game');
@@ -135,7 +118,18 @@ describe('Auth Routes', () => {
             };
 
             configManager.validateCivilizationId.mockReturnValue(false);
-            configManager.getAllCivilizations.mockReturnValue([{ id: 1, name: 'Vikings' }]);
+            configManager.getAllCivilizations.mockReturnValue([
+                { 
+                    id: 1, 
+                    name: 'Vikings',
+                    description: 'Seafaring warriors',
+                    bonuses: {
+                        military: 1.2,
+                        construction: 1.0,
+                        research: 1.0
+                    }
+                }
+            ]);
 
             const response = await request(app)
                 .post('/register')
@@ -143,6 +137,7 @@ describe('Auth Routes', () => {
                 .expect(200);
 
             expect(response.text).toContain('Invalid civilization selected');
+            expect(response.text).toContain('message error');
         });
     });
 
@@ -175,10 +170,7 @@ describe('Auth Routes', () => {
                 password: 'wrongpass',
             };
 
-            dataManager.authenticatePlayer.mockResolvedValue({
-                success: false,
-                message: 'Invalid credentials',
-            });
+            dataManager.authenticatePlayer.mockResolvedValue(null);
 
             const response = await request(app)
                 .post('/login')
@@ -186,6 +178,7 @@ describe('Auth Routes', () => {
                 .expect(200);
 
             expect(response.text).toContain('Invalid login name or password');
+            expect(response.text).toContain('message error');
         });
     });
 

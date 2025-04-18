@@ -36,7 +36,6 @@ router.post('/register', async (req, res) => {
         loginname, password, name, civ, email,
     } = req.body;
 
-    // Validate civilization ID
     if (!configManager.validateCivilizationId(parseInt(civ, 10))) {
         return res.render('register', {
             message: {
