@@ -24,8 +24,8 @@ describe('Auth Routes', () => {
             saveUninitialized: false,
             store: new SQLiteStore({
                 db: ':memory:',
-                table: 'sessions'
-            })
+                table: 'sessions',
+            }),
         }));
 
         // Set up view engine
@@ -57,26 +57,26 @@ describe('Auth Routes', () => {
     describe('GET /register', () => {
         it('should render register page with civilizations', async () => {
             const mockCivilizations = [
-                { 
-                    id: 1, 
+                {
+                    id: 1,
                     name: 'Vikings',
                     description: 'Seafaring warriors',
                     bonuses: {
                         military: 1.2,
                         construction: 1.0,
-                        research: 1.0
-                    }
+                        research: 1.0,
+                    },
                 },
-                { 
-                    id: 2, 
+                {
+                    id: 2,
                     name: 'Japanese',
                     description: 'Honorable warriors',
                     bonuses: {
                         military: 1.15,
                         construction: 1.0,
-                        research: 1.0
-                    }
-                }
+                        research: 1.0,
+                    },
+                },
             ];
 
             // Mock the configManager method
@@ -91,7 +91,7 @@ describe('Auth Routes', () => {
             expect(response.text).toContain('Vikings');
             expect(response.text).toContain('Japanese');
             expect(response.text).toContain('Civilization Bonuses');
-            
+
             // Verify the mock was called
             expect(configManager.getAllCivilizations).toHaveBeenCalled();
         });
@@ -104,7 +104,7 @@ describe('Auth Routes', () => {
                 password: 'testpass',
                 name: 'Test User',
                 civ: 1,
-                email: 'test@example.com'
+                email: 'test@example.com',
             };
 
             configManager.validateCivilizationId.mockReturnValue(true);
@@ -121,7 +121,7 @@ describe('Auth Routes', () => {
                 mockPlayerData.password,
                 mockPlayerData.name,
                 mockPlayerData.civ,
-                mockPlayerData.email
+                mockPlayerData.email,
             );
         });
 
@@ -131,7 +131,7 @@ describe('Auth Routes', () => {
                 password: 'testpass',
                 name: 'Test User',
                 civ: 999,
-                email: 'test@example.com'
+                email: 'test@example.com',
             };
 
             configManager.validateCivilizationId.mockReturnValue(false);
@@ -150,15 +150,15 @@ describe('Auth Routes', () => {
         it('should login with valid credentials', async () => {
             const mockCredentials = {
                 loginname: 'testuser',
-                password: 'testpass'
+                password: 'testpass',
             };
 
             dataManager.authenticatePlayer.mockResolvedValue({
                 success: true,
                 player: {
                     id: 1,
-                    loginname: 'testuser'
-                }
+                    loginname: 'testuser',
+                },
             });
 
             const response = await request(app)
@@ -172,12 +172,12 @@ describe('Auth Routes', () => {
         it('should return error with invalid credentials', async () => {
             const mockCredentials = {
                 loginname: 'testuser',
-                password: 'wrongpass'
+                password: 'wrongpass',
             };
 
             dataManager.authenticatePlayer.mockResolvedValue({
                 success: false,
-                message: 'Invalid credentials'
+                message: 'Invalid credentials',
             });
 
             const response = await request(app)
@@ -199,4 +199,4 @@ describe('Auth Routes', () => {
             expect(response.header.location).toBe('/');
         });
     });
-}); 
+});

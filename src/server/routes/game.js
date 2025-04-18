@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const dataManager = require('../data_manager');
 
@@ -15,7 +16,7 @@ const requireAuth = (req, res, next) => {
 router.get('/game', requireAuth, async (req, res) => {
     try {
         const playerData = await dataManager.getPlayerData(req.session.userId);
-        
+
         res.render('game', {
             user: {
                 id: playerData.id,
@@ -31,8 +32,8 @@ router.get('/game', requireAuth, async (req, res) => {
                 buildings: playerData.buildings,
                 military: playerData.military,
                 equipment: playerData.equipment,
-                land: playerData.land
-            }
+                land: playerData.land,
+            },
         });
     } catch (error) {
         console.error('Error loading game data:', error);
@@ -40,4 +41,4 @@ router.get('/game', requireAuth, async (req, res) => {
     }
 });
 
-module.exports = router; 
+module.exports = router;

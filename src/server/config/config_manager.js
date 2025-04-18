@@ -22,7 +22,7 @@ class ConfigManager {
     }
 
     getCivilization(id) {
-        return this.civilizations.find(civ => civ.id === id);
+        return this.civilizations.find((civ) => civ.id === id);
     }
 
     getAllCivilizations() {
@@ -30,8 +30,8 @@ class ConfigManager {
     }
 
     validateCivilizationId(id) {
-        return this.civilizations.some(civ => civ.id === id);
+        return this.civilizations.some((civ) => civ.id === id);
     }
 }
 
-module.exports = new ConfigManager(); 
+module.exports = new ConfigManager();

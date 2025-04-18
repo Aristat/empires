@@ -21,8 +21,8 @@ describe('Game Routes', () => {
             saveUninitialized: false,
             store: new SQLiteStore({
                 db: ':memory:',
-                table: 'sessions'
-            })
+                table: 'sessions',
+            }),
         }));
         app.use('/', gameRoutes);
     });
@@ -54,7 +54,7 @@ describe('Game Routes', () => {
                     iron: 200,
                     tools: 100,
                     wine: 0,
-                    people: 10
+                    people: 10,
                 },
                 buildings: {
                     woodcutter: 1,
@@ -72,7 +72,7 @@ describe('Game Routes', () => {
                     warehouse: 0,
                     stable: 0,
                     winery: 0,
-                    wall: 0
+                    wall: 0,
                 },
                 military: {
                     swordsman: 0,
@@ -81,13 +81,13 @@ describe('Game Routes', () => {
                     catapults: 0,
                     macemen: 0,
                     trained_peasants: 0,
-                    thieves: 0
+                    thieves: 0,
                 },
                 equipment: {
                     swords: 0,
                     bows: 0,
                     horses: 0,
-                    maces: 0
+                    maces: 0,
                 },
                 land: {
                     f_land: 10,
@@ -95,8 +95,8 @@ describe('Game Routes', () => {
                     p_land: 5,
                     free_f_land: 5,
                     free_m_land: 2,
-                    free_p_land: 2
-                }
+                    free_p_land: 2,
+                },
             };
 
             dataManager.getPlayerData.mockResolvedValue(mockPlayerData);
@@ -121,4 +121,4 @@ describe('Game Routes', () => {
             expect(response.text).toContain('Error loading game data');
         });
     });
-}); 
+});

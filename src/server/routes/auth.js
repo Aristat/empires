@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const dataManager = require('../data_manager');
 const configManager = require('../config/config_manager');
@@ -14,14 +15,14 @@ router.get('/', (req, res) => {
 
 router.get('/register', (req, res) => {
     const civilizations = configManager.getAllCivilizations();
-    res.render('register', { 
+    res.render('register', {
         message: '',
-        civilizations 
+        civilizations,
     });
 });
 
-router.get('/logout', async (req, res) => {    
-    req.session.destroy(err => {
+router.get('/logout', async (req, res) => {
+    req.session.destroy((err) => {
         if (err) {
             console.error('Error destroying session:', err);
         }
@@ -31,67 +32,69 @@ router.get('/logout', async (req, res) => {
 
 // POST routes
 router.post('/register', async (req, res) => {
-    const { loginname, password, name, civ, email } = req.body;
-    
+    const {
+        loginname, password, name, civ, email,
+    } = req.body;
+
     // Validate civilization ID
-    if (!configManager.validateCivilizationId(parseInt(civ))) {
-        return res.render('register', { 
-            message: { 
-                type: 'error', 
-                text: 'Invalid civilization selected' 
+    if (!configManager.validateCivilizationId(parseInt(civ, 10))) {
+        return res.render('register', {
+            message: {
+                type: 'error',
+                text: 'Invalid civilization selected',
             },
-            civilizations: configManager.getAllCivilizations()
+            civilizations: configManager.getAllCivilizations(),
         });
     }
-    
+
     try {
-        await dataManager.createPlayer(loginname, password, name, parseInt(civ), email);
-        res.render('login', { 
-            message: { 
-                type: 'success', 
-                text: 'Account created successfully! Please check your email for validation code.' 
-            } 
+        await dataManager.createPlayer(loginname, password, name, parseInt(civ, 10), email);
+        return res.render('login', {
+            message: {
+                type: 'success',
+                text: 'Account created successfully! Please check your email for validation code.',
+            },
         });
     } catch (error) {
-        res.render('register', { 
-            message: { 
-                type: 'error', 
-                text: 'An error occurred during registration' 
+        return res.render('register', {
+            message: {
+                type: 'error',
+                text: 'An error occurred during registration',
             },
-            civilizations: configManager.getAllCivilizations()
+            civilizations: configManager.getAllCivilizations(),
         });
     }
 });
 
 router.post('/login', async (req, res) => {
     const { loginname, password } = req.body;
-    
+
     try {
         const result = await dataManager.authenticatePlayer(loginname, password);
-        
-        if (!result.success) {
-            return res.render('login', { 
-                message: { 
-                    type: 'error', 
-                    text: result.message || 'Invalid login name or password' 
-                } 
+
+        if (!result) {
+            return res.render('login', {
+                message: {
+                    type: 'error',
+                    text: 'Invalid login name or password',
+                },
             });
         }
-        
+
         // Set session
-        req.session.userId = result.player.id;
-        req.session.loginname = result.player.loginname;
-        
-        res.redirect('/game');
+        req.session.userId = result.id;
+        req.session.loginname = result.loginname;
+
+        return res.redirect('/game');
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).render('login', { 
-            message: { 
-                type: 'error', 
-                text: 'An error occurred during login' 
-            } 
+        return res.status(500).render('login', {
+            message: {
+                type: 'error',
+                text: 'An error occurred during login',
+            },
         });
     }
 });
 
-module.exports = router; 
+module.exports = router;

@@ -31,4 +31,4 @@ describe('ConfigManager', () => {
         expect(civ.bonuses).toHaveProperty('construction');
         expect(civ.bonuses).toHaveProperty('research');
     });
-}); 
+});

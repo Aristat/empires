@@ -15,7 +15,7 @@ dataManager.initializeDatabase();
 const app = express();
 const port = process.env.PORT || 3000;
 
-console.log("Enviroment variables:", process.env);
+console.log('Enviroment variables:', process.env);
 
 // Session configuration
 app.use(session({
@@ -24,12 +24,12 @@ app.use(session({
     saveUninitialized: false,
     store: new SQLiteStore({
         db: path.join('src', 'db', process.env.DB_NAME),
-        table: 'sessions'
+        table: 'sessions',
     }),
     cookie: {
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
 }));
 
 // Middleware
@@ -48,4 +48,4 @@ app.use('/', gameRoutes);
 // Start server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
-}); 
+});

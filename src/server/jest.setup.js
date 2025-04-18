@@ -14,4 +14,4 @@ afterEach(async () => {
 afterAll(async () => {
     await sequelize.drop();
     await sequelize.close();
-}); 
+});

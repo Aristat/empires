@@ -3,13 +3,18 @@ const { Player } = require('./models');
 const sequelize = require('./config/database');
 
 class DataManager {
+    constructor() {
+        this.Player = Player;
+        this.sequelize = sequelize;
+    }
+
     async initializeDatabase() {
         try {
-            await sequelize.authenticate();
+            await this.sequelize.authenticate();
             console.log('Connected to the SQLite database.');
-            
+
             // Sync all models with the database
-            await sequelize.sync();
+            await this.sequelize.sync();
             console.log('Database schema synchronized successfully');
         } catch (err) {
             console.error('Error initializing database:', err);
@@ -22,13 +27,13 @@ class DataManager {
             const hashedPassword = await bcrypt.hash(password, 10);
             const validationCode = Math.random().toString(36).substring(2, 15);
 
-            const player = await Player.create({
+            const player = await this.Player.create({
                 loginname,
                 password: hashedPassword,
                 name,
                 civ,
                 email,
-                validation_code: validationCode
+                validation_code: validationCode,
             });
 
             return {
@@ -42,6 +47,7 @@ class DataManager {
                 validation_code: player.validation_code,
                 last_load: player.last_load,
                 is_admin: player.is_admin,
+                alliance_id: player.alliance_id,
                 score: player.score,
                 turn: player.turn,
                 turns_free: player.turns_free,
@@ -89,7 +95,7 @@ class DataManager {
                 // Land
                 f_land: player.f_land,
                 m_land: player.m_land,
-                p_land: player.p_land
+                p_land: player.p_land,
             };
         } catch (error) {
             if (error.name === 'SequelizeUniqueConstraintError') {
@@ -101,7 +107,7 @@ class DataManager {
 
     async authenticatePlayer(loginname, password) {
         try {
-            const player = await Player.findOne({ where: { loginname } });
+            const player = await this.Player.findOne({ where: { loginname } });
             if (!player) {
                 return null;
             }
@@ -122,6 +128,7 @@ class DataManager {
                 validation_code: player.validation_code,
                 last_load: player.last_load,
                 is_admin: player.is_admin,
+                alliance_id: player.alliance_id,
                 score: player.score,
                 turn: player.turn,
                 turns_free: player.turns_free,
@@ -169,7 +176,7 @@ class DataManager {
                 // Land
                 f_land: player.f_land,
                 m_land: player.m_land,
-                p_land: player.p_land
+                p_land: player.p_land,
             };
         } catch (error) {
             console.error('Error authenticating player:', error);
@@ -179,7 +186,7 @@ class DataManager {
 
     async updatePlayer(playerId, updates) {
         try {
-            const player = await Player.findByPk(playerId);
+            const player = await this.Player.findByPk(playerId);
             if (!player) {
                 throw new Error('Player not found');
             }
@@ -193,4 +200,4 @@ class DataManager {
     }
 }
 
-module.exports = new DataManager(); 
+module.exports = new DataManager();
