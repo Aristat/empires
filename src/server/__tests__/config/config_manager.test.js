@@ -1,4 +1,4 @@
-const configManager = require('../config/config_manager');
+const configManager = require('../../config/config_manager');
 
 describe('ConfigManager', () => {
     test('should load civilizations configuration', () => {
