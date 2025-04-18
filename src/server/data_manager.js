@@ -89,12 +89,12 @@ class DataManager {
             });
 
             if (!player) {
-                return { success: false, message: 'Player not found' };
+                return { success: false, error: 'Player not found' };
             }
 
             const passwordMatch = await bcrypt.compare(password, player.password);
             if (!passwordMatch) {
-                return { success: false, message: 'Invalid password' };
+                return { success: false, error: 'Invalid password' };
             }
 
             // Update last_load timestamp

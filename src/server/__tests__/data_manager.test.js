@@ -1,25 +1,16 @@
-const { DataManager } = require('../data_manager');
-const { Player } = require('../models/Player');
+const { Player } = require('../models');
+const dataManager = require('../data_manager');
 
 describe('DataManager', () => {
-  let dataManager;
-
-  beforeEach(async () => {
-    dataManager = new DataManager();
-    // Clear the database before each test
-    await Player.destroy({ where: {}, truncate: true });
-  });
-
   describe('createPlayer', () => {
     it('should create a new player successfully', async () => {
-      const playerData = {
-        login: 'testplayer',
-        password: 'testpass',
-        email: 'test@example.com',
-        civilization_id: 1
-      };
+      const loginname = 'testplayer';
+      const password = 'testpass';
+      const name = 'Test Player';
+      const civ = 1;
+      const email = 'test@example.com';
 
-      const result = await dataManager.createPlayer(playerData);
+      const result = await dataManager.createPlayer(loginname, password, name, civ, email);
       
       expect(result.success).toBe(true);
       expect(result.player).toBeDefined();
