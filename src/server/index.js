@@ -15,13 +15,15 @@ dataManager.initializeDatabase();
 const app = express();
 const port = process.env.PORT || 3000;
 
+console.log("Enviroment variables:", process.env);
+
 // Session configuration
 app.use(session({
     secret: 'your-secret-key',
     resave: false,
     saveUninitialized: false,
     store: new SQLiteStore({
-        db: path.join(__dirname, '../db', process.env.DB_NAME),
+        db: path.join('src', 'db', process.env.DB_NAME),
         table: 'sessions'
     }),
     cookie: {

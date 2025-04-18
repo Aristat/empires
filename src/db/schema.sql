@@ -17,12 +17,7 @@ CREATE TABLE IF NOT EXISTS players (
     last_turn DATETIME DEFAULT CURRENT_TIMESTAMP,
     killed_by INTEGER DEFAULT 0,
     killed_by_name TEXT,
-    FOREIGN KEY (alliance_id) REFERENCES alliances(id)
-);
-
-CREATE TABLE IF NOT EXISTS resources (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    player_id INTEGER NOT NULL,
+    -- Resources
     gold INTEGER DEFAULT 1000,
     food INTEGER DEFAULT 500,
     wood INTEGER DEFAULT 300,
@@ -30,12 +25,7 @@ CREATE TABLE IF NOT EXISTS resources (
     tools INTEGER DEFAULT 100,
     wine INTEGER DEFAULT 0,
     people INTEGER DEFAULT 10,
-    FOREIGN KEY (player_id) REFERENCES players(id)
-);
-
-CREATE TABLE IF NOT EXISTS buildings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    player_id INTEGER NOT NULL,
+    -- Buildings
     woodcutter INTEGER DEFAULT 0,
     hunter INTEGER DEFAULT 0,
     farmer INTEGER DEFAULT 0,
@@ -52,12 +42,7 @@ CREATE TABLE IF NOT EXISTS buildings (
     stable INTEGER DEFAULT 0,
     winery INTEGER DEFAULT 0,
     wall INTEGER DEFAULT 0,
-    FOREIGN KEY (player_id) REFERENCES players(id)
-);
-
-CREATE TABLE IF NOT EXISTS military (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    player_id INTEGER NOT NULL,
+    -- Military
     swordsman INTEGER DEFAULT 0,
     archers INTEGER DEFAULT 0,
     horseman INTEGER DEFAULT 0,
@@ -65,24 +50,13 @@ CREATE TABLE IF NOT EXISTS military (
     macemen INTEGER DEFAULT 0,
     trained_peasants INTEGER DEFAULT 0,
     thieves INTEGER DEFAULT 0,
-    FOREIGN KEY (player_id) REFERENCES players(id)
-);
-
-CREATE TABLE IF NOT EXISTS military_equipment (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    player_id INTEGER NOT NULL,
+    -- Equipment
     swords INTEGER DEFAULT 0,
     bows INTEGER DEFAULT 0,
     horses INTEGER DEFAULT 0,
     maces INTEGER DEFAULT 0,
-    FOREIGN KEY (player_id) REFERENCES players(id)
-);
-
-CREATE TABLE IF NOT EXISTS land (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    player_id INTEGER NOT NULL,
+    -- Land
     f_land INTEGER DEFAULT 0,
     m_land INTEGER DEFAULT 0,
-    p_land INTEGER DEFAULT 0,
-    FOREIGN KEY (player_id) REFERENCES players(id)
+    p_land INTEGER DEFAULT 0
 );
