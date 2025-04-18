@@ -2,6 +2,7 @@ const request = require('supertest');
 const express = require('express');
 const session = require('express-session');
 const SQLiteStore = require('connect-sqlite3')(session);
+const path = require('path');
 const authRoutes = require('../../routes/auth');
 const dataManager = require('../../data_manager');
 const configManager = require('../../config/config_manager');
@@ -26,6 +27,11 @@ describe('Auth Routes', () => {
                 table: 'sessions'
             })
         }));
+
+        // Set up view engine
+        app.set('view engine', 'ejs');
+        app.set('views', path.join(__dirname, '../../../public/views'));
+
         app.use('/', authRoutes);
     });
 
@@ -51,16 +57,42 @@ describe('Auth Routes', () => {
     describe('GET /register', () => {
         it('should render register page with civilizations', async () => {
             const mockCivilizations = [
-                { id: 1, name: 'Vikings' },
-                { id: 2, name: 'Japanese' }
+                { 
+                    id: 1, 
+                    name: 'Vikings',
+                    description: 'Seafaring warriors',
+                    bonuses: {
+                        military: 1.2,
+                        construction: 1.0,
+                        research: 1.0
+                    }
+                },
+                { 
+                    id: 2, 
+                    name: 'Japanese',
+                    description: 'Honorable warriors',
+                    bonuses: {
+                        military: 1.15,
+                        construction: 1.0,
+                        research: 1.0
+                    }
+                }
             ];
+
+            // Mock the configManager method
             configManager.getAllCivilizations.mockReturnValue(mockCivilizations);
 
             const response = await request(app)
                 .get('/register')
                 .expect(200);
 
-            expect(response.text).toContain('register');
+            // Check if the page contains expected elements
+            expect(response.text).toContain('Create Your Empire');
+            expect(response.text).toContain('Vikings');
+            expect(response.text).toContain('Japanese');
+            expect(response.text).toContain('Civilization Bonuses');
+            
+            // Verify the mock was called
             expect(configManager.getAllCivilizations).toHaveBeenCalled();
         });
     });
