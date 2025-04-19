@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+We use bootstrap for UI css, please provide all code on frontend side based on that gem and framework

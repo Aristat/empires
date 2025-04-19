@@ -18,6 +18,10 @@ gem "stimulus-rails"
 gem "jbuilder"
 # Authentication solution [https://github.com/heartcombo/devise]
 gem "devise"
+# Frontend framework [https://getbootstrap.com/]
+gem "bootstrap", "~> 5.3.0"
+# Sass processor for Bootstrap [https://github.com/rails/dartsass-rails]
+gem "dartsass-rails"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
