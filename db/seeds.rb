@@ -16,74 +16,58 @@ civilizations = [
   {
     name: "Vikings",
     description: "Fierce warriors from the North, masters of naval warfare and raiding",
-    bonuses: {
-      military: 1.1,
-      construction: 1.0,
-      research: 1.0
-    }
+    military: 1.1,
+    construction: 1.0,
+    research: 1.0
   },
   {
     name: "Franks",
     description: "Powerful European kingdom known for its strong defensive capabilities",
-    bonuses: {
-      military: 1.0,
-      construction: 1.1,
-      research: 1.0
-    }
+    military: 1.0,
+    construction: 1.1,
+    research: 1.0
   },
   {
     name: "Japanese",
     description: "Island nation with highly disciplined warriors and efficient training",
-    bonuses: {
-      military: 1.1,
-      construction: 1.0,
-      research: 1.0
-    }
+    military: 1.1,
+    construction: 1.0,
+    research: 1.0
   },
   {
     name: "Byzantines",
     description: "Eastern Roman Empire, center of learning and advanced technology",
-    bonuses: {
-      military: 1.0,
-      construction: 1.0,
-      research: 1.1
-    }
+    military: 1.0,
+    construction: 1.0,
+    research: 1.1
   },
   {
     name: "Mongols",
     description: "Nomadic warriors with unmatched cavalry and mobility",
-    bonuses: {
-      military: 1.1,
-      construction: 1.0,
-      research: 1.0
-    }
+    military: 1.1,
+    construction: 1.0,
+    research: 1.0
   },
   {
     name: "Incas",
     description: "Advanced civilization with efficient resource management",
-    bonuses: {
-      military: 1.0,
-      construction: 1.1,
-      research: 1.0
-    }
+    military: 1.0,
+    construction: 1.1,
+    research: 1.0
   },
   {
     name: "Chinese",
     description: "Ancient civilization with advanced construction techniques",
-    bonuses: {
-      military: 1.0,
-      construction: 1.1,
-      research: 1.0
-    }
+    military: 1.0,
+    construction: 1.1,
+    research: 1.0
   },
   {
     name: "Barbarians",
     description: "Fierce tribes known for their raiding and combat prowess",
-    bonuses: {
-      military: 1.1,
-      construction: 1.0,
-      research: 1.0
-    }
+    military: 1.1,
+    construction: 1.0,
+    research: 1.0
   }
 ]
 
