@@ -76,3 +76,8 @@ games.each do |game|
   puts "Created game: #{game[:name]}"
 end
 
+user = User.create!(
+  email: 'test@gmail.com',
+  password: '123456',
+  password_confirmation: '123456'
+)
