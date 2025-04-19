@@ -1,17 +1,3 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-
-# Clear existing civilizations
-Civilization.destroy_all
-
-# Create civilizations
 civilizations = [
   {
     name: "Vikings",
@@ -71,10 +57,22 @@ civilizations = [
   }
 ]
 
-# Create each civilization
 civilizations.each do |civilization|
   Civilization.create!(civilization)
   puts "Created civilization: #{civilization[:name]}"
 end
 
-puts "Seeded #{Civilization.count} civilizations"
+games = [
+  {
+    name: 'Standard'
+  },
+  {
+    name: 'Blitz'
+  }
+]
+
+games.each do |game|
+  Game.create!(game)
+  puts "Created game: #{game[:name]}"
+end
+
