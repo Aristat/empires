@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_19_155714) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_19_184557) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "civilizations", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.json "bonuses"
+    t.jsonb "bonuses"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -29,10 +29,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_155714) do
   end
 
   create_table "user_games", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "game_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "game_id", null: false
+    t.bigint "civilization_id", null: false
+    t.integer "turn"
+    t.integer "last_turn"
+    t.integer "num_turns"
+    t.integer "food_ratio"
+    t.integer "tool_maker"
+    t.integer "wood_cutter"
+    t.integer "gold_mine"
+    t.integer "hunter"
+    t.integer "tower"
+    t.integer "town_center"
+    t.integer "market"
+    t.integer "iron_mine"
+    t.integer "house"
+    t.integer "farmer"
+    t.integer "people"
+    t.integer "f_land"
+    t.integer "m_land"
+    t.integer "p_land"
+    t.integer "swordsman"
+    t.integer "archers"
+    t.integer "horseman"
+    t.integer "wood"
+    t.integer "food"
+    t.integer "iron"
+    t.integer "gold"
+    t.integer "tools"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["civilization_id"], name: "index_user_games_on_civilization_id"
     t.index ["game_id"], name: "index_user_games_on_game_id"
     t.index ["user_id"], name: "index_user_games_on_user_id"
   end
@@ -50,6 +78,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_155714) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "user_games", "civilizations"
   add_foreign_key "user_games", "games"
   add_foreign_key "user_games", "users"
 end

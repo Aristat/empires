@@ -1,0 +1,127 @@
+<div class="container mt-4">
+  <h1>Game Details</h1>
+  
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">
+        Game #<%= @game.id %> - <%= @user_game.civilization.name %>
+      </h5>
+      
+      <div class="row">
+        <div class="col-md-4">
+          <h6>Resources</h6>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Wood:</span>
+              <span><%= @user_game.wood %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Food:</span>
+              <span><%= @user_game.food %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Iron:</span>
+              <span><%= @user_game.iron %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Gold:</span>
+              <span><%= @user_game.gold %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Tools:</span>
+              <span><%= @user_game.tools %></span>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="col-md-4">
+          <h6>Buildings</h6>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Houses:</span>
+              <span><%= @user_game.house %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Town Centers:</span>
+              <span><%= @user_game.town_center %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Markets:</span>
+              <span><%= @user_game.market %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Towers:</span>
+              <span><%= @user_game.tower %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Wood Cutters:</span>
+              <span><%= @user_game.wood_cutter %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Gold Mines:</span>
+              <span><%= @user_game.gold_mine %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Iron Mines:</span>
+              <span><%= @user_game.iron_mine %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Tool Makers:</span>
+              <span><%= @user_game.tool_maker %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Hunters:</span>
+              <span><%= @user_game.hunter %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Farmers:</span>
+              <span><%= @user_game.farmer %></span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-md-4">
+          <h6>Units and Land</h6>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between">
+              <span>People:</span>
+              <span><%= @user_game.people %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Swordsmen:</span>
+              <span><%= @user_game.swordsman %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Archers:</span>
+              <span><%= @user_game.archers %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Horsemen:</span>
+              <span><%= @user_game.horseman %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Forest Land:</span>
+              <span><%= @user_game.f_land %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Mountain Land:</span>
+              <span><%= @user_game.m_land %></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Plains Land:</span>
+              <span><%= @user_game.p_land %></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h6>Game Status</h6>
+        <p>Turn: <%= @user_game.turn %> / <%= @user_game.num_turns %></p>
+        <p>Food Ratio: <%= @user_game.food_ratio %></p>
+      </div>
+    </div>
+  </div>
+
+  <%= link_to 'Back to Games', root_path, class: 'btn btn-secondary mt-3' %>
+</div>

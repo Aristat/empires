@@ -4,6 +4,40 @@
   <% if user_signed_in? %>
     <p class="lead">Hello, <%= current_user.name %>!</p>
     <p>You are signed in as <%= current_user.email %></p>
+
+    <div class="container mt-4">
+      <h1>Available Games</h1>
+
+      <div class="row">
+        <% Game.all.each do |game| %>
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Game #<%= game.id %></h5>
+                <% user_game = current_user.user_games.find_by(game: game) %>
+                
+                <% if user_game %>
+                  <p class="card-text">
+                    Your Civilization: <%= user_game.civilization.name %><br>
+                    Turn: <%= user_game.turn %> / <%= user_game.num_turns %>
+                  </p>
+                  <%= link_to 'Continue Game', game_path(game), class: 'btn btn-primary' %>
+                <% else %>
+                  <p class="card-text">Not joined yet</p>
+                  <%= link_to 'Join Game', select_civilization_game_path(game), class: 'btn btn-success' %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if Game.count == 0 %>
+        <div class="alert alert-info">
+          No games available yet.
+        </div>
+      <% end %>
+    </div>
   <% else %>
     <p class="lead">Please sign in or create an account to get started.</p>
     <div class="mt-4">

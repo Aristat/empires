@@ -14,4 +14,11 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  resources :games, only: [:show] do
+    member do
+      get :select_civilization
+      post :join
+    end
+  end
 end
