@@ -1,0 +1,30 @@
+requirements:
+- cold fusion server 4.5 or higher
+- mssql 7.0 or higher
+- web server capable of running cold fusion (tested only on IIS5)
+
+To install the game copy the files to a directory.
+Create database and run 1000ad.sql from database directory.
+Setup dsn for the database.
+Edit application.cfm and change:
+	dsn - dsn for the database
+	required_host - this is the url for the game (without http) ex. test.1000ad.net the game will redirect users who come to game with different host.
+	filePath - local directory where the files are sitting
+	webpath - webpath for the site where game is
+	gameName - name of the game that you want to see on login screen
+	veritySearch - name of verity collection that is used for documentation
+	mailServer - your mail server
+	adminEmail - your email address
+	maxTurnsStored - maximum number of turns stored
+	minutesPerTurn - how often new turns are given
+	gameCode - if you have more than 1 game running on the same webserver, make those unique for each game
+	allianceMaxMembers - how many members can be in alliance. for deathmatch set to 0. for tournament mode set to 0.
+	startGameDate - when game started
+	endGameDate - when game ends
+	deathMatchMode - whether the game is deathmatch
+	deathmatchStart - when deathmatch begins
+
+then run docs/search_reindex.cfm to index the documentation
+
+- to change the news on the left side in the game edit: news.cfm
+

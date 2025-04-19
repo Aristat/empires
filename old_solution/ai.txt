@@ -1,0 +1,20 @@
+- use every 6 hours (10*6 = 60 turns)
+- research table use random and depand on civ
+	ex. franks:
+	1-3 = attack
+	4-15 = defense
+	16-18 = miliary loss
+	19-22 = thiefs 
+	23-50 = food production
+	51-....
+- buildings:
+	+ check food status (+/-), if not good build farms or hunters
+	+ check tools and change %
+	+ check iron
+	+ check gold
+- attacks:
+	+ check if someone attacked me or my alliance members
+- train:
+	+ train so that always max fort utalization
+- explore
+	+ explore when warehouses full

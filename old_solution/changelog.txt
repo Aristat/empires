@@ -1,0 +1,408 @@
+[
+ 	Change log for 1000 AD
+ 	Andrew Deren, 2000-2001
+] 
+[----------- Version 1.1 Start ---------------------]
+[12-23-00]
+- added new military units: trained peasants, catapults, macemen and thieves
+- redid the battle algorithm, now it's based on attack and defense points
+- new army attack: slaughter
+- started doing 3 new catapult attacks and 4 thief attacks
+[12-24-00]
+- fixed building bug, when finished one building and was not properly using the build turns
+- recent battle screen now shows what and how much was won
+[12-25-00]
+- changed exploring so that a specific land can be found 
+- changed exploring numbers so now more land is explored
+- finished all attacks for catapults and thieves
+[12-26-00]
+- redid buildings screen
+- allow building production to be set between 0 and 100 percent in 10 percent increments
+[12-29-00]
++ should not allow train thieves and catapults more than town centers
++ also when training don't train more than forts can hold
++ when building and not enough land, build only as much as there is land
++ army screen: room remaining include soldiers in training
++ thief attacks: when stealing doens't add goods
++ check negative swords, when training swordsmand and horseman at the same time
++ tool makers don't use gold now (add gold usage for tool makers on build screen)
+[1-1-01]
++ fixed army screen bug for attack/defense points
++ warning when attacking one of the allied empires
+[1-2-01]
++ readjusted victory points and run numbers for attacking smaller empires
++ added maces to public market and aid. Aid changed to 20% max of what have. Fixed bug when could sell more than have.
+[1-10-01]
++ Add colors for alliance member, ally and enemy on scores screen
+[1-15-01]
++ finally split eflag processing into multiple files
+[1-16-01]
++ alliance screen lists when alliance members played and if they are online
++ also shows other alliances that have the alliance on war or ally list
++ show enemies and allies in color for scores menu
+[2-5-01]
++ can't attack with more catapults or thieves than town centers allow
+
+[----------- Version 1.2 Start ---------------------]
+[2-9-01 - 2-15-00]
++ increase cost of keeping army
++ catapults now use 1 wood and 1 iron to upkeep each turn
++ attacks take longer
++ get less from attacking and no limit on attacks
++ if you attack someone over and over, then you gain less
++ new building: mage tower
++ put on army screen gold usage
++ research:
+		V1.2:
+		researches:
+			* military
+			1. attack points +1% - done
+			2. defense points +1% - done
+			3. thief effectivness +1% - done
+			4. military loss 1%, max 50% - done
+			
+			* production
+			5. food production +1% (hunters and farms) - done
+			6. mine production +1% (gold and iron) - done
+			7. weapons +1% weapons, tools, horses production - done
+		
+			* other
+			8. space effectivness: +1% storage, +1% army and people housing - done
+			9. markets +1% transfered goods, better local market prices - done (partial)
+			10. explore +1% land explored - done
+			
+		you get 1 science point per mage tower, you can research multiple levels for each research type.
+		1 research point costs 100 gold.
+		research points needed to complete level: 10 + (currentlevel^2.5) // cold fusion doesn't have power operator so use currentlevel*currentlevel*sqrt(currentlevel)
+
+[2-20-01 - V 1.2.1]
++ bug fixes: buying multiple items on pub market
++ added food and gold usage on status screen
++ Some spelling mistakes fixed
++ Messages changed
+
+[2-22-01 - V 1.2.2]
++ fixed nasty bug when attacking and it was not counting mage tower on all attacks that involved buildings
++ changed farm production to be from april to october and docs say so now too
++ fixed bug on displaying message of attacking someone too many times (closed font tag)
++ added maces to be displayed when sending maces thru aid
+
+[2-26-01 - V 1.2.3]
++ added maces and mage towers to score calculation
++ added wood and iron usage for catapults to end of turn message
++ fixed number of minutes per turn displayed when not enough turns remaining
++ can send horses with explorers to extend time they look for land
+
+[----------- Version 1.3 Start ---------------------]
+[2-27-01]
++ new message system. Can save and view sent messages
++ alliance member types: starting and trusted. Trusted members can see more info and can see battles.
++ disbanding army gives only 1/2 of what it cost to train
+
+[3-5-01]
++ a lot of bug fixes
+
+[3-11-00 - V 1.3.1]
++ fixed bug when disbanding uunits
++ made japanese only 1.5 research points per town center
++ attack casualties depandant on size of empires
++ thieves cannot attack 2x or 1/2x empires
++ added alliance member limit
++ added max train uunits on army screen
+
+[3-14-01 - V 1.3.2]
++ thief and catapult attacks kill uunits
++ fixed bug so that horseman run away when not enough gold or space
++ added deathmatch mode to the game
++ readjusted some civs
++ updated docs to show civ diffs and more unit statistics
++ added killed by flags to player so that dead people can't play and cannot be attacked, and it shows on scores who killed them
+
+[3-26-01 - V 1.3.3]
++ status screen now shows uunit 
++ fixed rounding bug when attacking
++ fixed adding to train queue and checking if enough weapons for uunit
++ reduced people die when no food and if x turns ended and no food, it stops ending turns
++ fixed bug when attacking taking land and destroying buildings
+
+[4-7-01]
++ fixed bug when attacking and attack or defense points where greater than MAX_INT
+
+[4-10-01 - V 1.3.4]
++ added move to top and move to bottom for build queue
++ added cancel all to build queue
++ fixed bug when canceling of demolishion of buildings and was adding gold
++ added war and ally boxes up to 5
++ added min price of 10 and max price of 25,000 for public market
++ two new thief attacks: steal building info, steal research info
+
+[4-12-01 - V 1.3.5]
++ added validation
++ added max build on build screen using DHTML (IE only)
++ bug fixes
++ added horses display on explore menu
++ added message blocks
++ filtering on some bad language
+
+[4-25-01 - V 1.4]
++ new civ: incas
++ workers required is increased a little
++ slower population growth
++ population cannot be smaller than 100
++ exploring gains a little less
++ unit numbers changed
++ search shows alliance leaders and civ
+
+[5-3-01 - V 1.4.1]
++ towers not are razed when attacking with army
++ mongols -1 attack for horseman and swordsman
++ attacks count only from the same category for penalty
++ other's succesful attacks also count for penalty
++ recent battles shows attack type and can view by attack type
+
+[5-9-01 - V 1.4.2]
++ readjusted take land for shaman
++ readjusted attack penalties
++ view deleted messages
+
+[5-16-01 - V 1.4.3]
++ turns to train UUnit decreased
++ catapult and thief are more effective
++ catapults are cheaper to make
++ byzantines readjustments
+
+[5-28-01 - V 1.4.4]
++ can't attack allies
++ attack screen remove penalty display for deathmatch
++ fix towers destroyed displayed when attacking with army
++ catapults don't kill thieves
++ can't delete empire in deathmatch once deathmatch started
++ on search page, civ of empires shows properly now
++ delete all messages deletes only what's visible
++ unique units show on thief report
++ food needed when attacking for 1 month
++ aid to the same person only once per hour
++ better display for casualties when army attacking
++ byzanties readjusted a little again
+
+[6-15-01 to 6-30-01 - V 1.5]
++ new documentation
++ fixed wood and iron usage for catapults
++ fixed bug when training negative army
++ added messages when ending turn and not enough people to work
++ added messages when ending turn and not enough resources for production
++ civ readjustments
++ in game chat (from www.webmaster.com)
+
+[7-5-01 - V 1.5.1]
+DB Changes:
+transferQueue - add createdOn dateTime (when upgrading set to current date time)
+exploreQueue - add createdOn dateTime (when upgrading set to current date time)
+exploreQueue - add horses (when upgrading set to 0)
+exploreQueue - add turnsUsed (when upgrading set to 1)
+attackNews - debugInfo 
+
+changes:
++ stop processing turns when run out of gold
++ cancel aid (if within 15 minutes of sending and no turns ended)
++ cancel exploring (if within 15 minutes of sending and no turns ended)
++ debugging info for army attacks
++ DHTML menu (IE Only) for scores when clicking on player #
++ in game chat
+
+[8-1-01 - V 1.6.0]
+DB changes:
+player - add research11 int default(0)
+player - add research12 int default(0)
+player - add wine int default(0)
+player - add winery int default(0)
+player - add wineryStatus int default(0)
+player - add wall int default(0)
+player - add wallUseWood int default(0)
+player - add wallUseIron int default(0)
+player - add wallUseGold int default(0)
+attackQueue - add wallBuildPerTurn int default(0)
+
+game changes:
++ catapult research
++ wood production research
++ fix bug for autotrade prices and research markets includes local trade
++ market research x10
++ thief research is for strength, not effectivness
++ fixed -1 explorer bug for mongols
++ incas: towncenters land down to 30
++ byzantines: mage tower up to 8 land
++ food for exploring increased by 20%
++ minimum explorers sent = 4
++ if fort and town centers is 0, fixed error on army page
++ army screen included food used by army
++ set max and min prices for each good sold at public market (set in index.cfm)
++ when people die due to lack of food, no more than 10% will die
++ when cancell attack and did not end turn get back all resources
++ add winery to produce wine (new resource). could send wine with army to boost strength.
++ reduced attack penalties
++ fixed bug when killing people with army
++ don't allow to train horseman for incas
++ prevent from submitting end turn more than once
++ on wall screen decide % of builders that will construct the wall, 20% chance for wall to decay
++ readjusted land taken by army
++ fixed run out of wood and 0 catapults, it says some run
++ local market, buy 50 goods even with 0 markets
++ put towers info into buildings docs
++ put page title and help link on all pages
++ do help for great wall
++ do help for wine in attacks
++ do help for management
++ do help for alliance
++ put army info view visible to alliance leader only
+
+[8-1-01 - V 1.6.1]
+DB changes:
+player - add validated int default(0)
+
+Game changes:
++ army screen, show wood and iron used for catapults instead of gold and food
++ put aid log for alliance members visible to trusted members
++ fixed overflow in db on attackQueue
++ put confirmation for remove from alliance
++ put confirmation for change leader
++ increased cost of building wall
++ require validation code to start playing
+
+[8-19-01 - V 1.7.0]
+DB changes:
+attackQueue - costWood int default(0)
+attackQueue - costIron int default(0)
+buildQueue - onhold int default(0)
+CREATE TABLE [ForumTopic] (
+	[id] [int] IDENTITY (1, 1) NOT NULL ,
+	[allianceID] [int] NULL ,
+	[topic] [varchar] (80) NULL ,
+	[author] [varchar] (60) NULL ,
+	[createdOn] [datetime] NULL ,
+	[messageCount] [int] NULL ,
+	[lastPostOn] [datetime] NULL ,
+	[lastPostBy] [varchar] (60) NULL ,
+	[playerID] [int] NULL ,
+	CONSTRAINT [PK_ForumTopic] PRIMARY KEY  NONCLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+) ON [PRIMARY]
+GO
+CREATE TABLE [ForumMessage] (
+	[id] [int] IDENTITY (1, 1) NOT NULL ,
+	[topicID] [int] NULL ,
+	[allianceID] [int] NULL ,
+	[createdOn] [datetime] NULL ,
+	[createdBy] [varchar] (60) NULL ,
+	[playerID] [int] NULL ,
+	[message] [text] NULL ,
+	CONSTRAINT [PK_ForumMessage] PRIMARY KEY  NONCLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+Game changes:
++ mongols no longer +1 food for hunters
++ food for attack needed for 6 months
++ population growth a bit slower
++ army food eaten no longer divided by 3
++ use wood and iron for 6 months to attack with catapults
++ thief attacks need food and gold for 6 months
++ add new civilizations: chinese (great wall, uunit)
++ add new civilization: barbarian (no good no bad)
++ add horses, wine and weapons to top tool bar
++ hold on building construction when in queue
++ put ubb codes for messages, alliance news and forums
++ in game forums for allinace
+
+[8-19-01 - V 1.7.1]
++ food eaten by army div by 2
++ population increase variable. mongols +50%, chinease +100%, franks -25%
++ add alliance forums to the left menu and make red when new messages posted
++ public market displayes top 10 least expensive for each good
++ can change price of good already on the market
++ added extremly high food ratio
++ alliance forums enhancements
++ attack order same as when adding to queue
++ added most research levels for scores
++ added civ stats for scores
++ scores now show top 15 and 30 up and down
+
+DB changes:
+attackQueue - hasAllianceMessages int default(0)
+
+[9-25-01 - V 1.7.2]
++ some civ readjustments
++ thief attacks: a little bit less army dies and less army poisoned
++ catapult attacks: a little bit of less catapults die in battle and less army killed
++ fixed bug, not giving incas +25 defense for thieves
+
+[10-10-01 - V 1.7.3]
+DB Changes:
+CREATE TABLE [vote] (
+	[id] [int] IDENTITY (1, 1) NOT NULL ,
+	[question] [varchar] (200) NULL ,
+	[createdOn] [datetime] NULL ,
+	[status] [int] NULL CONSTRAINT [DF_vote_status] DEFAULT (0),
+	CONSTRAINT [PK_vote] PRIMARY KEY  NONCLUSTERED ( [id] )  
+) 
+CREATE TABLE [voteAnswer] (
+	[id] [int] IDENTITY (1, 1) NOT NULL ,
+	[voteID] [int] NULL ,
+	[playerID] [int] NULL ,
+	[createdOn] [datetime] NULL ,
+	[choiceID] [int] NULL ,
+	CONSTRAINT [PK_voteAnswer] PRIMARY KEY  NONCLUSTERED ([id])  
+) 
+CREATE TABLE [voteChoice] (
+	[id] [int] IDENTITY (1, 1) NOT NULL ,
+	[voteID] [int] NULL ,
+	[choice] [varchar] (200) NULL ,
+	[pos] [int] NULL ,
+	CONSTRAINT [PK_voteQuestion] PRIMARY KEY  NONCLUSTERED ([id])  
+)
+CREATE TABLE [gameNews] (
+	[id] [int] IDENTITY (1, 1) NOT NULL ,
+	[createdOn] [datetime] NULL ,
+	[message] [text] NULL ,
+	CONSTRAINT [PK_gameNews] PRIMARY KEY  NONCLUSTERED ([id])  
+) 
+
+Alliance - add description text
+Change AllianceScores view to include alliance.id
+Player - add vacationEnd datetime
+
+Game Changes:
++ started doing admin interface: votes, setup game news, player lookup
++ shows days, hours and minutes remaining until reset at the bottom
++ added alliance admin page so that alliances can be renamed and extra description can be put
++ alliance admin can delete alliance forum topics and messages. Alliance members
+	can delete their own messages.
++ for recent battles now can type in multiple player #'s
++ fixed bug: gold usage for chinease wall was wrong 
++ civ change: mongols do not have horse production anymore. gives too much advantage. Mongols -5 thief defense.
++ cannot delete empire if attacked someone in the past 24 hours
++ fixed weapon production ratios if some weaponsmiths destoryed
++ fixed bug for incas that wasn't giving +25 thief bonus in battle
++ vacation mode under account management
++ 1 aid to same person per 24hr 
++ show percentage of wall build on the left menu 
++ optimized some code to remove redundant update queries
++ civ change: maceman for barbarians take a little less land
++ fixed bug: when available pop for mage towers was negative it was causing negative consumption, thus adding gold
++ civ change: chinease trained peasnats +1 attack and defense and +0.03 land taken
++ changed the way catapults attacking army and towers works
+
+TO DO:
+- add custom info for players visible on alliance page
+- random boosts for production (winter weather effects hunter production, summer weahter effects farm production)
+- dropdown list for messages and attacks
+- if leave alliance cannot return to the same alliance within 24 hours
+- global guild, can't attack 1/2 or 2X
+- siege attacks, twice attack points, but soldiers not used for 12 hours
+- when adding to build queue, checking for current land usage, include bulings in build queue
+
