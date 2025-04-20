@@ -11,6 +11,9 @@ class GamesController < ApplicationController
     if @user_game.nil?
       redirect_to select_civilization_game_path(@game)
     end
+
+    @nextTurnSeconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
+    puts "nextTurnSeconds: #{@nextTurnSeconds}"
   end
 
   def select_civilization
@@ -75,6 +78,7 @@ class GamesController < ApplicationController
     current_time = Time.current
     diff_seconds = current_time - @user_game.last_turn_at
     new_turns = (diff_seconds / @game.seconds_per_turn).to_i
+    return if new_turns <= 0
 
     player_turns = @user_game.current_turns + new_turns
     if player_turns > @game.max_turns

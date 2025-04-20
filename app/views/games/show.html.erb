@@ -5,7 +5,14 @@
       <div class="row">
         <div class="col-md-3">
           <h5>Game #<%= @game.id %> - <%= @user_game.civilization.name %></h5>
-          <p class="mb-0">Turn: <%= @user_game.current_turns %> / <%= @game.max_turns %></p>
+          <p class="mb-0">
+            <%= @user_game.current_turns %> turns remaining,
+            <% if @user_game.current_turns >= @game.max_turns %>
+              maximum turns stored
+            <% else %>
+              next free turn in <%= @nextTurnSeconds / 60 %> minutes and <%= @nextTurnSeconds % 60 %> seconds
+            <% end %>
+          </p>
         </div>
         <div class="col-md-6">
           <div class="row">
