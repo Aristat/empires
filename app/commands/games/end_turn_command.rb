@@ -37,6 +37,10 @@ module Games
       @c_wine = 0
     end
 
+    def add_message(message, color = nil)
+      @messages << { text: message, color: color }
+    end
+
     def call
       return false if @user_game.current_turns <= 0
 
@@ -63,10 +67,9 @@ module Games
 
         @user_game.turn += 1
         @user_game.current_turns -= 1
+        @user_game.last_message = @messages.to_json
         @user_game.save!
       end
-
-      p "Messages: #{@messages.join("\n")}"
 
       true
     end
@@ -84,7 +87,7 @@ module Games
 
       # Limit builders to available tools
       if num_builders > @user_game.tools
-        @messages << "You do not have enough tools for all of your builders"
+        add_message("You do not have enough tools for all of your builders", "danger")
         num_builders = @user_game.tools
       end
 
@@ -101,7 +104,7 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / hunter_building[:workers]).to_i
-        @messages << "Not enough people to work at hunters."
+        add_message("Not enough people to work at hunters.", "warning")
       end
 
       @r_people -= can_produce * hunter_building[:workers]
@@ -120,7 +123,7 @@ module Games
 
         if @r_people < people_need
           can_produce = (@r_people / farm_building[:workers]).to_i
-          @messages << "Not enough people to work on farms."
+          add_message("Not enough people to work on farms.", "warning")
         end
 
         @r_people -= can_produce * farm_building[:workers]
@@ -139,7 +142,7 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / wood_cutter_building[:workers]).to_i
-        @messages << "Not enough people to work at woodcutters."
+        add_message("Not enough people to work at woodcutters.", "warning")
       end
 
       @r_people -= can_produce * wood_cutter_building[:workers]
@@ -154,7 +157,7 @@ module Games
       if WINTER_MONTHS.include?(@month)
         @r_wood = @r_wood - burn_wood
         @c_wood = @c_wood + burn_wood
-        @messages << "#{burn_wood} wood was used for heat"
+        add_message("#{burn_wood} wood was used for heat", "info")
 
         if @r_wood < 0
           people_with_no_heat = ((@r_wood.abs * @data[:game_data][:people_burn_one_wood]) / 8.0).ceil
@@ -163,7 +166,7 @@ module Games
           people_freeze = rand((people_with_no_heat / 2)..people_with_no_heat)
           @user_game.people -= people_freeze
 
-          @messages << "#{people_freeze} people froze to death due to the lack of wood for heat"
+          add_message("#{people_freeze} people froze to death due to the lack of wood for heat", "danger")
           @r_wood = 0
         end
       end
@@ -179,7 +182,7 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / gold_mine_building[:workers]).to_i
-        @messages << "Not enough people to work at gold mines."
+        add_message("Not enough people to work at gold mines.", "warning")
       end
 
       @r_people -= can_produce * gold_mine_building[:workers]
@@ -198,7 +201,7 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / iron_mine_building[:workers]).to_i
-        @messages << "Not enough people to work at iron mines."
+        add_message("Not enough people to work at iron mines.", "warning")
       end
 
       @r_people -= can_produce * iron_mine_building[:workers]
@@ -217,19 +220,19 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / tool_maker_building[:workers]).to_i
-        @messages << "Not enough people to work at tool makers."
+        add_message("Not enough people to work at tool makers.", "warning")
       end
 
       wood_need = can_produce * tool_maker_building[:wood_need]
       if @r_wood < wood_need
         can_produce = (@r_wood / tool_maker_building[:wood_need]).to_i
-        @messages << "Not enough wood to work at tool makers."
+        add_message("Not enough wood to work at tool makers.", "warning")
       end
 
       iron_need = can_produce * tool_maker_building[:iron_need]
       if @r_iron < iron_need
         can_produce = (@r_iron / tool_maker_building[:iron_need]).to_i
-        @messages << "Not enough iron to work at tool makers."
+        add_message("Not enough iron to work at tool makers.", "warning")
       end
 
       if can_produce <= 0
@@ -254,7 +257,7 @@ module Games
       house_building = @data[:buildings][:house][:settings]
       town_center_building = @data[:buildings][:town_center][:settings]
 
-      @messages << "Your people ate #{food_eaten} food"
+      add_message("Your people ate #{food_eaten} food", "info")
 
       @c_food += food_eaten
       @r_food -= food_eaten
@@ -264,7 +267,7 @@ module Games
 
       if @r_food < 0
         people_die = (@user_game.people * 0.07).round
-        @messages << "#{people_die} people died due to lack of food"
+        add_message("#{people_die} people died due to lack of food", "danger")
 
         @user_game.people -= people_die
 
@@ -280,7 +283,7 @@ module Games
 
       if @growth > 0 && house_space > @user_game.people
         people_come = ((@growth / 10000.0) * @user_game.people * @data[:game_data][:pop_increase_modifier]).round
-        @messages << "Your population increased by #{people_come}"
+        add_message("Your population increased by #{people_come}", "success")
         @r_people += people_come
         @user_game.people += people_come
 
@@ -289,17 +292,17 @@ module Games
         end
       elsif @growth < 0
         people_leave = ((@growth.abs / 10000.0) * @user_game.people).round
-        @messages << "Due to poor food rationing your population decreased by #{people_leave} people"
+        add_message("Due to poor food rationing your population decreased by #{people_leave} people", "warning")
         @user_game.people -= people_leave
       elsif @growth > 0 && house_space == @user_game.people
-        @messages << "Lack of housing prevents further growth of population."
+        add_message("Lack of housing prevents further growth of population.", "warning")
       end
 
       # Check if there's enough housing
       if @user_game.people > house_space
         people_leave = ((@user_game.people - house_space) / 2.0).ceil
         @user_game.people -= people_leave
-        @messages << "Due to lack of housing #{people_leave} people emigrated from your empire"
+        add_message("Due to lack of housing #{people_leave} people emigrated from your empire", "danger")
       end
     end
 

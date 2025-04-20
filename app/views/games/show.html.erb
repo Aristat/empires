@@ -16,6 +16,22 @@
       </div>
     </div>
   </div>
+
+  <% if @user_game.last_message.present? %>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Last Turn Events</h5>
+        <div class="card-text">
+          <% JSON.parse(@user_game.last_message).each do |message| %>
+            <p class="mb-1 text-<%= message['color'] || 'dark' %>">
+              <%= message['text'] %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <div class="card mb-4">
     <div class="card-body">
       <div class="row">
