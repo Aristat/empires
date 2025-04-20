@@ -10,14 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_19_184557) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "buildings", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "key", null: false
+    t.jsonb "settings", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_buildings_on_key", unique: true
+  end
 
   create_table "civilizations", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.jsonb "bonuses"
+    t.jsonb "settings"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

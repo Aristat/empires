@@ -3,7 +3,7 @@ class CreateCivilizations < ActiveRecord::Migration[8.0]
     create_table :civilizations do |t|
       t.string :name
       t.text :description
-      t.jsonb :bonuses
+      t.jsonb :settings
 
       t.timestamps
     end
