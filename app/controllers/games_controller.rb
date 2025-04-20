@@ -1,7 +1,8 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game
-  before_action :set_user_game, :update_turns, only: [ :show ]
+  before_action :set_user_game, only: [ :show, :end_turn ]
+  before_action :update_turns, only: [ :show ]
 
   def index
     @games = Game.all
@@ -66,6 +67,16 @@ class GamesController < ApplicationController
     )
 
     redirect_to game_path(@game)
+  end
+
+  def end_turn
+    command = Games::EndTurnCommand.new(user_game: @user_game)
+    
+    if command.call
+      render json: { success: true }
+    else
+      render json: { success: false }, status: :unprocessable_entity
+    end
   end
 
   private
