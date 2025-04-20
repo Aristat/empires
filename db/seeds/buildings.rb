@@ -176,7 +176,7 @@ buildings_data = [
       allow_off: false,
       max_units: 10,
       people: 100,
-      supplies: 1000,
+      resources_limit_increase: 1000,
       max_explorers: 6,
       food_per_explorer: 5,
       max_local_trades: 100
@@ -209,7 +209,7 @@ buildings_data = [
       cost_iron: 0,
       cost_gold: 100,
       allow_off: false,
-      supplies: 2500
+      resources_limit_increase: 2500
     }
   },
   {

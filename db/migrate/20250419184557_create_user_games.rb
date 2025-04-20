@@ -21,8 +21,13 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :iron_mine
       t.integer :house
       t.integer :farmer
-      t.integer :people
-    
+      t.integer :weaponsmith
+      t.integer :fort
+      t.integer :warehouse
+      t.integer :stable
+      t.integer :mage_tower
+      t.integer :winery
+
       # land
       t.integer :f_land
       t.integer :m_land
@@ -39,6 +44,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :iron
       t.integer :gold
       t.integer :tools
+      t.integer :people
 
       t.timestamps
     end

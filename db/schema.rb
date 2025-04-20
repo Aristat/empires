@@ -61,7 +61,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
     t.integer "iron_mine"
     t.integer "house"
     t.integer "farmer"
-    t.integer "people"
+    t.integer "weaponsmith"
+    t.integer "fort"
+    t.integer "warehouse"
+    t.integer "stable"
+    t.integer "mage_tower"
+    t.integer "winery"
     t.integer "f_land"
     t.integer "m_land"
     t.integer "p_land"
@@ -73,6 +78,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
     t.integer "iron"
     t.integer "gold"
     t.integer "tools"
+    t.integer "people"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["civilization_id"], name: "index_user_games_on_civilization_id"
