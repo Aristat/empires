@@ -40,7 +40,7 @@ civilizations_data = [
           squares: 8
         }
       },
-      modifiers: {
+      game: {
         people_burn_one_wood: 125
       }
     }
@@ -80,7 +80,7 @@ civilizations_data = [
           workers: 15
         }
       },
-      modifiers: {
+      game: {
         pop_increase_modifier: 0.80,
         extra_food_per_land: 840
       }
@@ -159,7 +159,7 @@ civilizations_data = [
           squares: 8
         }
       },
-      modifiers: {
+      game: {
         people_eat_one_food: 60
       }
     }
@@ -204,7 +204,7 @@ civilizations_data = [
           gold_need: 200
         }
       },
-      modifiers: {
+      game: {
         people_eat_one_food: 50,
         pop_increase_modifier: 1.4,
         extra_food_per_land: 720
@@ -272,7 +272,7 @@ civilizations_data = [
           squares: 8
         }
       },
-      modifiers: {
+      game: {
         pop_increase_modifier: 2,
         wall_use_gold: 75,
         wall_use_iron: 1,

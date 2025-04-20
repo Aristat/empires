@@ -38,6 +38,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
     t.integer "seconds_per_turn"
     t.integer "start_turns"
     t.integer "max_turns"
+    t.jsonb "settings", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

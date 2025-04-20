@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game
-  before_action :set_user_game, :update_turns, only: [:show]
+  before_action :set_user_game, :update_turns, only: [ :show ]
 
   def index
     @games = Game.all
@@ -12,14 +12,14 @@ class GamesController < ApplicationController
       redirect_to select_civilization_game_path(@game) and return
     end
 
-    @buildings = Buildings::PrepareBuildingsDataCommand.new(user_game: @user_game).call
+    @data = PrepareDataCommand.new(user_game: @user_game).call
     @nextTurnSeconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
   end
 
   def select_civilization
     @civilizations = Civilization.all
     @user_game = current_user.user_games.find_by(game: @game)
-    
+
     if @user_game.present?
       redirect_to game_path(@game)
     end
@@ -27,7 +27,7 @@ class GamesController < ApplicationController
 
   def join
     @civilization = Civilization.find(params[:civilization_id])
-    
+
     @user_game = current_user.user_games.create!(
       game: @game,
       civilization: @civilization,

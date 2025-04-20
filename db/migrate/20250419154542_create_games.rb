@@ -5,6 +5,7 @@ class CreateGames < ActiveRecord::Migration[8.0]
       t.integer :seconds_per_turn
       t.integer :start_turns
       t.integer :max_turns
+      t.jsonb :settings, null: false, default: {}
 
       t.timestamps
     end
