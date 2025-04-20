@@ -13,7 +13,6 @@ class GamesController < ApplicationController
     end
 
     @nextTurnSeconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
-    puts "nextTurnSeconds: #{@nextTurnSeconds}"
   end
 
   def select_civilization
