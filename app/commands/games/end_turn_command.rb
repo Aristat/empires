@@ -48,12 +48,25 @@ module Games
         @r_food += @p_food
 
         wood_production
+        winter_time
+
+        gold_production
+        iron_production
+        tools_production
+
         people_eat_food
+        update_resources
+
+        if @user_game.people <= 100
+          @user_game.people = 100
+        end
 
         @user_game.turn += 1
         @user_game.current_turns -= 1
         @user_game.save!
       end
+
+      p "Messages: #{@messages.join("\n")}"
 
       true
     end
@@ -131,11 +144,11 @@ module Games
 
       @r_people -= can_produce * wood_cutter_building[:workers]
       get_wood = can_produce * wood_cutter_building[:production]
-      p_wood = get_wood
-      @r_wood += p_wood
+      @p_wood = get_wood
+      @r_wood += @p_wood
     end
 
-    def people_eat_food
+    def winter_time
       burn_wood = (@user_game.people / @data[:game_data][:people_burn_one_wood]).round
 
       if WINTER_MONTHS.include?(@month)
@@ -153,6 +166,173 @@ module Games
           @messages << "#{people_freeze} people froze to death due to the lack of wood for heat"
           @r_wood = 0
         end
+      end
+    end
+
+    def gold_production
+      return if @user_game.gold_mine <= 0 || @user_game.gold_mine_status <= 0
+
+      gold_mine_building = @data[:buildings][:gold_mine][:settings]
+
+      can_produce = (@user_game.gold_mine * (@user_game.gold_mine_status / 100.0)).round
+      people_need = can_produce * gold_mine_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / gold_mine_building[:workers]).to_i
+        @messages << "Not enough people to work at gold mines."
+      end
+
+      @r_people -= can_produce * gold_mine_building[:workers]
+      get_gold = can_produce * gold_mine_building[:production]
+      @p_gold = get_gold
+      @r_gold += @p_gold
+    end
+
+    def iron_production
+      return if @user_game.iron_mine <= 0 || @user_game.iron_mine_status <= 0
+
+      iron_mine_building = @data[:buildings][:iron_mine][:settings]
+
+      can_produce = (@user_game.iron_mine * (@user_game.iron_mine_status / 100.0)).round
+      people_need = can_produce * iron_mine_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / iron_mine_building[:workers]).to_i
+        @messages << "Not enough people to work at iron mines."
+      end
+
+      @r_people -= can_produce * iron_mine_building[:workers]
+      get_iron = can_produce * iron_mine_building[:production]
+      @p_iron = get_iron
+      @r_iron += @p_iron
+    end
+
+    def tools_production
+      return if @user_game.tool_maker <= 0 || @user_game.tool_maker_status <= 0
+
+      tool_maker_building = @data[:buildings][:tool_maker][:settings]
+
+      can_produce = (@user_game.tool_maker * (@user_game.tool_maker_status / 100.0)).round
+      people_need = can_produce * tool_maker_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / tool_maker_building[:workers]).to_i
+        @messages << "Not enough people to work at tool makers."
+      end
+
+      wood_need = can_produce * tool_maker_building[:wood_need]
+      if @r_wood < wood_need
+        can_produce = (@r_wood / tool_maker_building[:wood_need]).to_i
+        @messages << "Not enough wood to work at tool makers."
+      end
+
+      iron_need = can_produce * tool_maker_building[:iron_need]
+      if @r_iron < iron_need
+        can_produce = (@r_iron / tool_maker_building[:iron_need]).to_i
+        @messages << "Not enough iron to work at tool makers."
+      end
+
+      if can_produce <= 0
+        can_produce = 0
+      end
+
+      @r_people -= can_produce * tool_maker_building[:workers]
+
+      @c_wood += can_produce * tool_maker_building[:wood_need]
+      @r_wood -= can_produce * tool_maker_building[:wood_need]
+
+      @c_iron += can_produce * tool_maker_building[:iron_need]
+      @r_iron -= can_produce * tool_maker_building[:iron_need]
+
+      @p_tools = can_produce * tool_maker_building[:production]
+      @r_tools += @p_tools
+    end
+
+    def people_eat_food
+      food_eaten = (@user_game.people / @data[:game_data][:people_eat_one_food]).round
+
+      house_building = @data[:buildings][:house][:settings]
+      town_center_building = @data[:buildings][:town_center][:settings]
+
+      @messages << "Your people ate #{food_eaten} food"
+
+      @c_food += food_eaten
+      @r_food -= food_eaten
+
+      # TODO: growth logic
+      @growth = 0
+
+      if @r_food < 0
+        people_die = (@user_game.people * 0.07).round
+        @messages << "#{people_die} people died due to lack of food"
+
+        @user_game.people -= people_die
+
+        if @user_game.people < (@user_game.town_center + @user_game.house)
+          @user_game.people = @user_game.town_center + @user_game.house
+        end
+
+        @r_food = 0
+        @growth = 0
+      end
+
+      house_space = @user_game.house * house_building[:people] + @user_game.town_center * town_center_building[:people]
+
+      if @growth > 0 && house_space > @user_game.people
+        people_come = ((@growth / 10000.0) * @user_game.people * @data[:game_data][:pop_increase_modifier]).round
+        @messages << "Your population increased by #{people_come}"
+        @r_people += people_come
+        @user_game.people += people_come
+
+        if @user_game.people > house_space
+          @user_game.people = house_space
+        end
+      elsif @growth < 0
+        people_leave = ((@growth.abs / 10000.0) * @user_game.people).round
+        @messages << "Due to poor food rationing your population decreased by #{people_leave} people"
+        @user_game.people -= people_leave
+      elsif @growth > 0 && house_space == @user_game.people
+        @messages << "Lack of housing prevents further growth of population."
+      end
+
+      # Check if there's enough housing
+      if @user_game.people > house_space
+        people_leave = ((@user_game.people - house_space) / 2.0).ceil
+        @user_game.people -= people_leave
+        @messages << "Due to lack of housing #{people_leave} people emigrated from your empire"
+      end
+    end
+
+    def update_resources
+      warehouse_building = @data[:buildings][:warehouse][:settings]
+      town_center_building = @data[:buildings][:town_center][:settings]
+
+      can_hold = @user_game.town_center * town_center_building[:resources_limit_increase] +
+        @user_game.warehouse * warehouse_building[:resources_limit_increase]
+
+      @user_game.wood = @r_wood
+      @user_game.food = @r_food
+      @user_game.iron = @r_iron
+      @user_game.gold = @r_gold
+      @user_game.tools = @r_tools
+      @user_game.wine = @r_wine
+
+      total_resources = @user_game.wood + @user_game.food + @user_game.iron + @user_game.gold + @user_game.tools +
+        @user_game.wine
+
+      if can_hold < total_resources
+        too_much = total_resources - can_hold
+        steal_wood = (@user_game.wood / total_resources * too_much).round
+        steal_food = (@user_game.food / total_resources * too_much).round
+        steal_iron = (@user_game.iron / total_resources * too_much).round
+        steal_tools = (@user_game.tools / total_resources * too_much).round
+        steal_wine = (@user_game.wine / total_resources * too_much).round
+
+        @user_game.wood -= steal_wood
+        @user_game.food -= steal_food
+        @user_game.iron -= steal_iron
+        @user_game.tools -= steal_tools
+        @user_game.wine -= steal_wine
       end
     end
   end

@@ -28,6 +28,14 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :mage_tower
       t.integer :winery
 
+      # buildings statuses
+      t.integer :hunter_status, default: 100
+      t.integer :farmer_status, default: 100
+      t.integer :wood_cutter_status, default: 100
+      t.integer :gold_mine_status, default: 100
+      t.integer :iron_mine_status, default: 100
+      t.integer :tool_maker_status, default: 100
+
       # land
       t.integer :f_land
       t.integer :m_land

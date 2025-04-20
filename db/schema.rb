@@ -67,6 +67,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
     t.integer "stable"
     t.integer "mage_tower"
     t.integer "winery"
+    t.integer "hunter_status", default: 100
+    t.integer "farmer_status", default: 100
+    t.integer "wood_cutter_status", default: 100
+    t.integer "gold_mine_status", default: 100
+    t.integer "iron_mine_status", default: 100
+    t.integer "tool_maker_status", default: 100
     t.integer "f_land"
     t.integer "m_land"
     t.integer "p_land"
