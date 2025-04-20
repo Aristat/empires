@@ -61,6 +61,7 @@ class GamesController < ApplicationController
       iron: 1000,
       gold: 100000,
       tools: 250,
+      wine: 0,
       turn: 0,
       last_turn_at: Time.current,
       current_turns: @game.start_turns
@@ -70,8 +71,10 @@ class GamesController < ApplicationController
   end
 
   def end_turn
+    render json: { success: false }, status: :unprocessable_entity and return if @user_game.blank?
+
     command = Games::EndTurnCommand.new(user_game: @user_game)
-    
+
     if command.call
       render json: { success: true }
     else

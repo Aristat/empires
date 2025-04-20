@@ -45,6 +45,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :gold
       t.integer :tools
       t.integer :people
+      t.integer :wine
 
       t.timestamps
     end

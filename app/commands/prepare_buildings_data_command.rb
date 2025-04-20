@@ -6,18 +6,16 @@ class PrepareBuildingsDataCommand < BaseCommand
   end
 
   def call
-    Building.all.map do |building|
+    Building.all.each_with_object({}) do |building, result|
       base_settings = building.settings
       civ_overrides = civilization.settings.dig("buildings", building.key) || {}
       settings = base_settings.merge(civ_overrides)
 
-      {
+      result[building.key] = {
         id: building.id,
         name: building.name,
         key: building.key,
-        land_type: settings["land"],
-        production_name: settings["production_name"],
-        allow_off: settings["allow_off"]
+        settings: settings
       }
     end
   end

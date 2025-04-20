@@ -79,6 +79,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
     t.integer "gold"
     t.integer "tools"
     t.integer "people"
+    t.integer "wine"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["civilization_id"], name: "index_user_games_on_civilization_id"

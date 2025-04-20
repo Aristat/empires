@@ -11,7 +11,7 @@ class PrepareDataCommand < BaseCommand
 
     {
       game_data: game_data,
-      buildings: buildings,
-    }
+      buildings: buildings
+    }.with_indifferent_access
   end
 end

@@ -23,7 +23,7 @@ class PrepareGameDataCommand < BaseCommand
       wall_use_gold: game.wall_use_gold,
       wall_use_iron: game.wall_use_iron,
       wall_use_wood: game.wall_use_wood,
-      wall_use_wine: game.wall_use_wine,
+      wall_use_wine: game.wall_use_wine
     }
 
     civ_overrides = @civilization.settings.dig("game") || {}
