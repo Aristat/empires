@@ -1,5 +1,5 @@
 class ExampleCommand < BaseCommand
-    def execute
-        puts "ExampleCommand executed"
-    end
+  def call
+    puts "ExampleCommand executed"
+  end
 end

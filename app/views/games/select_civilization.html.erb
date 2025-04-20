@@ -12,13 +12,11 @@
             
             <h6>Bonuses:</h6>
             <ul class="list-unstyled">
-              <% civilization.settings.each do |key, value| %>
+              <% civilization.buildings.to_a.each do |key, value| %>
                 <li>
                   <%= key.humanize %>: 
-                  <% if value > 1 %>
-                    <span class="text-success">+<%= ((value - 1) * 100).to_i %>%</span>
-                  <% else %>
-                    <span class="text-danger"><%= ((value - 1) * 100).to_i %>%</span>
+                  <% if value.present? %>
+                    <span class="text-success">+<%= value %>%</span>
                   <% end %>
                 </li>
               <% end %>

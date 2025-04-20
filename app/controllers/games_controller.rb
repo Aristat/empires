@@ -9,9 +9,10 @@ class GamesController < ApplicationController
 
   def show
     if @user_game.nil?
-      redirect_to select_civilization_game_path(@game)
+      redirect_to select_civilization_game_path(@game) and return
     end
 
+    @buildings = Buildings::PrepareBuildingsDataCommand.new(user_game: @user_game).call
     @nextTurnSeconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
   end
 
