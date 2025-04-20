@@ -1,6 +1,5 @@
 class Civilization < ApplicationRecord
-  store_accessor :settings, :military, :construction, :research
-
   validates :name, presence: true, uniqueness: true
-  validates :description, presence: true
+
+  store_accessor :settings, :special_unit, :buildings
 end
