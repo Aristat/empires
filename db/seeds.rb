@@ -6,10 +6,16 @@ require_relative 'seeds/civilizations'
 
 games = [
   {
-    name: 'Standard'
+    name: 'Standard',
+    seconds_per_turn: 600,
+    start_turns: 100,
+    max_turns: 400,
   },
   {
-    name: 'Blitz'
+    name: 'Blitz',
+    seconds_per_turn: 100,
+    start_turns: 100,
+    max_turns: 800,
   }
 ]
 
@@ -18,8 +24,9 @@ games.each do |game|
   puts "Created game: #{game[:name]}"
 end
 
-user = User.find_orcreate!(
-  email: 'test@gmail.com',
-  password: '123456',
-  password_confirmation: '123456'
+user = User.find_or_initialize_by(
+  email: 'test@gmail.com'
 )
+user.password = '123456'
+user.password_confirmation = '123456'
+user.save!

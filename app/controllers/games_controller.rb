@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game
-  before_action :set_user_game, only: [:show]
+  before_action :set_user_game, :update_turns, only: [:show]
 
   def index
     @games = Game.all
@@ -52,8 +52,8 @@ class GamesController < ApplicationController
       gold: 1000,
       tools: 100,
       turn: 0,
-      last_turn: Time.current,
-      num_turns: 100
+      last_turn_at: Time.current,
+      current_turns: @game.start_turns
     )
 
     redirect_to game_path(@game)
@@ -67,5 +67,20 @@ class GamesController < ApplicationController
 
   def set_user_game
     @user_game = current_user.user_games.find_by(game: @game)
+  end
+
+  def update_turns
+    return if @user_game.nil?
+
+    current_time = Time.current
+    diff_seconds = current_time - @user_game.last_turn_at
+    new_turns = (diff_seconds / @game.seconds_per_turn).to_i
+
+    player_turns = @user_game.current_turns + new_turns
+    if player_turns > @game.max_turns
+        player_turns = @game.max_turns
+    end
+
+    @user_game.update(current_turns: player_turns, last_turn_at: current_time)
   end
 end

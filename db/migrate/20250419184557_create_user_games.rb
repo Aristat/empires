@@ -6,8 +6,8 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.references :civilization, null: false, foreign_key: true
 
       t.integer :turn
-      t.integer :last_turn
-      t.integer :num_turns
+      t.datetime :last_turn_at
+      t.integer :current_turns
 
       # builders
       t.integer :food_ratio

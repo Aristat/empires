@@ -33,6 +33,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
 
   create_table "games", force: :cascade do |t|
     t.string "name"
+    t.integer "seconds_per_turn"
+    t.integer "start_turns"
+    t.integer "max_turns"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -42,8 +45,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_203015) do
     t.bigint "game_id", null: false
     t.bigint "civilization_id", null: false
     t.integer "turn"
-    t.integer "last_turn"
-    t.integer "num_turns"
+    t.datetime "last_turn_at"
+    t.integer "current_turns"
     t.integer "food_ratio"
     t.integer "tool_maker"
     t.integer "wood_cutter"

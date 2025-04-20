@@ -12,7 +12,7 @@
             
             <h6>Bonuses:</h6>
             <ul class="list-unstyled">
-              <% civilization.bonuses.each do |key, value| %>
+              <% civilization.settings.each do |key, value| %>
                 <li>
                   <%= key.humanize %>: 
                   <% if value > 1 %>
