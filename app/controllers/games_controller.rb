@@ -14,6 +14,9 @@ class GamesController < ApplicationController
     end
 
     @data = PrepareDataCommand.new(user_game: @user_game).call
+    @month = (@user_game.turn % 12) + 1
+    @year = (@user_game.turn / 12).to_i + 1000
+
     @nextTurnSeconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
   end
 
