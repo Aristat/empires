@@ -20,7 +20,7 @@
         <%= form_with(url: user_game_path(@game), method: :put, local: true) do |f| %>
           <% @data[:buildings].each do |key, building| %>
             <% have = @data[:user_data][key][:count] %>
-            <% status = @data[:user_data][key][:status] || 100 %>
+            <% status = @data[:user_data][key][:status] %>
             <% land = @data[:user_data][key][:land] %>
             <% workers = @data[:user_data][key][:workers] %>
 
