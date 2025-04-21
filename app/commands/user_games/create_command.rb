@@ -42,6 +42,7 @@ module UserGames
         gold: 100000,
         tools: 250,
         wine: 0,
+        horses: 0,
         turn: 0,
         last_turn_at: Time.current,
         current_turns: game.start_turns

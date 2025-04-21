@@ -91,6 +91,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_20_183818) do
     t.integer "tools"
     t.integer "people"
     t.integer "wine"
+    t.integer "horses"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "last_message", default: {}, null: false

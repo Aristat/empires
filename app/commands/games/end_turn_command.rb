@@ -19,6 +19,7 @@ module Games
       @r_gold = @user_game.gold
       @r_tools = @user_game.tools
       @r_wine = @user_game.wine
+      @r_horses = @user_game.horses
 
       # produced
       @p_wood = 0
@@ -27,6 +28,7 @@ module Games
       @p_gold = 0
       @p_tools = 0
       @p_wine = 0
+      @p_horses = 0
 
       # consumed
       @c_wood = 0
@@ -35,6 +37,7 @@ module Games
       @c_gold = 0
       @c_tools = 0
       @c_wine = 0
+      @pp_horses = 0
     end
 
     def call
@@ -53,6 +56,8 @@ module Games
         gold_production
         iron_production
         tools_production
+        horses_production
+        wine_production
 
         people_eat_food
         update_resources
@@ -260,6 +265,65 @@ module Games
       add_message("Tool makers produced #{@p_tools} tools", "success")
     end
 
+    def horses_production
+      return if @user_game.stable <= 0 || @user_game.stable <= 0
+
+      stable_building = @data[:buildings][:stable][:settings]
+
+      can_produce = (@user_game.stable * (@user_game.stable_status / 100.0)).round
+      people_need = can_produce * stable_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / stable_building[:workers]).to_i
+        add_message("Not enough people to work at stables.", "warning")
+      end
+
+      food_need = can_produce * stable_building[:food_need]
+      if @r_food < food_need
+        can_produce = (@r_food / stable_building[:food_need]).to_i
+      end
+
+      can_produce = 0 if can_produce < 0
+      @r_people = @r_people - (can_produce * stable_building[:workers])
+      @c_food += can_produce * stable_building[:food_need]
+      @r_food -= can_produce * stable_building[:food_need]
+
+      @p_horses = can_produce * stable_building[:production]
+      @r_horses += @p_horses
+      add_message("Stables produced #{@p_horses} horses", "success")
+    end
+
+    def wine_production
+      return if @user_game.winery <= 0 || @user_game.winery_status <= 0
+
+      winery_building = @data[:buildings][:winery][:settings]
+
+      can_produce = (@user_game.winery * (@user_game.winery_status / 100.0)).round
+      people_need = can_produce * winery_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / winery_building[:workers]).to_i
+        add_message("Not enough people to work at wineries.", "warning")
+      end
+
+      gold_need = can_produce * winery_building[:gold_need]
+      if @r_gold < gold_need
+        can_produce = (@r_gold / winery_building[:gold_need]).to_i
+        add_message("Not enough gold to work at wineries.", "warning")
+      end
+
+      can_produce = 0 if can_produce < 0
+
+      @r_people = @r_people - (can_produce * winery_building[:workers])
+
+      @c_gold += can_produce * winery_building[:gold_need]
+      @r_gold -= can_produce * winery_building[:gold_need]
+
+      @p_wine = can_produce * winery_building[:production]
+      @r_wine += @p_wine
+      add_message("Wineries produced #{@p_wine} wine", "success")
+    end
+
     def people_eat_food
       food_eaten = (@user_game.people / @data[:game_data][:people_eat_one_food]).round
 
@@ -328,9 +392,10 @@ module Games
       @user_game.gold = @r_gold
       @user_game.tools = @r_tools
       @user_game.wine = @r_wine
+      @user_game.horses = @r_horses
 
       total_resources = (@user_game.wood + @user_game.food + @user_game.iron + @user_game.tools +
-        @user_game.wine).to_f
+        @user_game.wine + @user_game.horses).to_f
 
       if can_hold < total_resources
         too_much = total_resources - can_hold
@@ -339,14 +404,19 @@ module Games
         steal_iron = (@user_game.iron / total_resources * too_much).round
         steal_tools = (@user_game.tools / total_resources * too_much).round
         steal_wine = (@user_game.wine / total_resources * too_much).round
+        steal_horses = (@user_game.horses / total_resources * too_much).round
 
         @user_game.wood -= steal_wood
         @user_game.food -= steal_food
         @user_game.iron -= steal_iron
         @user_game.tools -= steal_tools
         @user_game.wine -= steal_wine
+        @user_game.horses -= steal_horses
 
-        add_message("Due to lack of storage space, you lost #{steal_wood} wood, #{steal_food} food, #{steal_iron} iron, #{steal_tools} tools, and #{steal_wine} wine", "danger")
+        add_message(
+          "Due to lack of storage space, you lost #{steal_wood} wood, #{steal_food} food, #{steal_iron} iron," \
+            "#{steal_tools} tools, #{steal_wine} wine and #{steal_horses} horses", "danger"
+        )
       end
     end
   end
