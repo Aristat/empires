@@ -1,23 +1,8 @@
 buildings_data = [
   {
-    name: "Wood Cutter",
-    key: "wood_cutter",
-    settings: {
-      land: :forest,
-      workers: 6,
-      squares: 4,
-      food_eaten: 0,
-      cost_wood: 2,
-      cost_iron: 0,
-      cost_gold: 25,
-      allow_off: true,
-      production: 4,
-      production_name: "wood"
-    }
-  },
-  {
     name: "Hunter",
     key: "hunter",
+    position: 0,
     settings: {
       land: :forest,
       workers: 6,
@@ -34,6 +19,7 @@ buildings_data = [
   {
     name: "Farm",
     key: "farm",
+    position: 1,
     settings: {
       land: :plains,
       workers: 12,
@@ -48,23 +34,26 @@ buildings_data = [
     }
   },
   {
-    name: "House",
-    key: "house",
+    name: "Wood Cutter",
+    key: "wood_cutter",
+    position: 2,
     settings: {
-      land: :plains,
-      workers: 0,
-      squares: 2,
-      food_eaten: 1,
-      cost_wood: 4,
+      land: :forest,
+      workers: 6,
+      squares: 4,
+      food_eaten: 0,
+      cost_wood: 2,
       cost_iron: 0,
-      cost_gold: 100,
-      allow_off: false,
-      people: 100
+      cost_gold: 25,
+      allow_off: true,
+      production: 4,
+      production_name: "wood"
     }
   },
   {
     name: "Iron Mine",
     key: "iron_mine",
+    position: 3,
     settings: {
       land: :mountain,
       workers: 8,
@@ -80,6 +69,7 @@ buildings_data = [
   {
     name: "Gold Mine",
     key: "gold_mine",
+    position: 4,
     settings: {
       land: :mountain,
       workers: 12,
@@ -93,8 +83,27 @@ buildings_data = [
     }
   },
   {
+    name: "Winery",
+    key: "winery",
+    position: 5,
+    settings: {
+      land: :plains,
+      workers: 12,
+      squares: 6,
+      food_eaten: 0,
+      cost_wood: 12,
+      cost_iron: 4,
+      cost_gold: 1000,
+      allow_off: true,
+      production: 1,
+      gold_need: 10,
+      production_name: "wine"
+    }
+  },
+  {
     name: "Tool Maker",
     key: "tool_maker",
+    position: 6,
     settings: {
       land: :plains,
       workers: 10,
@@ -114,6 +123,7 @@ buildings_data = [
   {
     name: "Weaponsmith",
     key: "weaponsmith",
+    position: 7,
     settings: {
       land: :plains,
       workers: 10,
@@ -134,6 +144,7 @@ buildings_data = [
   {
     name: "Fort",
     key: "fort",
+    position: 10,
     settings: {
       land: :plains,
       workers: 0,
@@ -151,6 +162,7 @@ buildings_data = [
   {
     name: "Tower",
     key: "tower",
+    position: 11,
     settings: {
       land: :plains,
       workers: 0,
@@ -165,6 +177,7 @@ buildings_data = [
   {
     name: "Town Center",
     key: "town_center",
+    position: 12,
     settings: {
       land: :plains,
       workers: 0,
@@ -185,6 +198,7 @@ buildings_data = [
   {
     name: "Market",
     key: "market",
+    position: 13,
     settings: {
       land: :plains,
       workers: 6,
@@ -200,6 +214,7 @@ buildings_data = [
   {
     name: "Warehouse",
     key: "warehouse",
+    position: 14,
     settings: {
       land: :plains,
       workers: 4,
@@ -215,6 +230,7 @@ buildings_data = [
   {
     name: "Stable",
     key: "stable",
+    position: 8,
     settings: {
       land: :plains,
       workers: 12,
@@ -232,6 +248,7 @@ buildings_data = [
   {
     name: "Mage Tower",
     key: "mage_tower",
+    position: 9,
     settings: {
       land: :plains,
       workers: 20,
@@ -247,22 +264,20 @@ buildings_data = [
     }
   },
   {
-    name: "Winery",
-    key: "winery",
+    name: "House",
+    key: "house",
     settings: {
       land: :plains,
-      workers: 12,
-      squares: 6,
-      food_eaten: 0,
-      cost_wood: 12,
-      cost_iron: 4,
-      cost_gold: 1000,
-      allow_off: true,
-      production: 1,
-      gold_need: 10,
-      production_name: "wine"
+      workers: 0,
+      squares: 2,
+      food_eaten: 1,
+      cost_wood: 4,
+      cost_iron: 0,
+      cost_gold: 100,
+      allow_off: false,
+      people: 100
     }
-  }
+  },
 ]
 
 buildings_data.each do |building_data|

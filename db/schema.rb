@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_20_183818) do
     t.string "name", null: false
     t.string "key", null: false
     t.jsonb "settings", default: {}, null: false
+    t.integer "position", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_buildings_on_key", unique: true

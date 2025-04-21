@@ -4,6 +4,7 @@ class CreateBuildings < ActiveRecord::Migration[7.1]
       t.string :name, null: false
       t.string :key, null: false, index: { unique: true }
       t.jsonb :settings, null: false, default: {}
+      t.integer :position, null: false, default: 0
 
       t.timestamps
     end
