@@ -45,7 +45,7 @@ class GamesController < ApplicationController
       market: 10,
       iron_mine: 20,
       house: 50,
-      farmer: 20,
+      farm: 20,
       weaponsmith: 0,
       fort: 0,
       warehouse: 0,

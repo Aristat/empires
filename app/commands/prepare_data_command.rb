@@ -13,7 +13,7 @@ class PrepareDataCommand < BaseCommand
       user_game.gold_mine * buildings[:gold_mine][:settings][:squares]
     used_forest = user_game.wood_cutter * buildings[:wood_cutter][:settings][:squares] +
       user_game.hunter * buildings[:hunter][:settings][:squares]
-    used_plains = user_game.farmer * buildings[:farmer][:settings][:squares] +
+    used_plains = user_game.farm * buildings[:farm][:settings][:squares] +
       user_game.house * buildings[:house][:settings][:squares] +
       user_game.market * buildings[:market][:settings][:squares] +
       user_game.warehouse * buildings[:warehouse][:settings][:squares] +
@@ -39,9 +39,9 @@ class PrepareDataCommand < BaseCommand
         count: user_game.hunter,
         status: user_game.hunter_status,
       },
-      farmer: {
-        count: user_game.farmer,
-        status: user_game.farmer_status,
+      farm: {
+        count: user_game.farm,
+        status: user_game.farm_status,
       },
       gold_mine: {
         count: user_game.gold_mine,

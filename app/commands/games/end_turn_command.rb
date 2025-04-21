@@ -115,12 +115,12 @@ module Games
     end
 
     def farms_production
-      return if @user_game.farmer <= 0 || @user_game.farmer_status <= 0
+      return if @user_game.farm <= 0 || @user_game.farm_status <= 0
 
-      farm_building = @data[:buildings][:farmer][:settings]
+      farm_building = @data[:buildings][:farm][:settings]
 
       if @month >= 4 && @month <= 10
-        can_produce = (@user_game.farmer * (@user_game.farmer_status / 100.0)).round
+        can_produce = (@user_game.farm * (@user_game.farm_status / 100.0)).round
         people_need = can_produce * farm_building[:workers]
 
         if @r_people < people_need

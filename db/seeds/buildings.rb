@@ -33,7 +33,7 @@ buildings_data = [
   },
   {
     name: "Farm",
-    key: "farmer",
+    key: "farm",
     settings: {
       land: :plains,
       workers: 12,

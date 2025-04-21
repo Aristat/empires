@@ -20,7 +20,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :market
       t.integer :iron_mine
       t.integer :house
-      t.integer :farmer
+      t.integer :farm
       t.integer :weaponsmith
       t.integer :fort
       t.integer :warehouse
@@ -30,7 +30,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
 
       # buildings statuses
       t.integer :hunter_status, default: 100
-      t.integer :farmer_status, default: 100
+      t.integer :farm_status, default: 100
       t.integer :wood_cutter_status, default: 100
       t.integer :gold_mine_status, default: 100
       t.integer :iron_mine_status, default: 100

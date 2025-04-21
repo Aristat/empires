@@ -20,7 +20,7 @@ civilizations_data = [
         hunter: {
           production: 5
         },
-        farmer: {
+        farm: {
           production: 6
         },
         house: {
@@ -58,7 +58,7 @@ civilizations_data = [
         take_land: 0.30
       },
       buildings: {
-        farmer: {
+        farm: {
           squares: 2
         },
         tool_maker: {
@@ -104,7 +104,7 @@ civilizations_data = [
         hunter: {
           production: 2
         },
-        farmer: {
+        farm: {
           production: 10
         },
         house: {
@@ -180,7 +180,7 @@ civilizations_data = [
         gold_per_turn: 5
       },
       buildings: {
-        farmer: {
+        farm: {
           production: 6
         },
         hunter: {
