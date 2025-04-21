@@ -37,10 +37,6 @@ module Games
       @c_wine = 0
     end
 
-    def add_message(message, color = nil)
-      @messages << { text: message, color: color }
-    end
-
     def call
       return false if @user_game.current_turns <= 0
 
@@ -67,7 +63,7 @@ module Games
 
         @user_game.turn += 1
         @user_game.current_turns -= 1
-        @user_game.last_message = @messages.to_json
+        @user_game.last_message = @messages
         @user_game.save!
       end
 
@@ -76,6 +72,10 @@ module Games
 
     private
 
+    def add_message(message, color = nil)
+      @messages << { text: message, color: color }
+    end
+
     def calculate_builders
       tool_maker_building = @data[:buildings][:tool_maker][:settings]
 
@@ -83,6 +83,7 @@ module Games
 
       if num_builders > @user_game.people
         num_builders = (@user_game.people / 2).round
+        add_message("Not enough people to work as builders.", "warning")
       end
 
       # Limit builders to available tools
@@ -110,6 +111,7 @@ module Games
       @r_people -= can_produce * hunter_building[:workers]
       get_food = can_produce * hunter_building[:production]
       @p_food += get_food
+      add_message("Hunters produced #{get_food} food", "success")
     end
 
     def farms_production
@@ -129,6 +131,9 @@ module Games
         @r_people -= can_produce * farm_building[:workers]
         get_food = can_produce * farm_building[:production]
         @p_food += get_food
+        add_message("Farms produced #{get_food} food", "success")
+      else
+        add_message("Farms are not producing during winter months.", "info")
       end
     end
 
@@ -149,6 +154,7 @@ module Games
       get_wood = can_produce * wood_cutter_building[:production]
       @p_wood = get_wood
       @r_wood += @p_wood
+      add_message("Woodcutters produced #{get_wood} wood", "success")
     end
 
     def winter_time
@@ -189,6 +195,7 @@ module Games
       get_gold = can_produce * gold_mine_building[:production]
       @p_gold = get_gold
       @r_gold += @p_gold
+      add_message("Gold mines produced #{get_gold} gold", "success")
     end
 
     def iron_production
@@ -208,6 +215,7 @@ module Games
       get_iron = can_produce * iron_mine_building[:production]
       @p_iron = get_iron
       @r_iron += @p_iron
+      add_message("Iron mines produced #{get_iron} iron", "success")
     end
 
     def tools_production
@@ -249,6 +257,7 @@ module Games
 
       @p_tools = can_produce * tool_maker_building[:production]
       @r_tools += @p_tools
+      add_message("Tool makers produced #{@p_tools} tools", "success")
     end
 
     def people_eat_food
@@ -320,7 +329,7 @@ module Games
       @user_game.tools = @r_tools
       @user_game.wine = @r_wine
 
-      total_resources = @user_game.wood + @user_game.food + @user_game.iron + @user_game.gold + @user_game.tools +
+      total_resources = @user_game.wood + @user_game.food + @user_game.iron + @user_game.tools +
         @user_game.wine
 
       if can_hold < total_resources
@@ -336,6 +345,8 @@ module Games
         @user_game.iron -= steal_iron
         @user_game.tools -= steal_tools
         @user_game.wine -= steal_wine
+
+        add_message("Due to lack of storage space, you lost #{steal_wood} wood, #{steal_food} food, #{steal_iron} iron, #{steal_tools} tools, and #{steal_wine} wine", "danger")
       end
     end
   end

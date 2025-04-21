@@ -88,7 +88,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_20_183818) do
     t.integer "wine"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "last_message"
+    t.jsonb "last_message", default: {}, null: false
     t.index ["civilization_id"], name: "index_user_games_on_civilization_id"
     t.index ["game_id"], name: "index_user_games_on_game_id"
     t.index ["user_id"], name: "index_user_games_on_user_id"

@@ -22,7 +22,7 @@
       <div class="card-body">
         <h5 class="card-title">Last Turn Events</h5>
         <div class="card-text">
-          <% JSON.parse(@user_game.last_message).each do |message| %>
+          <% @user_game.last_message.each do |message| %>
             <p class="mb-1 text-<%= message['color'] || 'dark' %>">
               <%= message['text'] %>
             </p>
