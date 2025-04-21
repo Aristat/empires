@@ -17,7 +17,7 @@ class GamesController < ApplicationController
     @month = (@user_game.turn % 12) + 1
     @year = (@user_game.turn / 12).to_i + 1000
 
-    @nextTurnSeconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
+    @next_turn_seconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
   end
 
   def select_civilization

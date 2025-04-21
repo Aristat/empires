@@ -13,7 +13,7 @@
           <% if @user_game.current_turns >= @game.max_turns %>
             maximum turns stored
           <% else %>
-            next free turn in <%= @nextTurnSeconds / 60 %> minutes and <%= @nextTurnSeconds % 60 %> seconds
+            next free turn in <%= @next_turn_seconds / 60 %> minutes and <%= @next_turn_seconds % 60 %> seconds
           <% end %>
         </p>
         <button onclick="endTurn()" class="btn btn-primary mt-2">End Turn</button>
