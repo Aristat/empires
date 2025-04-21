@@ -49,4 +49,3 @@ module UserGames
     end
   end
 end
-

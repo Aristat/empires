@@ -79,7 +79,7 @@ module Games
     def calculate_builders
       tool_maker_building = @data[:buildings][:tool_maker][:settings]
 
-      num_builders = tool_maker_building[:num_builders] * @user_game.tool_maker
+      num_builders = tool_maker_building[:num_builders] * @user_game.tool_maker + Building::DEFAULT_NUM_BUILDERS
 
       if num_builders > @user_game.people
         num_builders = (@user_game.people / 2).round

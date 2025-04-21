@@ -19,7 +19,7 @@
                 <% if user_game %>
                   <p class="card-text">
                     Your Civilization: <%= user_game.civilization.name %><br>
-                    Turn: <%= user_game.turn %> / <%= game.max_turns %>
+                    Turn: <%= user_game.turn %>
                   </p>
                   <%= link_to 'Continue Game', game_path(game), class: 'btn btn-primary' %>
                 <% else %>

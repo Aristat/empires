@@ -29,67 +29,58 @@ class PrepareDataCommand < BaseCommand
     user_data = {
       used_mountains: used_mountains,
       used_forest: used_forest,
-      used_plains: used_plains,
-
-      wood_cutter: {
-        count: user_game.wood_cutter,
-        status: user_game.wood_cutter_status,
-      },
-      hunter: {
-        count: user_game.hunter,
-        status: user_game.hunter_status,
-      },
-      farm: {
-        count: user_game.farm,
-        status: user_game.farm_status,
-      },
-      gold_mine: {
-        count: user_game.gold_mine,
-        status: user_game.gold_mine_status,
-      },
-      iron_mine: {
-        count: user_game.iron_mine,
-        status: user_game.iron_mine_status,
-      },
-      tool_maker: {
-        count: user_game.tool_maker,
-        status: user_game.tool_maker_status,
-      },
-      winery: {
-        count: user_game.winery,
-        status: 100,
-      },
-      mage_tower: {
-        count: user_game.mage_tower,
-        status: 100,
-      },
-      weaponsmith: {
-        count: user_game.weaponsmith,
-        status: 100,
-      },
-      fort: {
-        count: user_game.fort,
-      },
-      tower: {
-        count: user_game.tower,
-      },
-      town_center: {
-        count: user_game.town_center,
-      },
-      market: {
-        count: user_game.market,
-      },
-      warehouse: {
-        count: user_game.warehouse,
-      },
-      stable: {
-        count: user_game.stable,
-        status: 100,
-      },
-      house: {
-        count: user_game.house,
-      },
+      used_plains: used_plains
     }.with_indifferent_access
+
+    total_workers = 0
+    total_land = 0
+
+    [
+      :wood_cutter, :hunter, :farm, :gold_mine, :iron_mine, :tool_maker, :winery, :mage_tower, :weaponsmith, :fort,
+      :tower, :town_center, :market, :warehouse, :stable, :house
+    ].each do |key|
+      count = user_game.send(key)
+
+      if user_game.has_attribute?("#{key}_status")
+        status = user_game.send("#{key}_status")
+        working = (count * (status / 100.0)).round
+        workers = working * buildings[key][:settings][:workers].to_i
+      else
+        working = 0
+        workers = 0
+      end
+      total_workers += workers
+
+      land = count * buildings[key][:settings][:squares]
+      total_land += land
+
+      user_data[key] = {
+        count: count,
+        status: status,
+        working: working,
+        workers: workers,
+        land: land
+      }.compact
+    end
+
+    num_builders = buildings[:tool_maker][:settings][:num_builders] * @user_game.tool_maker + Building::DEFAULT_NUM_BUILDERS
+    # TODO: finish wall build per turn
+    wall_build_per_turn = 0 / 100
+    wall_builders = (num_builders * wall_build_per_turn).round
+
+    free = user_game.people - total_workers - num_builders
+    total_workers += free if free < 0
+
+    house_space = user_game.house * buildings[:house][:settings][:people] +
+      user_game.town_center * buildings[:town_center][:settings][:people]
+    free_house_space = house_space - user_game.people
+
+    user_data[:num_builders] = num_builders
+    user_data[:wall_builders] = wall_builders
+    user_data[:total_workers] = total_workers
+    user_data[:total_land] = total_land
+    user_data[:free] = free
+    user_data[:free_house_space] = free_house_space
 
     {
       game_data: game_data,

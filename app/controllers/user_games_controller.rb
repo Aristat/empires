@@ -3,7 +3,7 @@ class UserGamesController < ApplicationController
   before_action :set_user_game
 
   def update
-    p 'Update!'
+    p "Update!"
 
     redirect_to game_path(@user_game.game)
   end

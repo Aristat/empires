@@ -2,13 +2,13 @@ module ApplicationHelper
     def season(month_number)
         case month_number
         when 12, 1, 2
-            'Winter'
+            "Winter"
         when 3, 4, 5
-            'Spring'
+            "Spring"
         when 6, 7, 8
-            'Summer'
+            "Summer"
         when 9, 10, 11
-            'Autumn'
+            "Autumn"
         end
     end
 end

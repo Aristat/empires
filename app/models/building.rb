@@ -1,4 +1,6 @@
 class Building < ApplicationRecord
+  DEFAULT_NUM_BUILDERS = 3
+
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
 

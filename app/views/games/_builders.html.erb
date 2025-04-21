@@ -20,10 +20,9 @@
         <%= form_with(url: user_game_path(@game), method: :put, local: true) do |f| %>
           <% @data[:buildings].each do |key, building| %>
             <% have = @data[:user_data][key][:count] %>
-            <% status = @data[:user_data][key][:status] %>
-            <% land = have * building[:settings][:squares] %>
-            <% working = building[:settings][:allow_off] ? (have * (status / 100.0)).round : have %>
-            <% workers = working * building[:settings][:workers].to_i %>
+            <% status = @data[:user_data][key][:status] || 100 %>
+            <% land = @data[:user_data][key][:land] %>
+            <% workers = @data[:user_data][key][:workers] %>
 
             <tr>
               <td>
@@ -58,6 +57,55 @@
             </td>
           </tr>
         <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-header">
+    <h5 class="mb-0">Population</h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <tbody>
+          <tr>
+            <td class="text-end">Total:</td>
+            <td><%= number_with_delimiter(@user_game.people) %></td>
+          </tr>
+          <tr>
+            <td class="text-end">Working:</td>
+            <td><%= number_with_delimiter(@data[:user_data][:total_workers]) %></td>
+          </tr>
+          <tr>
+            <td class="text-end">Construction Workers:</td>
+            <td><%= number_with_delimiter(@data[:user_data][:num_builders]) %></td>
+          </tr>
+          <tr>
+            <td class="text-end">Wall Builders:</td>
+            <td><%= number_with_delimiter(@data[:user_data][:wall_builders]) %></td>
+          </tr>
+          <% if @data[:user_data][:free] < 0 %>
+            <tr>
+              <td colspan="2">
+                <div class="text-danger">
+                  You do not have enough people for your production.<br>
+                  You need additional <%= number_with_delimiter(@data[:user_data][:free].abs) %> people.
+                </div>
+              </td>
+            </tr>
+          <% else %>
+            <tr>
+              <td class="text-end">Not Working:</td>
+              <td><%= number_with_delimiter(@data[:user_data][:free]) %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <td class="text-end">Extra House Space:</td>
+            <td><%= number_with_delimiter(@data[:user_data][:free_house_space]) %></td>
+          </tr>
         </tbody>
       </table>
     </div>
