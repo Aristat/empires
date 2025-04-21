@@ -43,10 +43,10 @@
               </td>
               <td class="text-end"><%= number_with_delimiter(workers) %></td>
               <td>
-                'Testing production'
+                <%= @data[:user_data][key][:production] %>
               </td>
               <td>
-                'Testing consumption'
+                <%= @data[:user_data][key][:consumption] %>
               </td>
             </tr>
           <% end %>

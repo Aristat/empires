@@ -48,11 +48,30 @@ class PrepareUserDataCommand < BaseCommand
       land = count * buildings[key][:settings][:squares]
       total_land += land
 
+      production =
+        if buildings[key][:settings][:production_name]
+          "#{working * buildings[key][:settings][:production]} #{buildings[key][:settings][:production_name]}"
+        else
+          nil
+        end
+
+      consumption =
+        if key == :tool_maker
+          "#{working * buildings[key][:settings][:wood_need]} wood\n" \
+            "#{working * buildings[key][:settings][:iron_need]} iron"
+        elsif key == :winery
+          "#{working * buildings[key][:settings][:gold_need]} gold"
+        else
+          nil
+        end
+
       user_data[key] = {
         count: count,
         status: status,
         working: working,
         workers: workers,
+        production: production,
+        consumption: consumption,
         land: land
       }.compact
     end
