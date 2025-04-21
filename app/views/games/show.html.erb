@@ -40,6 +40,23 @@
     <div class="card-body">
       <div class="row">
         <div class="col-md-12">
+          <!-- Summary Row -->
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                <div class="d-flex align-items-center">
+                  <h5 class="mb-0 me-3">Score: <%= number_with_delimiter(@user_game.score) %></h5>
+                </div>
+                <div class="d-flex align-items-center">
+                  <h5 class="mb-0 me-3">Population: <%= number_with_delimiter(@user_game.people) %></h5>
+                </div>
+                <div class="d-flex align-items-center">
+                  <h5 class="mb-0">Gold: <%= number_with_delimiter(@user_game.gold) %></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Summary Row -->
           <div class="row">
             <div class="col-md-4">
               <h6>Land</h6>
@@ -98,16 +115,16 @@
                   <span><%= @user_game.iron %></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                  <span>Gold:</span>
-                  <span><%= @user_game.gold %></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
                   <span>Tools:</span>
                   <span><%= @user_game.tools %></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                  <span>People:</span>
-                  <span><%= @user_game.people %></span>
+                  <span>Wine:</span>
+                  <span><%= @user_game.wine %></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <span>Horses:</span>
+                  <span><%= @user_game.horses %></span>
                 </li>
               </ul>
             </div>

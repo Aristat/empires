@@ -70,6 +70,7 @@ module Games
         @user_game.current_turns -= 1
         @user_game.last_message = @messages
         @user_game.save!
+        UserGames::UpdateScoreCommand.new(user_game: @user_game).call
       end
 
       true

@@ -56,6 +56,8 @@ games = [
 ]
 
 games.each do |game|
+  next if Game.exists?(name: game[:name])
+
   Game.create!(game)
   puts "Created game: #{game[:name]}"
 end

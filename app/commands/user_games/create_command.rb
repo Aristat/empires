@@ -9,7 +9,7 @@ module UserGames
     end
 
     def call
-      current_user.user_games.create!(
+      user_game = current_user.user_games.create!(
         game: game,
         civilization: civilization,
         food_ratio: 1,
@@ -47,6 +47,10 @@ module UserGames
         last_turn_at: Time.current,
         current_turns: game.start_turns
       )
+
+      UserGames::UpdateScoreCommand.new(user_game: user_game).call
+
+      user_game
     end
   end
 end

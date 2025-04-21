@@ -48,6 +48,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_20_183818) do
     t.bigint "user_id", null: false
     t.bigint "game_id", null: false
     t.bigint "civilization_id", null: false
+    t.bigint "score"
     t.integer "turn"
     t.datetime "last_turn_at"
     t.integer "current_turns"

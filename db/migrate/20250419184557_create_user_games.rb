@@ -5,6 +5,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.references :game, null: false, foreign_key: true
       t.references :civilization, null: false, foreign_key: true
 
+      t.bigint :score
       t.integer :turn
       t.datetime :last_turn_at
       t.integer :current_turns
