@@ -22,4 +22,6 @@ Rails.application.routes.draw do
       post :end_turn
     end
   end
+
+  resources :user_games, only: [:update]
 end

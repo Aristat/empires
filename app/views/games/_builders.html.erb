@@ -1,80 +1,65 @@
-<div class="row">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Production Buildings</h5>
-        <ul class="list-group">
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Wood Cutters:</span>
-            <span><%= user_game.wood_cutter %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Gold Mines:</span>
-            <span><%= user_game.gold_mine %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Iron Mines:</span>
-            <span><%= user_game.iron_mine %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Tool Makers:</span>
-            <span><%= user_game.tool_maker %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Hunters:</span>
-            <span><%= user_game.hunter %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Farmers:</span>
-            <span><%= user_game.farmer %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Stable:</span>
-            <span><%= user_game.stable %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Winery:</span>
-            <span><%= user_game.winery %></span>
-          </li>
-        </ul>
-      </div>
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Building Status</h5>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-light">
+        <tr>
+          <th>Building</th>
+          <th class="text-end">Have</th>
+          <th class="text-end">Land</th>
+          <th>Status</th>
+          <th class="text-end">Workers</th>
+          <th>Production</th>
+          <th>Consumption</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%= form_with(url: user_game_path(@game), method: :put, local: true) do |f| %>
+          <% @data[:buildings].each do |key, building| %>
+            <% have = @data[:user_data][key][:count] %>
+            <% status = @data[:user_data][key][:status] %>
+            <% land = have * building[:settings][:squares] %>
+            <% working = building[:settings][:allow_off] ? (have * (status / 100.0)).round : have %>
+            <% workers = working * building[:settings][:workers].to_i %>
+
+            <tr>
+              <td>
+                <%= building[:name] %>
+              </td>
+              <td class="text-end"><%= number_with_delimiter(have) %></td>
+              <td class="text-end"><%= number_with_delimiter(land) %> <%= building[:settings][:land] %></td>
+              <td>
+                <% if building[:settings][:allow_off] %>
+                  <%= f.select "#{key}_status",
+                               (0..10).map { |n| [n * 10, n] },
+                               { selected: status / 10 },
+                               { class: 'form-select form-select-sm' }
+                  %>
+                <% else %>
+                  —
+                <% end %>
+              </td>
+              <td class="text-end"><%= number_with_delimiter(workers) %></td>
+              <td>
+                'Testing production'
+              </td>
+              <td>
+                'Testing consumption'
+              </td>
+            </tr>
+          <% end %>
+
+          <tr class="table-light">
+            <td colspan="7" class="text-end">
+              <%= f.submit 'Update Production', class: 'btn btn-primary' %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Infrastructure</h5>
-        <ul class="list-group">
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Houses:</span>
-            <span><%= user_game.house %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Warehouse:</span>
-            <span><%= user_game.warehouse %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Mage tower:</span>
-            <span><%= user_game.mage_tower %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Town Centers:</span>
-            <span><%= user_game.town_center %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Markets:</span>
-            <span><%= user_game.market %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Towers:</span>
-            <span><%= user_game.tower %></span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between">
-            <span>Forts:</span>
-            <span><%= user_game.fort %></span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div> 
+</div>
