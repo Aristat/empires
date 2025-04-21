@@ -39,26 +39,50 @@
   <div class="card mb-4">
     <div class="card-body">
       <div class="row">
-        <div class="col-md-2">
-          <h6>Land</h6>
-          <ul class="list-group list-group-horizontal">
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Forest:</span>
-              <span><%= @user_game.f_land %></span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Mountain:</span>
-              <span><%= @user_game.m_land %></span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Plains:</span>
-              <span><%= @user_game.p_land %></span>
-            </li>
-          </ul>
-        </div>
-        <div class="col-md-8">
+        <div class="col-md-12">
           <div class="row">
-            <div class="col">
+            <div class="col-md-4">
+              <h6>Land</h6>
+              <table class="table table-bordered">
+                <tbody>
+                  <tr style="background-color: #663333; color: white;">
+                    <th scope="row">Total:</th>
+                    <td class="text-end">
+                      <i class="bi bi-mountain" title="Total Mountain Land"></i>
+                      <%= number_with_delimiter(@user_game.m_land) %>
+                    </td>
+                    <td style="width: 10px;"></td>
+                    <td class="text-end">
+                      <i class="bi bi-tree-fill" title="Total Forest Land"></i>
+                      <%= number_with_delimiter(@user_game.f_land) %>
+                    </td>
+                    <td style="width: 10px;"></td>
+                    <td class="text-end">
+                      <i class="bi bi-flower1" title="Total Plains Land"></i>
+                      <%= number_with_delimiter(@user_game.p_land) %>
+                    </td>
+                  </tr>
+                  <tr style="background-color: #336633; color: white;">
+                    <th scope="row">Free:</th>
+                    <td class="text-end">
+                      <i class="bi bi-mountain" title="Free Mountain Land"></i>
+                      <%= number_with_delimiter(@user_game.m_land - @data[:user_data][:used_mountains]) %>
+                    </td>
+                    <td style="width: 10px;"></td>
+                    <td class="text-end">
+                      <i class="bi bi-tree-fill" title="Free Forest Land"></i>
+                      <%= number_with_delimiter(@user_game.f_land - @data[:user_data][:used_forest]) %>
+                    </td>
+                    <td style="width: 10px;"></td>
+                    <td class="text-end">
+                      <i class="bi bi-flower1" title="Free Plains Land"></i>
+                      <%= number_with_delimiter(@user_game.p_land - @data[:user_data][:used_plains]) %>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-8">
               <h6>Resources</h6>
               <ul class="list-group list-group-horizontal">
                 <li class="list-group-item d-flex justify-content-between">
