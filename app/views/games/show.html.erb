@@ -166,7 +166,7 @@
 })();
 
 function endTurn() {
-  fetch('<%= end_turn_game_path(@game) %>', {
+  fetch('<%= end_turn_user_game_path(@game) %>', {
     method: 'POST',
     headers: {
       'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content

@@ -8,6 +8,18 @@ class UserGamesController < ApplicationController
     redirect_to game_path(@user_game.game)
   end
 
+  def end_turn
+    render json: { success: false }, status: :unprocessable_entity and return if @user_game.blank?
+
+    command = Games::EndTurnCommand.new(user_game: @user_game)
+
+    if command.call
+      render json: { success: true }
+    else
+      render json: { success: false }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_user_game
