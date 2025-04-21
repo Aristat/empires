@@ -329,8 +329,8 @@ module Games
       @user_game.tools = @r_tools
       @user_game.wine = @r_wine
 
-      total_resources = @user_game.wood + @user_game.food + @user_game.iron + @user_game.tools +
-        @user_game.wine
+      total_resources = (@user_game.wood + @user_game.food + @user_game.iron + @user_game.tools +
+        @user_game.wine).to_f
 
       if can_hold < total_resources
         too_much = total_resources - can_hold
