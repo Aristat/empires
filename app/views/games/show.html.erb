@@ -146,6 +146,11 @@
         Units
       </button>
     </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
+        Management
+      </button>
+    </li>
   </ul>
 
   <!-- Tab Content -->
@@ -158,6 +163,11 @@
     <!-- Units Tab -->
     <div class="tab-pane fade" id="units" role="tabpanel" aria-labelledby="units-tab">
       <%= render 'units', user_game: @user_game %>
+    </div>
+
+    <!-- Management Tab -->
+    <div class="tab-pane fade" id="management" role="tabpanel" aria-labelledby="management-tab">
+      <%= render 'management', user_game: @user_game %>
     </div>
   </div>
 

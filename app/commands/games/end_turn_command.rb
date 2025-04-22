@@ -37,7 +37,6 @@ module Games
       @c_gold = 0
       @c_tools = 0
       @c_wine = 0
-      @pp_horses = 0
     end
 
     def call
@@ -331,13 +330,34 @@ module Games
       house_building = @data[:buildings][:house][:settings]
       town_center_building = @data[:buildings][:town_center][:settings]
 
+      @growth = 0
+      case @user_game.food_ratio
+      when -2
+        @growth = rand(-200..-100)
+        food_eaten = (food_eaten * 0.45).round
+      when -1
+        @growth = rand(-100..-50)
+        food_eaten = (food_eaten * 0.75).round
+      when 0
+        @growth = rand(-30..50)
+      when 1
+        @growth = rand(50..100)
+        food_eaten = (food_eaten * 1.5).round
+      when 2
+        @growth = rand(100..200)
+        food_eaten = (food_eaten * 2.5).round
+      when 3
+        @growth = rand(200..400)
+        food_eaten = (food_eaten * 4).round
+      when 4
+        @growth = rand(400..800)
+        food_eaten = (food_eaten * 8).round
+      end
+
       add_message("Your people ate #{food_eaten} food", "info")
 
       @c_food += food_eaten
       @r_food -= food_eaten
-
-      # TODO: growth logic
-      @growth = 0
 
       if @r_food < 0
         people_die = (@user_game.people * 0.07).round

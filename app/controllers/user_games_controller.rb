@@ -3,7 +3,7 @@ class UserGamesController < ApplicationController
   before_action :set_user_game
 
   def update
-    p "Update!"
+    @user_game.update!(update_params)
 
     redirect_to game_path(@user_game.game)
   end
@@ -21,6 +21,10 @@ class UserGamesController < ApplicationController
   end
 
   private
+
+  def update_params
+    params.permit(:food_ratio)
+  end
 
   def set_user_game
     @user_game = current_user.user_games.find(params[:id])
