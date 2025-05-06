@@ -28,6 +28,6 @@ Rails.application.routes.draw do
       post :end_turn
     end
 
-    resources :build_queues, only: [:create]
+    resources :build_queues, only: [:create, :update, :destroy]
   end
 end

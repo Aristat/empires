@@ -94,7 +94,7 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:free_forest] = user_game.f_land - used_forest
     user_data[:used_plains] = used_plains
     user_data[:free_plains] = user_game.p_land - used_plains
-    user_data[:num_builders] = num_builders
+    user_data[:num_builders] = [ num_builders, 3 ].max
     user_data[:wall_builders] = wall_builders
     user_data[:total_workers] = total_workers
     user_data[:total_land] = total_land
