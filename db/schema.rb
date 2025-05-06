@@ -21,7 +21,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_06_171951) do
     t.integer "wood"
     t.integer "gold"
     t.integer "building_type"
-    t.integer "mission"
+    t.integer "queue_type"
     t.integer "position"
     t.integer "quantity"
     t.integer "time_needed"

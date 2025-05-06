@@ -15,7 +15,7 @@ class BuildQueuesController < ApplicationController
   end
 
   def update
-    if @build_queue.update(build_queue_params)
+    if @build_queue.update(build_queue_params.except(:position))
       if build_queue_params[:position].present?
         handle_position_update
       end
@@ -28,14 +28,14 @@ class BuildQueuesController < ApplicationController
   end
 
   def destroy
-    if params[:id].present?
-      @build_queue.destroy
-      flash[:notice] = "Building queue item removed"
-    else
-      @user_game.build_queues.destroy_all
-      flash[:notice] = "All building queues cleared"
-    end
+    BuildQueues::DeleteCommand.new(user_game: @user_game, build_queues: [ @build_queue ]).call
+    flash[:notice] = "Building queue item removed"
+    redirect_to game_path(@user_game.game)
+  end
 
+  def destroy_all
+    BuildQueues::DeleteCommand.new(user_game: @user_game, build_queues: @user_game.build_queues).call
+    flash[:notice] = "All building queues cleared"
     redirect_to game_path(@user_game.game)
   end
 
@@ -46,7 +46,7 @@ class BuildQueuesController < ApplicationController
   end
 
   def set_build_queue
-    @build_queue = @user_game.build_queues.find(params[:id]) if params[:id].present?
+    @build_queue = @user_game.build_queues.find(params[:id])
   end
 
   def build_queue_params

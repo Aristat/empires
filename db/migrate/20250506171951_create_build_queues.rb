@@ -7,7 +7,7 @@ class CreateBuildQueues < ActiveRecord::Migration[7.1]
       t.integer :wood
       t.integer :gold
       t.integer :building_type
-      t.integer :mission
+      t.integer :queue_type
       t.integer :position
       t.integer :quantity
       t.integer :time_needed

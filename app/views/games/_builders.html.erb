@@ -3,7 +3,7 @@
     <h5 class="mb-0">Build or Demolish</h5>
   </div>
   <div class="card-body">
-    <%= form_with(url: user_game_build_queues_path(@game), method: :post, local: true, id: 'buildForm') do |f| %>
+    <%= form_with(url: user_game_build_queues_path(@user_game), method: :post, local: true, id: 'buildForm') do |f| %>
       <div class="row align-items-center">
         <div class="col-md-3">
           <%= f.select :building_queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select', id: 'buildingQueueType' } %>
@@ -79,7 +79,7 @@
               <tr class="<%= 'table-secondary' if queue.on_hold %>">
                 <td>
                   <%= building[:name] %>
-                  <% if queue.mission == 'demolish' %>
+                  <% if queue.queue_type == 'demolish' %>
                     <span class="text-danger">(Demolish)</span>
                   <% end %>
                 </td>
@@ -93,36 +93,30 @@
                   <% end %>
                 </td>
                 <td class="text-center">
-                  <div class="btn-group btn-group-sm">
-                    <%= link_to 'Cancel', 
-                        user_game_build_queue_path(@game, queue), 
+                  <div class="d-flex gap-1 justify-content-center">
+                    <%= button_to 'Cancel', 
+                        user_game_build_queue_path(@user_game, queue), 
                         method: :delete,
-                        class: 'btn btn-outline-danger',
-                        data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %>
+                        class: 'btn btn-sm btn-outline-danger',
+                        form: { data: { turbo_confirm: 'Are you sure?' } } %>
                     
-                    <%= link_to queue.on_hold ? 'Resume' : 'Hold',
-                        user_game_build_queue_path(@game, queue, build_queue: { on_hold: !queue.on_hold }),
+                    <%= button_to queue.on_hold ? 'Resume' : 'Hold',
+                        user_game_build_queue_path(@user_game, queue, { on_hold: !queue.on_hold }),
                         method: :patch,
-                        class: "btn btn-outline-#{queue.on_hold ? 'success' : 'warning'}" %>
+                        class: "btn btn-sm btn-outline-#{queue.on_hold ? 'success' : 'warning'}" %>
                     
                     <div class="btn-group btn-group-sm">
-                      <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                        Move
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <%= link_to 'To Top',
-                              user_game_build_queue_path(@game, queue, build_queue: { position: 0 }),
-                              method: :patch,
-                              class: 'dropdown-item' %>
-                        </li>
-                        <li>
-                          <%= link_to 'To Bottom',
-                              user_game_build_queue_path(@game, queue, build_queue: { position: -1 }),
-                              method: :patch,
-                              class: 'dropdown-item' %>
-                        </li>
-                      </ul>
+                      <%= button_to '↑',
+                          user_game_build_queue_path(@user_game, queue, { position: 0 }),
+                          method: :patch,
+                          class: 'btn btn-outline-secondary',
+                          title: 'Move to Top' %>
+                      
+                      <%= button_to '↓',
+                          user_game_build_queue_path(@user_game, queue, { position: -1 }),
+                          method: :patch,
+                          class: 'btn btn-outline-secondary',
+                          title: 'Move to Bottom' %>
                     </div>
                   </div>
                 </td>
@@ -133,11 +127,11 @@
             <tfoot>
               <tr>
                 <td colspan="4" class="text-center">
-                  <%= link_to 'Cancel All',
-                      user_game_build_queues_path(@game),
+                  <%= button_to 'Cancel All',
+                      destroy_all_user_game_build_queues_path(@user_game),
                       method: :delete,
                       class: 'btn btn-danger',
-                      data: { turbo_method: :delete, turbo_confirm: 'Are you sure you want to cancel all building queues?' } %>
+                      form: { data: { turbo_confirm: 'Are you sure you want to cancel all building queues?' } } %>
                 </td>
               </tr>
             </tfoot>
@@ -304,15 +298,15 @@ function showBuild() {
 
   const land = selectedOption.dataset.land;
   const squares = selectedOption.dataset.squares;
-  if (land === 'P') {
+  if (land === 'plain') {
     temp = Math.floor(freePLand / squares);
     if (temp < canBuild) canBuild = temp;
   }
-  if (land === 'M') {
+  if (land === 'mountain') {
     temp = Math.floor(freeMLand / squares);
     if (temp < canBuild) canBuild = temp;
   }
-  if (land === 'F') {
+  if (land === 'forest') {
     temp = Math.floor(freeFLand / squares);
     if (temp < canBuild) canBuild = temp;
   }

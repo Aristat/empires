@@ -4,14 +4,14 @@ class BuildQueue < ApplicationRecord
   validates :building_type, presence: true
   validates :quantity, presence: true, numericality: { greater_than: 0 }
   validates :position, presence: true, numericality: { greater_than_or_equal_to: 0 }
-  validates :mission, presence: true, inclusion: { in: %w[build demolish] }
+  validates :queue_type, presence: true, inclusion: { in: %w[build demolish] }
   validates :iron, :wood, :gold, :time_needed, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   scope :active, -> { where(on_hold: false) }
   scope :ordered, -> { order(position: :asc) }
   scope :for_turn, ->(turn) { where(turn_added: turn) }
 
-  enum :mission, {
+  enum :queue_type, {
     build: 0,
     demolish: 1
   }, prefix: true

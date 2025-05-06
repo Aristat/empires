@@ -21,7 +21,7 @@ buildings_data = [
     key: "farm",
     position: 1,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 12,
       squares: 4,
       food_eaten: 0,
@@ -87,7 +87,7 @@ buildings_data = [
     key: "winery",
     position: 5,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 12,
       squares: 6,
       food_eaten: 0,
@@ -105,7 +105,7 @@ buildings_data = [
     key: "tool_maker",
     position: 6,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 10,
       squares: 2,
       food_eaten: 0,
@@ -125,7 +125,7 @@ buildings_data = [
     key: "weaponsmith",
     position: 7,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 10,
       squares: 4,
       food_eaten: 0,
@@ -146,7 +146,7 @@ buildings_data = [
     key: "fort",
     position: 10,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 0,
       squares: 12,
       food_eaten: 2,
@@ -164,7 +164,7 @@ buildings_data = [
     key: "tower",
     position: 11,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 0,
       squares: 4,
       food_eaten: 0,
@@ -179,7 +179,7 @@ buildings_data = [
     key: "town_center",
     position: 12,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 0,
       squares: 25,
       food_eaten: 0,
@@ -200,7 +200,7 @@ buildings_data = [
     key: "market",
     position: 13,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 6,
       squares: 4,
       food_eaten: 0,
@@ -216,7 +216,7 @@ buildings_data = [
     key: "warehouse",
     position: 14,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 4,
       squares: 2,
       food_eaten: 0,
@@ -232,7 +232,7 @@ buildings_data = [
     key: "stable",
     position: 8,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 12,
       squares: 4,
       food_eaten: 0,
@@ -250,7 +250,7 @@ buildings_data = [
     key: "mage_tower",
     position: 9,
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 20,
       squares: 10,
       food_eaten: 0,
@@ -267,7 +267,7 @@ buildings_data = [
     name: "House",
     key: "house",
     settings: {
-      land: :plains,
+      land: :plain,
       workers: 0,
       squares: 2,
       food_eaten: 1,

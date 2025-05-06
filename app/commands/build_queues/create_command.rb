@@ -80,8 +80,8 @@ module BuildQueues
         available_land = user_game.m_land - calculate_used_land("mountain")
       when "forest"
         available_land = user_game.f_land - calculate_used_land("forest")
-      when "plains"
-        available_land = user_game.p_land - calculate_used_land("plains")
+      when "plain"
+        available_land = user_game.p_land - calculate_used_land("plain")
       end
 
       if needed_land > available_land
@@ -109,7 +109,7 @@ module BuildQueues
       @build_queue = @user_game.build_queues.create!(
         building_type: params[:building_type],
         quantity: params[:building_quantity].to_i,
-        mission: params[:building_queue_type],
+        queue_type: params[:building_queue_type],
         turn_added: user_game.turn,
         time_needed: time_needed,
         position: position,
