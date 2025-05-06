@@ -4,17 +4,15 @@
   </div>
   <div class="card-body">
     <%= form_with(url: user_game_build_queues_path(@game), method: :post, local: true, id: 'buildForm') do |f| %>
-      <%= f.hidden_field :page, value: 'build' %>
-      
       <div class="row align-items-center">
         <div class="col-md-3">
           <%= f.select :queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select', id: 'buildingQueueType' } %>
         </div>
         <div class="col-md-2">
-          <%= f.number_field :qty, value: 1, min: 1, max: 99999999, class: 'form-control', size: 5 %>
+          <%= f.number_field :building_quantity, value: 1, min: 1, max: 99999999, class: 'form-control', size: 5 %>
         </div>
         <div class="col-md-5">
-          <%= f.select :building_no,
+          <%= f.select :building_type,
                       options_for_select(
                         @data[:buildings].map do |key, building|
                           [
@@ -171,17 +169,85 @@
 </div>
 
 <script>
+
+// Building calculation
+function showBuild() {
+  const buildingSelect = document.getElementById('buildingSelect');
+  if (!buildingSelect || buildingSelect.selectedIndex === 0) return 0;
+
+  const queueType = document.querySelector('select[name="queue_type"]').value;
+  if (queueType === 'demolish') {
+    const allowBuild = document.getElementById('allowBuild');
+    if (allowBuild) {
+      allowBuild.textContent = '';
+    }
+    return 0;
+  }
+
+  const selectedOption = buildingSelect.options[buildingSelect.selectedIndex];
+  const freeMLand = <%= @data[:user_data][:free_mountains] %>;
+  const freeFLand = <%= @data[:user_data][:free_forest] %>;
+  const freePLand = <%= @data[:user_data][:free_plains] %>;
+  const gold = <%= @user_game.gold %>;
+  const iron = <%= @user_game.iron %>;
+  const wood = <%= @user_game.wood %>;
+
+  let canBuild = Number.MAX_VALUE;
+  let temp = 0;
+
+  if (selectedOption.dataset.gold > 0) {
+    temp = Math.floor(gold / selectedOption.dataset.gold);
+    if (temp < canBuild) canBuild = temp;
+  }
+  if (selectedOption.dataset.iron > 0) {
+    temp = Math.floor(iron / selectedOption.dataset.iron);
+    if (temp < canBuild) canBuild = temp;
+  }
+  if (selectedOption.dataset.wood > 0) {
+    temp = Math.floor(wood / selectedOption.dataset.wood);
+    if (temp < canBuild) canBuild = temp;
+  }
+
+  const land = selectedOption.dataset.land;
+  const squares = selectedOption.dataset.squares;
+  if (land === 'P') {
+    temp = Math.floor(freePLand / squares);
+    if (temp < canBuild) canBuild = temp;
+  }
+  if (land === 'M') {
+    temp = Math.floor(freeMLand / squares);
+    if (temp < canBuild) canBuild = temp;
+  }
+  if (land === 'F') {
+    temp = Math.floor(freeFLand / squares);
+    if (temp < canBuild) canBuild = temp;
+  }
+
+  const allowBuild = document.getElementById('allowBuild');
+  if (allowBuild) {
+    allowBuild.textContent = `Your resources allow you to build ${canBuild} ${selectedOption.text.split(' (')[0]}`;
+  }
+
+  return canBuild;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  const buildForm = document.getElementById('buildForm');
-  if (buildForm) {
-    buildForm.addEventListener('submit', function(e) {
-      const buildingSelect = document.getElementById('buildingSelect');
-      if (!buildingSelect.value) {
-        e.preventDefault();
-        buildingSelect.classList.add('is-invalid');
-        alert('Please select a building to build or demolish');
-      } else {
-        buildingSelect.classList.remove('is-invalid');
+  const buildingSelect = document.getElementById('buildingSelect');
+  if (buildingSelect) {
+    buildingSelect.addEventListener('change', showBuild);
+  }
+
+  const buildingQueueTypeSelect = document.getElementById('buildingQueueType');
+  if (buildingQueueTypeSelect) {
+    buildingQueueTypeSelect.addEventListener('change', showBuild);
+  }
+
+  const maxButton = document.getElementById('maxButton');
+  if (maxButton) {
+    maxButton.addEventListener('click', function() {
+      const maxValue = showBuild();
+      if (maxValue > 0) {
+        document.querySelector('input[name="qty"]').value = maxValue;
       }
     });
   }
