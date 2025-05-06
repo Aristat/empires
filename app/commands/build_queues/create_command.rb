@@ -8,7 +8,7 @@ module BuildQueues
     end
 
     def call
-      p 'build_queue_params', build_queue_params
+      p "build_queue_params", build_queue_params
     end
   end
 end

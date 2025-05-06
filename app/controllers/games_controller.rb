@@ -61,7 +61,7 @@ class GamesController < ApplicationController
 
     player_turns = @user_game.current_turns + new_turns
     if player_turns > @game.max_turns
-        player_turns = @game.max_turns
+      player_turns = @game.max_turns
     end
 
     @user_game.update(current_turns: player_turns, last_turn_at: current_time)
