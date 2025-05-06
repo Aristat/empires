@@ -8,7 +8,7 @@
       
       <div class="row align-items-center">
         <div class="col-md-3">
-          <%= f.select :queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select' } %>
+          <%= f.select :queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select', id: 'buildingQueueType' } %>
         </div>
         <div class="col-md-2">
           <%= f.number_field :qty, value: 1, min: 1, max: 99999999, class: 'form-control', size: 5 %>
@@ -31,10 +31,10 @@
                         end
                       ),
                       { prompt: '--- Select a building to build or demolish ---' },
-                      { class: 'form-select', id: 'buildingSelect' } %>
+                      { class: 'form-select', id: 'buildingSelect', required: true } %>
         </div>
         <div class="col-md-2">
-          <%= f.submit 'Go', class: 'btn btn-primary' %>
+          <%= f.submit 'Queue', class: 'btn btn-primary' %>
         </div>
       </div>
       
@@ -168,3 +168,21 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const buildForm = document.getElementById('buildForm');
+  if (buildForm) {
+    buildForm.addEventListener('submit', function(e) {
+      const buildingSelect = document.getElementById('buildingSelect');
+      if (!buildingSelect.value) {
+        e.preventDefault();
+        buildingSelect.classList.add('is-invalid');
+        alert('Please select a building to build or demolish');
+      } else {
+        buildingSelect.classList.remove('is-invalid');
+      }
+    });
+  }
+});
+</script>

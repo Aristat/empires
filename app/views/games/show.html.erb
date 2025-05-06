@@ -211,6 +211,15 @@ function showBuild() {
   const buildingSelect = document.getElementById('buildingSelect');
   if (!buildingSelect || buildingSelect.selectedIndex === 0) return;
 
+  const queueType = document.querySelector('select[name="queue_type"]').value;
+  if (queueType === 'demolish') {
+    const allowBuild = document.getElementById('allowBuild');
+    if (allowBuild) {
+      allowBuild.textContent = '';
+    }
+    return;
+  }
+
   const selectedOption = buildingSelect.options[buildingSelect.selectedIndex];
   const freeMLand = <%= @data[:user_data][:free_mountains] %>;
   const freeFLand = <%= @data[:user_data][:free_forest] %>;
@@ -221,8 +230,6 @@ function showBuild() {
 
   let canBuild = Number.MAX_VALUE;
   let temp = 0;
-
-  console.log('selectedOption', selectedOption);
 
   if (selectedOption.dataset.gold > 0) {
     temp = Math.floor(gold / selectedOption.dataset.gold);
@@ -263,6 +270,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const buildingSelect = document.getElementById('buildingSelect');
   if (buildingSelect) {
     buildingSelect.addEventListener('change', showBuild);
+  }
+
+  const buildingQueueTypeSelect = document.getElementById('buildingQueueType');
+  if (buildingQueueTypeSelect) {
+    buildingQueueTypeSelect.addEventListener('change', showBuild);
   }
 
   const gameTabs = document.getElementById('gameTabs');
