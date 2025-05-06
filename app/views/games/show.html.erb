@@ -209,7 +209,7 @@ function endTurn() {
 // Building calculation
 function showBuild() {
   const buildingSelect = document.getElementById('buildingSelect');
-  if (!buildingSelect || buildingSelect.selectedIndex === 0) return;
+  if (!buildingSelect || buildingSelect.selectedIndex === 0) return 0;
 
   const queueType = document.querySelector('select[name="queue_type"]').value;
   if (queueType === 'demolish') {
@@ -217,7 +217,7 @@ function showBuild() {
     if (allowBuild) {
       allowBuild.textContent = '';
     }
-    return;
+    return 0;
   }
 
   const selectedOption = buildingSelect.options[buildingSelect.selectedIndex];
@@ -263,6 +263,8 @@ function showBuild() {
   if (allowBuild) {
     allowBuild.textContent = `Your resources allow you to build ${canBuild} ${selectedOption.text.split(' (')[0]}`;
   }
+
+  return canBuild;
 }
 
 // Add event listener for building selection
@@ -275,6 +277,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const buildingQueueTypeSelect = document.getElementById('buildingQueueType');
   if (buildingQueueTypeSelect) {
     buildingQueueTypeSelect.addEventListener('change', showBuild);
+  }
+
+  const maxButton = document.getElementById('maxButton');
+  if (maxButton) {
+    maxButton.addEventListener('click', function() {
+      const maxValue = showBuild();
+      if (maxValue > 0) {
+        document.querySelector('input[name="qty"]').value = maxValue;
+      }
+    });
   }
 
   const gameTabs = document.getElementById('gameTabs');

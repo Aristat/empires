@@ -3,7 +3,7 @@ class BuildQueuesController < ApplicationController
   before_action :set_user_game
 
   def create
-    Rails.logger.info("params", params)
+    Rails.logger.info([ "params", params ])
 
     redirect_to game_path(@user_game.game)
   end
