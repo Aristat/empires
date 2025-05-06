@@ -81,21 +81,24 @@ class PrepareUserDataCommand < BaseCommand
     wall_build_per_turn = 0 / 100
     wall_builders = (num_builders * wall_build_per_turn).round
 
-    free = user_game.people - total_workers - num_builders
-    total_workers += free if free < 0
+    free_people = user_game.people - total_workers - num_builders
+    total_workers += free_people if free_people < 0
 
     house_space = user_game.house * buildings[:house][:settings][:people] +
       user_game.town_center * buildings[:town_center][:settings][:people]
     free_house_space = house_space - user_game.people
 
     user_data[:used_mountains] = used_mountains
+    user_data[:free_mountains] = user_game.m_land - used_mountains
     user_data[:used_forest] = used_forest
+    user_data[:free_forest] = user_game.f_land - used_forest
     user_data[:used_plains] = used_plains
+    user_data[:free_plains] = user_game.p_land - used_plains
     user_data[:num_builders] = num_builders
     user_data[:wall_builders] = wall_builders
     user_data[:total_workers] = total_workers
     user_data[:total_land] = total_land
-    user_data[:free] = free
+    user_data[:free_people] = free_people
     user_data[:free_house_space] = free_house_space
 
     user_data

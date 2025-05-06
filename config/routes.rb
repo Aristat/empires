@@ -27,5 +27,7 @@ Rails.application.routes.draw do
     member do
       post :end_turn
     end
+
+    resources :build_queues, only: [:create]
   end
 end

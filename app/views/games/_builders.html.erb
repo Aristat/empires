@@ -1,3 +1,60 @@
+<div class="card mb-3">
+  <div class="card-header">
+    <h5 class="mb-0">Build or Demolish</h5>
+  </div>
+  <div class="card-body">
+    <%= form_with(url: user_game_build_queues_path(@game), method: :post, local: true, id: 'buildForm') do |f| %>
+      <%= f.hidden_field :page, value: 'build' %>
+      
+      <div class="row align-items-center">
+        <div class="col-md-3">
+          <%= f.select :queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select' } %>
+        </div>
+        <div class="col-md-2">
+          <%= f.number_field :qty, value: 1, min: 1, max: 99999999, class: 'form-control', size: 5 %>
+        </div>
+        <div class="col-md-5">
+          <%= f.select :building_no,
+                      options_for_select(
+                        @data[:buildings].map do |key, building|
+                          [
+                            "#{building[:name]} (#{building[:settings][:cost_wood]} W, #{building[:settings][:cost_iron]} I, #{building[:settings][:cost_gold]} G, #{building[:settings][:squares]} #{building[:settings][:land]})",
+                            key,
+                            {
+                              'data-wood' => building[:settings][:cost_wood],
+                              'data-iron' => building[:settings][:cost_iron],
+                              'data-gold' => building[:settings][:cost_gold],
+                              'data-squares' => building[:settings][:squares],
+                              'data-land' => building[:settings][:land]
+                            }
+                          ]
+                        end
+                      ),
+                      { prompt: '--- Select a building to build or demolish ---' },
+                      { class: 'form-select', id: 'buildingSelect' } %>
+        </div>
+        <div class="col-md-2">
+          <%= f.submit 'Go', class: 'btn btn-primary' %>
+        </div>
+      </div>
+      
+      <div class="row mt-2">
+        <div class="col-12">
+          <small class="text-muted">
+            W - Wood, I - Iron, G - Gold, P - Plains, F - Forest, M - Mountains
+          </small>
+        </div>
+      </div>
+      
+      <div class="row mt-2">
+        <div class="col-12">
+          <div id="allowBuild" class="text-primary"></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
 <div class="card">
   <div class="card-header">
     <h5 class="mb-0">Building Status</h5>
@@ -87,19 +144,19 @@
             <td class="text-end">Wall Builders:</td>
             <td><%= number_with_delimiter(@data[:user_data][:wall_builders]) %></td>
           </tr>
-          <% if @data[:user_data][:free] < 0 %>
+          <% if @data[:user_data][:free_people] < 0 %>
             <tr>
               <td colspan="2">
                 <div class="text-danger">
                   You do not have enough people for your production.<br>
-                  You need additional <%= number_with_delimiter(@data[:user_data][:free].abs) %> people.
+                  You need additional <%= number_with_delimiter(@data[:user_data][:free_people].abs) %> people.
                 </div>
               </td>
             </tr>
           <% else %>
             <tr>
               <td class="text-end">Not Working:</td>
-              <td><%= number_with_delimiter(@data[:user_data][:free]) %></td>
+              <td><%= number_with_delimiter(@data[:user_data][:free_people]) %></td>
             </tr>
           <% end %>
           <tr>

@@ -1,5 +1,5 @@
 class ExampleCommand < BaseCommand
   def call
-    puts "ExampleCommand executed"
+    Rails.logger.info("ExampleCommand executed")
   end
 end
