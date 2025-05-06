@@ -3,13 +3,11 @@ class BuildQueuesController < ApplicationController
   before_action :set_user_game
 
   def create
-    Rails.logger.info([ "params", build_queue_params ])
+    command = BuildQueues::CreateCommand.new(user_game: @user_game, build_queue_params: build_queue_params)
+    command.call
 
-    begin
-
-    rescue StandardError => e
-      flash[:alert] = "Error: #{e.message}"
-      Rails.logger.error("Build queue error: #{e.message}")
+    if command.failed?
+      flash[:alert] = "#{command.errors.join("\n")}"
     end
 
     redirect_to game_path(@user_game.game)
@@ -22,6 +20,6 @@ class BuildQueuesController < ApplicationController
   end
 
   def build_queue_params
-    params.expect(build_queue: [ :queue_type, :building_quantity, :building_type ])
+    params.permit(:building_queue_type, :building_quantity, :building_type)
   end
 end

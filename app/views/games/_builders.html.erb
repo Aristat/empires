@@ -6,7 +6,7 @@
     <%= form_with(url: user_game_build_queues_path(@game), method: :post, local: true, id: 'buildForm') do |f| %>
       <div class="row align-items-center">
         <div class="col-md-3">
-          <%= f.select :queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select', id: 'buildingQueueType' } %>
+          <%= f.select :building_queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select', id: 'buildingQueueType' } %>
         </div>
         <div class="col-md-2">
           <%= f.number_field :building_quantity, value: 1, min: 1, max: 99999999, class: 'form-control', size: 5 %>
@@ -33,7 +33,7 @@
         </div>
         <div class="col-md-2">
           <%= f.submit 'Queue', class: 'btn btn-primary' %>
-          <button type="button" id="maxButton" class="btn btn-secondary ms-2">Max</button>
+          <button type="button" id="buildingMaxButton" class="btn btn-secondary ms-2">Max</button>
         </div>
       </div>
       
@@ -175,7 +175,7 @@ function showBuild() {
   const buildingSelect = document.getElementById('buildingSelect');
   if (!buildingSelect || buildingSelect.selectedIndex === 0) return 0;
 
-  const queueType = document.querySelector('select[name="queue_type"]').value;
+  const queueType = document.querySelector('select[name="building_queue_type"]').value;
   if (queueType === 'demolish') {
     const allowBuild = document.getElementById('allowBuild');
     if (allowBuild) {
@@ -242,12 +242,12 @@ document.addEventListener('DOMContentLoaded', function() {
     buildingQueueTypeSelect.addEventListener('change', showBuild);
   }
 
-  const maxButton = document.getElementById('maxButton');
-  if (maxButton) {
-    maxButton.addEventListener('click', function() {
+  const buildingMaxButton = document.getElementById('buildingMaxButton');
+  if (buildingMaxButton) {
+      buildingMaxButton.addEventListener('click', function() {
       const maxValue = showBuild();
       if (maxValue > 0) {
-        document.querySelector('input[name="qty"]').value = maxValue;
+        document.querySelector('input[name="building_quantity"]').value = maxValue;
       }
     });
   }
