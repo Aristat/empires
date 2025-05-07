@@ -29,3 +29,10 @@
 
 en:
   hello: "Hello world"
+  build_queues:
+    messages:
+      created: "Building queue created successfully"
+      updated: "Building queue updated successfully"
+      destroyed: "Building queue item removed"
+      destroyed_all: "All building queues cleared"
+      error_updating: "Error updating building queue"
