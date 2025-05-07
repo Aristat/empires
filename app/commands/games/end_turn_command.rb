@@ -57,6 +57,9 @@ module Games
         tools_production
         horses_production
         wine_production
+        # mage_tower_production
+        # update researches
+        update_wall
 
         people_eat_food
         process_building_queue
@@ -323,6 +326,76 @@ module Games
       @p_wine = can_produce * winery_building[:production]
       @r_wine += @p_wine
       add_message("Wineries produced #{@p_wine} wine", 'success')
+    end
+
+    def update_wall
+      total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
+      total_wall = (total_land * 0.05).round
+
+      # Handle wall decay (25% chance)
+      if rand(1..100) <= 25 && @user_game.wall > 10
+        decay = (@user_game.wall * (rand(1..100) / 750.0)).round
+        if decay > 0
+          @user_game.wall -= decay
+          add_message("#{decay} units of wall deteriorated", 'danger')
+        end
+      end
+
+      # Handle wall construction
+      if @user_game.wall_build_per_turn > 0 && @user_game.wall < total_wall
+        wall_builders = (@num_builders * (@user_game.wall_build_per_turn / 100.0)).round
+        can_produce = (wall_builders / 25).to_i
+
+        # Adjust if we would exceed total wall
+        if can_produce + @user_game.wall > total_wall
+          can_produce = total_wall - @user_game.wall
+        end
+
+        # Check resource requirements
+        gold_need = can_produce * @data[:game_data][:wall_use_gold]
+        if @r_gold < gold_need
+          can_produce = (@r_gold / @data[:game_data][:wall_use_gold]).to_i
+          add_message('Not enough gold for construction of the great wall.', 'danger')
+        end
+
+        wood_need = can_produce * @data[:game_data][:wall_use_wood]
+        if @r_wood < wood_need
+          can_produce = (@r_wood / @data[:game_data][:wall_use_wood]).to_i
+          add_message('Not enough wood for construction of the great wall.', 'danger')
+        end
+
+        iron_need = can_produce * @data[:game_data][:wall_use_iron]
+        if @r_iron < iron_need
+          can_produce = (@r_iron / @data[:game_data][:wall_use_iron]).to_i
+          add_message('Not enough iron for construction of the great wall.', 'danger')
+        end
+
+        wine_need = can_produce * @data[:game_data][:wall_use_wine]
+        if @r_wine < wine_need
+          can_produce = (@r_wine / @data[:game_data][:wall_use_wine]).to_i
+          add_message('Not enough wine for construction of the great wall.', 'danger')
+        end
+
+        if can_produce > 0
+          # Update consumed resources
+          @c_gold += can_produce * @data[:game_data][:wall_use_gold]
+          @r_gold -= can_produce * @data[:game_data][:wall_use_gold]
+
+          @c_wood += can_produce * @data[:game_data][:wall_use_wood]
+          @r_wood -= can_produce * @data[:game_data][:wall_use_wood]
+
+          @c_iron += can_produce * @data[:game_data][:wall_use_iron]
+          @r_iron -= can_produce * @data[:game_data][:wall_use_iron]
+
+          @c_wine += can_produce * @data[:game_data][:wall_use_wine]
+          @r_wine -= can_produce * @data[:game_data][:wall_use_wine]
+
+          # Update wall and builders
+          @user_game.wall += can_produce
+          @num_builders -= (can_produce * 10)
+          add_message("Constructed #{can_produce} units of wall.", 'success')
+        end
+      end
     end
 
     def people_eat_food
