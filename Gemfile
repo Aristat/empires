@@ -19,7 +19,7 @@ gem 'jbuilder'
 # Authentication solution [https://github.com/heartcombo/devise]
 gem 'devise'
 # Frontend framework [https://getbootstrap.com/]
-gem 'bootstrap', '~> 5.3.0'
+gem 'bootstrap', '~> 5.3.5'
 # Sass processor for Bootstrap [https://github.com/rails/dartsass-rails]
 gem 'dartsass-rails'
 
