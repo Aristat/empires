@@ -59,6 +59,7 @@ module Games
         wine_production
 
         people_eat_food
+        process_building_queue
         update_resources
 
         if @user_game.people <= 100
@@ -397,6 +398,121 @@ module Games
         people_leave = ((@user_game.people - house_space) / 2.0).ceil
         @user_game.people -= people_leave
         add_message("Due to lack of housing #{people_leave} people emigrated from your empire", "danger")
+      end
+    end
+
+    def process_building_queue
+      m_used = @data[:user_data][:used_mountains]
+      f_used = @data[:user_data][:used_forest]
+      p_used = @data[:user_data][:used_plains]
+
+      build_moves = @num_builders
+
+      @user_game.build_queues.active.ordered.find_each do |queue|
+        building = @data[:buildings][queue.building_type.to_sym]
+
+        # Check available land
+        has_land = case building[:settings][:land]
+        when "mountain"
+                    @user_game.m_land - m_used
+        when "forest"
+                    @user_game.f_land - f_used
+        when "plain"
+                    @user_game.p_land - p_used
+        end
+
+        if has_land <= 0 && queue.queue_type == "build"
+          add_message("You do not have any free #{building[:settings][:land]} land to build #{building[:name]}", "danger")
+          next
+        end
+
+        b_need_time = building[:settings][:cost_wood] + building[:settings][:cost_iron] # time needed for one building
+
+        time_remaining = queue.time_needed
+        if build_moves > time_remaining # we can finish all buildings
+          build_moves -= time_remaining
+          time_remaining = 0
+        else
+          time_remaining -= build_moves
+          build_moves = 0
+        end
+
+        # Calculate how many buildings were built or demolished
+        qty_remaining = (time_remaining.to_f / b_need_time).ceil
+        qty_build = queue.quantity - qty_remaining
+
+        land_taken = qty_build * building[:settings][:squares]
+        if land_taken > has_land && queue.queue_type == "build" # cannot build, not enough land
+          # Calculate how many can be built
+          qty_build = (has_land / building[:settings][:squares]).floor
+          qty_remaining = queue.quantity - qty_build
+          build_moves += qty_remaining * b_need_time
+          time_remaining = qty_remaining * b_need_time
+          land_taken = qty_build * building[:settings][:squares]
+
+          add_message("Not enough land (#{qty_remaining * building[:settings][:squares]} #{building[:settings][:land]}) to process construction of #{building[:name]}", "danger")
+        end
+
+        constructed = false
+        if qty_build > 0 && queue.queue_type == "build" # built some buildings
+          add_message("Finished construction of #{qty_build} #{building[:name]}s", "success")
+          case building[:settings][:land]
+          when "mountain"
+            m_used += land_taken
+          when "forest"
+            f_used += land_taken
+          when "plain"
+            p_used += land_taken
+          end
+
+          had_buildings = @user_game.send(queue.building_type)
+          has_buildings = had_buildings + qty_build
+          constructed = true
+        elsif qty_build > 0 && queue.queue_type == "demolish" # demolished some buildings
+          add_message("Demolished #{qty_build} #{building[:name]}s", "success")
+          case building[:settings][:land]
+          when "mountain"
+            m_used -= land_taken
+          when "forest"
+            f_used -= land_taken
+          when "plain"
+            p_used -= land_taken
+          end
+
+          had_buildings = @user_game.send(queue.building_type)
+          has_buildings = had_buildings - qty_build
+          constructed = true
+        end
+
+        if constructed
+          # if queue.building_type == 'weaponsmith' # demolished weapon smith
+          #   # Try to preserve ratio
+          #   bow_ratio = 0
+          #   mace_ratio = 0
+          #   sword_ratio = 0
+          #
+          #   if had_buildings > 0
+          #     bow_ratio = @user_game.bow_weaponsmith.to_f / had_buildings
+          #     sword_ratio = @user_game.sword_weaponsmith.to_f / had_buildings
+          #     mace_ratio = @user_game.mace_weaponsmith.to_f / had_buildings
+          #   end
+          #
+          #   @user_game.bow_weaponsmith = (has_buildings * bow_ratio).to_i
+          #   @user_game.sword_weaponsmith = (has_buildings * sword_ratio).to_i
+          #   @user_game.mace_weaponsmith = (has_buildings * mace_ratio).to_i
+          # end
+
+          @user_game.send("#{queue.building_type}=", has_buildings)
+        end
+
+        if time_remaining == 0
+          queue.destroy
+        else
+          queue.update(
+            time_needed: time_remaining,
+            quantity: qty_remaining
+          )
+        end
       end
     end
 

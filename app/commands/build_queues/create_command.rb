@@ -13,13 +13,10 @@ module BuildQueues
     end
 
     def call
-      return false unless validate_params
-      return false unless validate_resources
-      return false unless validate_land
-
-      ActiveRecord::Base.transaction do
-        create_build_queue
-        update_resources
+      if params[:building_queue_type] == "build"
+        build_queue
+      elsif params[:building_queue_type] == "demolish"
+        demolish_queue
       end
 
       true
@@ -29,6 +26,21 @@ module BuildQueues
     end
 
     private
+
+    def build_queue
+      return false unless validate_params
+      return false unless validate_resources
+      return false unless validate_land
+
+      ActiveRecord::Base.transaction do
+        create_build_queue
+        update_resources
+      end
+    end
+
+    def demolish_queue
+      # TODO! add demolish queue from eflag_build
+    end
 
     def validate_params
       if params[:building_type].blank? || !buildings.key?(params[:building_type].to_sym)
