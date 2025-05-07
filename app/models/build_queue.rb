@@ -1,3 +1,33 @@
+# rubocop:disable Lint/RedundantCopDisableDirective, Layout/LineLength
+# == Schema Information
+#
+# Table name: build_queues
+#
+#  id            :bigint           not null, primary key
+#  building_type :integer
+#  gold          :integer
+#  iron          :integer
+#  on_hold       :boolean          default(FALSE)
+#  position      :integer
+#  quantity      :integer
+#  queue_type    :integer
+#  time_needed   :integer
+#  turn_added    :integer
+#  wood          :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  user_game_id  :bigint           not null
+#
+# Indexes
+#
+#  index_build_queues_on_user_game_id               (user_game_id)
+#  index_build_queues_on_user_game_id_and_position  (user_game_id,position)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_game_id => user_games.id)
+#
+# rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class BuildQueue < ApplicationRecord
   include StringKeyConcern
 

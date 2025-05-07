@@ -1,3 +1,18 @@
+# rubocop:disable Lint/RedundantCopDisableDirective, Layout/LineLength
+# == Schema Information
+#
+# Table name: games
+#
+#  id               :bigint           not null, primary key
+#  max_turns        :integer
+#  name             :string
+#  seconds_per_turn :integer
+#  settings         :jsonb            not null
+#  start_turns      :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+# rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class Game < ApplicationRecord
   has_many :user_games, dependent: :destroy
   has_many :users, through: :user_games
