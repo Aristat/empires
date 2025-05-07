@@ -13,9 +13,9 @@ module BuildQueues
     end
 
     def call
-      if params[:building_queue_type] == "build"
+      if params[:building_queue_type] ==  BuildQueue.string_key(:queue_types, :build)
         build_queue
-      elsif params[:building_queue_type] == "demolish"
+      elsif params[:building_queue_type] == BuildQueue.string_key(:queue_types, :demolish)
         demolish_queue
       end
 
@@ -39,7 +39,38 @@ module BuildQueues
     end
 
     def demolish_queue
-      # TODO! add demolish queue from eflag_build
+      building = buildings[params[:building_type].to_sym]
+      quantity = params[:building_quantity].to_i
+
+      if quantity < 1 || quantity > BuildQueue::MAX_BUILDING_QUANTITY_PER_ACTION
+        @errors << "Cannot demolish 0 buildings."
+        return false
+      end
+
+      # Check how many are being destroyed
+      total_demolishing = user_game.build_queues
+        .where(building_type: params[:building_type], queue_type: BuildQueue.string_key(:queue_types, :demolish))
+        .sum(:quantity)
+
+      current_buildings = user_game.send(params[:building_type])
+      available_buildings = current_buildings - total_demolishing
+
+      if available_buildings < quantity
+        @errors << "You do not have that many buildings of this type."
+        return false
+      end
+
+      time_needed = (building[:settings][:cost_wood] + building[:settings][:cost_iron]) * quantity
+      position = user_game.build_queues.maximum(:position).to_i + 1
+
+      user_game.build_queues.create!(
+        building_type: params[:building_type],
+        queue_type: :demolish,
+        quantity: quantity,
+        turn_added: user_game.turn,
+        time_needed: time_needed,
+        position: position,
+      )
     end
 
     def validate_params
@@ -48,7 +79,8 @@ module BuildQueues
         return false
       end
 
-      if params[:building_quantity].to_i <= 0 || params[:building_quantity].to_i > 10_000_000
+      if params[:building_quantity].to_i <= 0 ||
+        params[:building_quantity].to_i > BuildQueue::MAX_BUILDING_QUANTITY_PER_ACTION
         @errors << "Invalid number of buildings."
         return false
       end

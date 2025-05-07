@@ -9,7 +9,7 @@
           <%= f.select :building_queue_type, [%w[Build build], %w[Demolish demolish]], {}, { class: 'form-select', id: 'buildingQueueType' } %>
         </div>
         <div class="col-md-2">
-          <%= f.number_field :building_quantity, value: 1, min: 1, max: 99999999, class: 'form-control', size: 5 %>
+          <%= f.number_field :building_quantity, value: 1, min: 1, max: BuildQueue::MAX_BUILDING_QUANTITY_PER_ACTION, class: 'form-control', size: 5 %>
         </div>
         <div class="col-md-5">
           <%= f.select :building_type,
@@ -36,7 +36,7 @@
           <button type="button" id="buildingMaxButton" class="btn btn-secondary ms-2">Max</button>
         </div>
       </div>
-      
+
       <div class="row mt-2">
         <div class="col-12">
           <small class="text-muted">
@@ -44,7 +44,7 @@
           </small>
         </div>
       </div>
-      
+
       <div class="row mt-2">
         <div class="col-12">
           <div id="allowBuild" class="text-primary"></div>
@@ -94,24 +94,24 @@
                 </td>
                 <td class="text-center">
                   <div class="d-flex gap-1 justify-content-center">
-                    <%= button_to 'Cancel', 
-                        user_game_build_queue_path(@user_game, queue), 
+                    <%= button_to 'Cancel',
+                        user_game_build_queue_path(@user_game, queue),
                         method: :delete,
                         class: 'btn btn-sm btn-outline-danger',
                         form: { data: { turbo_confirm: 'Are you sure?' } } %>
-                    
+
                     <%= button_to queue.on_hold ? 'Resume' : 'Hold',
                         user_game_build_queue_path(@user_game, queue, { on_hold: !queue.on_hold }),
                         method: :patch,
                         class: "btn btn-sm btn-outline-#{queue.on_hold ? 'success' : 'warning'}" %>
-                    
+
                     <div class="btn-group btn-group-sm">
                       <%= button_to '↑',
                           user_game_build_queue_path(@user_game, queue, { position: 0 }),
                           method: :patch,
                           class: 'btn btn-outline-secondary',
                           title: 'Move to Top' %>
-                      
+
                       <%= button_to '↓',
                           user_game_build_queue_path(@user_game, queue, { position: -1 }),
                           method: :patch,

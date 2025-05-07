@@ -408,7 +408,7 @@ module Games
 
       build_moves = @num_builders
 
-      @user_game.build_queues.active.ordered.find_each do |queue|
+      @user_game.build_queues.active.ordered.each do |queue|
         building = @data[:buildings][queue.building_type.to_sym]
 
         # Check available land

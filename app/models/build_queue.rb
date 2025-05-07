@@ -1,4 +1,8 @@
 class BuildQueue < ApplicationRecord
+  include StringKeyConcern
+
+  MAX_BUILDING_QUANTITY_PER_ACTION = 10_000_000
+
   belongs_to :user_game
 
   validates :building_type, presence: true
@@ -38,7 +42,7 @@ class BuildQueue < ApplicationRecord
   def move_to_top
     transaction do
       # Shift all other items down
-      user_game.build_queues.where("position < ?", position).update_all("position = position + 1")
+      user_game.build_queues.where(position: ...position).update_all("position = position + 1")
       # Move this item to position 0
       update!(position: 0)
     end

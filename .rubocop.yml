@@ -38,3 +38,6 @@ Style/Documentation:
 
 Rails:
   Enabled: true
+
+Layout/TrailingWhitespace:
+  Enabled: false
