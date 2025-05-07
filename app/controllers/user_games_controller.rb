@@ -25,7 +25,7 @@ class UserGamesController < ApplicationController
   def update_params
     params.permit(
       :food_ratio, :hunter_status, :farm_status, :wood_cutter_status, :gold_mine_status, :iron_mine_status,
-      :tool_maker_status, :winery_status, :weaponsmith_status, :stable_status, :mage_tower_status
+      :tool_maker_status, :winery_status, :weaponsmith_status, :stable_status, :mage_tower_status, :wall_build_per_turn
     )
   end
 

@@ -1,0 +1,87 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Great Wall</h5>
+  </div>
+  <div class="card-body">
+    <p>
+      Wall provides extra protection for your empire.<br>
+      You currently have <%= number_with_delimiter(@user_game.wall) %> units of wall which provide you with
+      <span class="h4 fw-bold"><%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%</span> extra protection.<br>
+      You need <%= number_with_delimiter(@data[:user_data][:total_wall]) %> units of wall to have 100% extra defense.
+    </p>
+
+    <%= form_with url: user_game_path(@user_game), method: :put, class: "mt-4" do |f| %>
+
+      <div class="card">
+        <div class="card-header">
+          <strong>Percentage of builders you want to dedicate to wall construction:</strong>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :wall_build_per_turn, "Builder Percentage:", class: "form-label" %>
+            <div class="input-group">
+              <%= f.number_field :wall_build_per_turn,
+                  value: @user_game.wall_build_per_turn,
+                  class: "form-control",
+                  style: "width: 100px" %>
+              <span class="input-group-text">%</span>
+            </div>
+          </div>
+
+          <p class="text-muted">
+            <%= @data[:user_data][:wall_builders] %> out of <%= @data[:user_data][:num_builders] %> builders will construct <%= @data[:user_data][:wall_build] %> units of wall every month.<br>
+            Wall construction monthly cost:
+            <%= number_with_delimiter(@data[:user_data][:wall_build] * @data[:game_data][:wall_use_gold]) %> gold,
+            <%= number_with_delimiter(@data[:user_data][:wall_build] * @data[:game_data][:wall_use_wood]) %> wood,
+            <%= number_with_delimiter(@data[:user_data][:wall_build] * @data[:game_data][:wall_use_iron]) %> iron,
+            <%= number_with_delimiter(@data[:user_data][:wall_build] * @data[:game_data][:wall_use_wine]) %> wine
+          </p>
+
+          <hr>
+
+          <p class="text-muted">
+            Cost to construct 1 unit of wall is: <%= number_with_delimiter(@data[:game_data][:wall_use_gold]) %> gold, <%= number_with_delimiter(@data[:game_data][:wall_use_wood]) %> wood, <%= number_with_delimiter(@data[:game_data][:wall_use_iron]) %> iron and <%= number_with_delimiter(@data[:game_data][:wall_use_wine]) %> wine
+          </p>
+
+          <div class="text-center">
+            <%= f.submit "Update", class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Wall Help Modal %>
+<div class="modal fade" id="wallHelpModal" tabindex="-1" aria-labelledby="wallHelpModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="wallHelpModalLabel">Wall Help</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>The Great Wall provides additional protection for your empire against attacks. The protection percentage is calculated based on your total land and current wall units.</p>
+
+        <h6>How it works:</h6>
+        <ul>
+          <li>You need 5% of your total land in wall units for 100% protection</li>
+          <li>Builders will automatically construct wall units each turn</li>
+          <li>You can adjust the percentage of builders dedicated to wall construction</li>
+          <li>Each wall unit costs resources to build</li>
+        </ul>
+
+        <h6>Resource Costs:</h6>
+        <ul>
+          <li>Gold: <%= number_with_delimiter(@data[:game_data][:wall_use_gold]) %> per unit</li>
+          <li>Wood: <%= number_with_delimiter(@data[:game_data][:wall_use_wood]) %> per unit</li>
+          <li>Iron: <%= number_with_delimiter(@data[:game_data][:wall_use_iron]) %> per unit</li>
+          <li>Wine: <%= number_with_delimiter(@data[:game_data][:wall_use_wine]) %> per unit</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

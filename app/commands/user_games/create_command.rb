@@ -44,6 +44,8 @@ module UserGames
         wine: 0,
         horses: 0,
         turn: 0,
+        wall: 0,
+        wall_build_per_turn: 0,
         last_turn_at: Time.current,
         current_turns: game.start_turns
       )

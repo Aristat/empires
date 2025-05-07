@@ -76,10 +76,13 @@ class PrepareUserDataCommand < BaseCommand
       }.compact
     end
 
-    num_builders = buildings[:tool_maker][:settings][:num_builders] * @user_game.tool_maker + Building::DEFAULT_NUM_BUILDERS
-    # TODO: finish wall build per turn
-    wall_build_per_turn = 0 / 100
+    num_builders = buildings[:tool_maker][:settings][:num_builders] * user_game.tool_maker + Building::DEFAULT_NUM_BUILDERS
+
+    total_wall = (total_land * 0.05).round
+    wall_protection = total_wall > 0 && total_land > 0 ? ((user_game.wall.to_f / total_wall) * 100).round : 0
+    wall_build_per_turn = user_game.wall_build_per_turn / 100.0
     wall_builders = (num_builders * wall_build_per_turn).round
+    wall_build = (wall_builders / 25.0).to_i
 
     free_people = user_game.people - total_workers - num_builders
     total_workers += free_people if free_people < 0
@@ -94,8 +97,11 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:free_forest] = user_game.f_land - used_forest
     user_data[:used_plains] = used_plains
     user_data[:free_plains] = user_game.p_land - used_plains
-    user_data[:num_builders] = [ num_builders, 3 ].max
+    user_data[:num_builders] = num_builders
+    user_data[:total_wall] = total_wall
+    user_data[:wall_protection] = wall_protection
     user_data[:wall_builders] = wall_builders
+    user_data[:wall_build] = wall_build
     user_data[:total_workers] = total_workers
     user_data[:total_land] = total_land
     user_data[:free_people] = free_people

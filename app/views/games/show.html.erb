@@ -147,6 +147,11 @@
       </button>
     </li>
     <li class="nav-item" role="presentation">
+      <button class="nav-link" id="wall-tab" data-bs-toggle="tab" data-bs-target="#wall" type="button" role="tab" aria-controls="wall" aria-selected="false">
+        Wall (<%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%)
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
       <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
         Management
       </button>
@@ -163,6 +168,11 @@
     <!-- Units Tab -->
     <div class="tab-pane fade" id="units" role="tabpanel" aria-labelledby="units-tab">
       <%= render 'units', user_game: @user_game %>
+    </div>
+
+    <!-- Wall Tab -->
+    <div class="tab-pane fade" id="wall" role="tabpanel" aria-labelledby="wall-tab">
+      <%= render 'wall', user_game: @user_game %>
     </div>
 
     <!-- Management Tab -->
@@ -184,7 +194,7 @@
   const savedTab = localStorage.getItem('activeTab') || 'builders-tab';
   const tabToActivate = document.getElementById(savedTab);
   const paneToActivate = document.getElementById(savedTab.replace('-tab', ''));
-  
+
   if (tabToActivate && paneToActivate) {
     tabToActivate.classList.add('active');
     tabToActivate.setAttribute('aria-selected', 'true');
@@ -208,7 +218,7 @@ function endTurn() {
 
 document.addEventListener('DOMContentLoaded', function() {
   const gameTabs = document.getElementById('gameTabs');
-  
+
   // Listen for tab changes
   gameTabs.addEventListener('shown.bs.tab', function(event) {
     localStorage.setItem('activeTab', event.target.id);

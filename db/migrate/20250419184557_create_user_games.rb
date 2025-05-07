@@ -45,12 +45,12 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :f_land
       t.integer :m_land
       t.integer :p_land
-    
+
       # units
       t.integer :swordsman
       t.integer :archers
       t.integer :horseman
-    
+
       # resources
       t.integer :wood
       t.integer :food
@@ -60,6 +60,9 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :people
       t.integer :wine
       t.integer :horses
+
+      t.integer :wall
+      t.integer :wall_build_per_turn
 
       t.timestamps
     end
