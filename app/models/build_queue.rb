@@ -35,6 +35,8 @@ class BuildQueue < ApplicationRecord
 
   belongs_to :user_game
 
+  acts_as_list scope: :user_game
+
   validates :building_type, presence: true
   validates :quantity, presence: true, numericality: { greater_than: 0 }
   validates :position, presence: true, numericality: { greater_than_or_equal_to: 0 }
@@ -68,21 +70,4 @@ class BuildQueue < ApplicationRecord
     stable: 14,
     house: 15
   }, prefix: true
-
-  def move_to_top
-    transaction do
-      # Shift all other items down
-      user_game.build_queues.where(position: ...position).update_all("position = position + 1")
-      # Move this item to position 0
-      update!(position: 0)
-    end
-  end
-
-  def move_to_bottom
-    transaction do
-      max_position = user_game.build_queues.maximum(:position)
-      user_game.build_queues.where("position > ?", position).update_all("position = position - 1")
-      update!(position: max_position)
-    end
-  end
 end

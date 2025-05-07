@@ -26,7 +26,7 @@ class PrepareGameDataCommand < BaseCommand
       wall_use_wine: game.wall_use_wine
     }
 
-    civ_overrides = @civilization.settings.dig("game") || {}
+    civ_overrides = @civilization.settings.dig('game') || {}
     game_settings.merge(civ_overrides)
   end
 end

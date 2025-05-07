@@ -43,7 +43,7 @@ module BuildQueues
       quantity = params[:building_quantity].to_i
 
       if quantity < 1 || quantity > BuildQueue::MAX_BUILDING_QUANTITY_PER_ACTION
-        @errors << "Cannot demolish 0 buildings."
+        @errors << 'Cannot demolish 0 buildings.'
         return false
       end
 
@@ -56,12 +56,11 @@ module BuildQueues
       available_buildings = current_buildings - total_demolishing
 
       if available_buildings < quantity
-        @errors << "You do not have that many buildings of this type."
+        @errors << 'You do not have that many buildings of this type.'
         return false
       end
 
       time_needed = (building[:settings][:cost_wood] + building[:settings][:cost_iron]) * quantity
-      position = user_game.build_queues.maximum(:position).to_i + 1
 
       user_game.build_queues.create!(
         building_type: params[:building_type],
@@ -69,19 +68,19 @@ module BuildQueues
         quantity: quantity,
         turn_added: user_game.turn,
         time_needed: time_needed,
-        position: position,
+        position: 1,
       )
     end
 
     def validate_params
       if params[:building_type].blank? || !buildings.key?(params[:building_type].to_sym)
-        @errors << "Invalid building to build."
+        @errors << 'Invalid building to build.'
         return false
       end
 
       if params[:building_quantity].to_i <= 0 ||
         params[:building_quantity].to_i > BuildQueue::MAX_BUILDING_QUANTITY_PER_ACTION
-        @errors << "Invalid number of buildings."
+        @errors << 'Invalid number of buildings.'
         return false
       end
 
@@ -120,12 +119,12 @@ module BuildQueues
       needed_land = quantity * building[:settings][:squares]
 
       case building[:settings][:land]
-      when "mountain"
-        available_land = user_game.m_land - calculate_used_land("mountain")
-      when "forest"
-        available_land = user_game.f_land - calculate_used_land("forest")
-      when "plain"
-        available_land = user_game.p_land - calculate_used_land("plain")
+      when 'mountain'
+        available_land = user_game.m_land - calculate_used_land('mountain')
+      when 'forest'
+        available_land = user_game.f_land - calculate_used_land('forest')
+      when 'plain'
+        available_land = user_game.p_land - calculate_used_land('plain')
       end
 
       if needed_land > available_land
@@ -148,7 +147,6 @@ module BuildQueues
 
     def create_build_queue
       time_needed = @needed_wood + @needed_iron
-      position = user_game.build_queues.maximum(:position).to_i + 1
 
       @build_queue = @user_game.build_queues.create!(
         building_type: params[:building_type],
@@ -156,7 +154,7 @@ module BuildQueues
         queue_type: params[:building_queue_type],
         turn_added: user_game.turn,
         time_needed: time_needed,
-        position: position,
+        position: 1,
         iron: @needed_iron,
         wood: @needed_wood,
         gold: @needed_gold

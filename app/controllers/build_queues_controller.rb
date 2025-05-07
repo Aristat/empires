@@ -19,9 +19,9 @@ class BuildQueuesController < ApplicationController
       if build_queue_params[:position].present?
         handle_position_update
       end
-      flash[:notice] = "Building queue updated successfully"
+      flash[:notice] = 'Building queue updated successfully'
     else
-      flash[:alert] = "Error updating building queue"
+      flash[:alert] = 'Error updating building queue'
     end
 
     redirect_to game_path(@user_game.game)
@@ -29,13 +29,13 @@ class BuildQueuesController < ApplicationController
 
   def destroy
     BuildQueues::DeleteCommand.new(user_game: @user_game, build_queues: [ @build_queue ]).call
-    flash[:notice] = "Building queue item removed"
+    flash[:notice] = 'Building queue item removed'
     redirect_to game_path(@user_game.game)
   end
 
   def destroy_all
     BuildQueues::DeleteCommand.new(user_game: @user_game, build_queues: @user_game.build_queues).call
-    flash[:notice] = "All building queues cleared"
+    flash[:notice] = 'All building queues cleared'
     redirect_to game_path(@user_game.game)
   end
 
@@ -57,7 +57,7 @@ class BuildQueuesController < ApplicationController
     position = build_queue_params[:position].to_i
     if position == 0
       # Move to top
-      @build_queue.move_to_top
+      @build_queue.move_higher
     elsif position == -1
       # Move to bottom
       @build_queue.move_to_bottom

@@ -89,12 +89,12 @@ module Games
 
       if num_builders > @user_game.people
         num_builders = (@user_game.people / 2).round
-        add_message("Not enough people to work as builders.", "warning")
+        add_message('Not enough people to work as builders.', 'warning')
       end
 
       # Limit builders to available tools
       if num_builders > @user_game.tools
-        add_message("You do not have enough tools for all of your builders", "danger")
+        add_message('You do not have enough tools for all of your builders', 'danger')
         num_builders = @user_game.tools
       end
 
@@ -111,13 +111,13 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / hunter_building[:workers]).to_i
-        add_message("Not enough people to work at hunters.", "warning")
+        add_message('Not enough people to work at hunters.', 'warning')
       end
 
       @r_people -= can_produce * hunter_building[:workers]
       get_food = can_produce * hunter_building[:production]
       @p_food += get_food
-      add_message("Hunters produced #{get_food} food", "success")
+      add_message("Hunters produced #{get_food} food", 'success')
     end
 
     def farms_production
@@ -131,15 +131,15 @@ module Games
 
         if @r_people < people_need
           can_produce = (@r_people / farm_building[:workers]).to_i
-          add_message("Not enough people to work on farms.", "warning")
+          add_message('Not enough people to work on farms.', 'warning')
         end
 
         @r_people -= can_produce * farm_building[:workers]
         get_food = can_produce * farm_building[:production]
         @p_food += get_food
-        add_message("Farms produced #{get_food} food", "success")
+        add_message("Farms produced #{get_food} food", 'success')
       else
-        add_message("Farms are not producing during winter months.", "info")
+        add_message('Farms are not producing during winter months.', 'info')
       end
     end
 
@@ -153,14 +153,14 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / wood_cutter_building[:workers]).to_i
-        add_message("Not enough people to work at woodcutters.", "warning")
+        add_message('Not enough people to work at woodcutters.', 'warning')
       end
 
       @r_people -= can_produce * wood_cutter_building[:workers]
       get_wood = can_produce * wood_cutter_building[:production]
       @p_wood = get_wood
       @r_wood += @p_wood
-      add_message("Woodcutters produced #{get_wood} wood", "success")
+      add_message("Woodcutters produced #{get_wood} wood", 'success')
     end
 
     def winter_time
@@ -169,7 +169,7 @@ module Games
       if WINTER_MONTHS.include?(@month)
         @r_wood = @r_wood - burn_wood
         @c_wood = @c_wood + burn_wood
-        add_message("#{burn_wood} wood was used for heat", "info")
+        add_message("#{burn_wood} wood was used for heat", 'info')
 
         if @r_wood < 0
           people_with_no_heat = ((@r_wood.abs * @data[:game_data][:people_burn_one_wood]) / 8.0).ceil
@@ -178,7 +178,7 @@ module Games
           people_freeze = rand((people_with_no_heat / 2)..people_with_no_heat)
           @user_game.people -= people_freeze
 
-          add_message("#{people_freeze} people froze to death due to the lack of wood for heat", "danger")
+          add_message("#{people_freeze} people froze to death due to the lack of wood for heat", 'danger')
           @r_wood = 0
         end
       end
@@ -194,14 +194,14 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / gold_mine_building[:workers]).to_i
-        add_message("Not enough people to work at gold mines.", "warning")
+        add_message('Not enough people to work at gold mines.', 'warning')
       end
 
       @r_people -= can_produce * gold_mine_building[:workers]
       get_gold = can_produce * gold_mine_building[:production]
       @p_gold = get_gold
       @r_gold += @p_gold
-      add_message("Gold mines produced #{get_gold} gold", "success")
+      add_message("Gold mines produced #{get_gold} gold", 'success')
     end
 
     def iron_production
@@ -214,14 +214,14 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / iron_mine_building[:workers]).to_i
-        add_message("Not enough people to work at iron mines.", "warning")
+        add_message('Not enough people to work at iron mines.', 'warning')
       end
 
       @r_people -= can_produce * iron_mine_building[:workers]
       get_iron = can_produce * iron_mine_building[:production]
       @p_iron = get_iron
       @r_iron += @p_iron
-      add_message("Iron mines produced #{get_iron} iron", "success")
+      add_message("Iron mines produced #{get_iron} iron", 'success')
     end
 
     def tools_production
@@ -234,19 +234,19 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / tool_maker_building[:workers]).to_i
-        add_message("Not enough people to work at tool makers.", "warning")
+        add_message('Not enough people to work at tool makers.', 'warning')
       end
 
       wood_need = can_produce * tool_maker_building[:wood_need]
       if @r_wood < wood_need
         can_produce = (@r_wood / tool_maker_building[:wood_need]).to_i
-        add_message("Not enough wood to work at tool makers.", "warning")
+        add_message('Not enough wood to work at tool makers.', 'warning')
       end
 
       iron_need = can_produce * tool_maker_building[:iron_need]
       if @r_iron < iron_need
         can_produce = (@r_iron / tool_maker_building[:iron_need]).to_i
-        add_message("Not enough iron to work at tool makers.", "warning")
+        add_message('Not enough iron to work at tool makers.', 'warning')
       end
 
       if can_produce <= 0
@@ -263,7 +263,7 @@ module Games
 
       @p_tools = can_produce * tool_maker_building[:production]
       @r_tools += @p_tools
-      add_message("Tool makers produced #{@p_tools} tools", "success")
+      add_message("Tool makers produced #{@p_tools} tools", 'success')
     end
 
     def horses_production
@@ -276,7 +276,7 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / stable_building[:workers]).to_i
-        add_message("Not enough people to work at stables.", "warning")
+        add_message('Not enough people to work at stables.', 'warning')
       end
 
       food_need = can_produce * stable_building[:food_need]
@@ -291,7 +291,7 @@ module Games
 
       @p_horses = can_produce * stable_building[:production]
       @r_horses += @p_horses
-      add_message("Stables produced #{@p_horses} horses", "success")
+      add_message("Stables produced #{@p_horses} horses", 'success')
     end
 
     def wine_production
@@ -304,13 +304,13 @@ module Games
 
       if @r_people < people_need
         can_produce = (@r_people / winery_building[:workers]).to_i
-        add_message("Not enough people to work at wineries.", "warning")
+        add_message('Not enough people to work at wineries.', 'warning')
       end
 
       gold_need = can_produce * winery_building[:gold_need]
       if @r_gold < gold_need
         can_produce = (@r_gold / winery_building[:gold_need]).to_i
-        add_message("Not enough gold to work at wineries.", "warning")
+        add_message('Not enough gold to work at wineries.', 'warning')
       end
 
       can_produce = 0 if can_produce < 0
@@ -322,7 +322,7 @@ module Games
 
       @p_wine = can_produce * winery_building[:production]
       @r_wine += @p_wine
-      add_message("Wineries produced #{@p_wine} wine", "success")
+      add_message("Wineries produced #{@p_wine} wine", 'success')
     end
 
     def people_eat_food
@@ -355,14 +355,14 @@ module Games
         food_eaten = (food_eaten * 8).round
       end
 
-      add_message("Your people ate #{food_eaten} food", "info")
+      add_message("Your people ate #{food_eaten} food", 'info')
 
       @c_food += food_eaten
       @r_food -= food_eaten
 
       if @r_food < 0
         people_die = (@user_game.people * 0.07).round
-        add_message("#{people_die} people died due to lack of food", "danger")
+        add_message("#{people_die} people died due to lack of food", 'danger')
 
         @user_game.people -= people_die
 
@@ -378,7 +378,7 @@ module Games
 
       if @growth > 0 && house_space > @user_game.people
         people_come = ((@growth / 10000.0) * @user_game.people * @data[:game_data][:pop_increase_modifier]).round
-        add_message("Your population increased by #{people_come}", "success")
+        add_message("Your population increased by #{people_come}", 'success')
         @r_people += people_come
         @user_game.people += people_come
 
@@ -387,17 +387,17 @@ module Games
         end
       elsif @growth < 0
         people_leave = ((@growth.abs / 10000.0) * @user_game.people).round
-        add_message("Due to poor food rationing your population decreased by #{people_leave} people", "warning")
+        add_message("Due to poor food rationing your population decreased by #{people_leave} people", 'warning')
         @user_game.people -= people_leave
       elsif @growth > 0 && house_space == @user_game.people
-        add_message("Lack of housing prevents further growth of population.", "warning")
+        add_message('Lack of housing prevents further growth of population.', 'warning')
       end
 
       # Check if there's enough housing
       if @user_game.people > house_space
         people_leave = ((@user_game.people - house_space) / 2.0).ceil
         @user_game.people -= people_leave
-        add_message("Due to lack of housing #{people_leave} people emigrated from your empire", "danger")
+        add_message("Due to lack of housing #{people_leave} people emigrated from your empire", 'danger')
       end
     end
 
@@ -413,16 +413,16 @@ module Games
 
         # Check available land
         has_land = case building[:settings][:land]
-        when "mountain"
+        when 'mountain'
                     @user_game.m_land - m_used
-        when "forest"
+        when 'forest'
                     @user_game.f_land - f_used
-        when "plain"
+        when 'plain'
                     @user_game.p_land - p_used
         end
 
-        if has_land <= 0 && queue.queue_type == "build"
-          add_message("You do not have any free #{building[:settings][:land]} land to build #{building[:name]}", "danger")
+        if has_land <= 0 && queue.queue_type == 'build'
+          add_message("You do not have any free #{building[:settings][:land]} land to build #{building[:name]}", 'danger')
           next
         end
 
@@ -442,7 +442,7 @@ module Games
         qty_build = queue.quantity - qty_remaining
 
         land_taken = qty_build * building[:settings][:squares]
-        if land_taken > has_land && queue.queue_type == "build" # cannot build, not enough land
+        if land_taken > has_land && queue.queue_type == 'build' # cannot build, not enough land
           # Calculate how many can be built
           qty_build = (has_land / building[:settings][:squares]).floor
           qty_remaining = queue.quantity - qty_build
@@ -450,32 +450,32 @@ module Games
           time_remaining = qty_remaining * b_need_time
           land_taken = qty_build * building[:settings][:squares]
 
-          add_message("Not enough land (#{qty_remaining * building[:settings][:squares]} #{building[:settings][:land]}) to process construction of #{building[:name]}", "danger")
+          add_message("Not enough land (#{qty_remaining * building[:settings][:squares]} #{building[:settings][:land]}) to process construction of #{building[:name]}", 'danger')
         end
 
         constructed = false
-        if qty_build > 0 && queue.queue_type == "build" # built some buildings
-          add_message("Finished construction of #{qty_build} #{building[:name]}s", "success")
+        if qty_build > 0 && queue.queue_type == 'build' # built some buildings
+          add_message("Finished construction of #{qty_build} #{building[:name]}s", 'success')
           case building[:settings][:land]
-          when "mountain"
+          when 'mountain'
             m_used += land_taken
-          when "forest"
+          when 'forest'
             f_used += land_taken
-          when "plain"
+          when 'plain'
             p_used += land_taken
           end
 
           had_buildings = @user_game.send(queue.building_type)
           has_buildings = had_buildings + qty_build
           constructed = true
-        elsif qty_build > 0 && queue.queue_type == "demolish" # demolished some buildings
-          add_message("Demolished #{qty_build} #{building[:name]}s", "success")
+        elsif qty_build > 0 && queue.queue_type == 'demolish' # demolished some buildings
+          add_message("Demolished #{qty_build} #{building[:name]}s", 'success')
           case building[:settings][:land]
-          when "mountain"
+          when 'mountain'
             m_used -= land_taken
-          when "forest"
+          when 'forest'
             f_used -= land_taken
-          when "plain"
+          when 'plain'
             p_used -= land_taken
           end
 
@@ -552,7 +552,7 @@ module Games
 
         add_message(
           "Due to lack of storage space, you lost #{steal_wood} wood, #{steal_food} food, #{steal_iron} iron," \
-            "#{steal_tools} tools, #{steal_wine} wine and #{steal_horses} horses", "danger"
+            "#{steal_tools} tools, #{steal_wine} wine and #{steal_horses} horses", 'danger'
         )
       end
     end
