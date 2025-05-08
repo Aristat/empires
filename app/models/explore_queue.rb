@@ -42,4 +42,6 @@ class ExploreQueue < ApplicationRecord
     forest_land: 2,
     plain_land: 3
   }, prefix: true
+
+  validates :people, presence: true, numericality: { greater_than_or_equal_to: 4 }
 end

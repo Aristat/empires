@@ -3,6 +3,13 @@ class ExploreQueuesController < ApplicationController
   before_action :set_user_game
 
   def create
+    command = ExploreQueues::CreateCommand.new(user_game: @user_game, explore_queue_params: explore_queue_params)
+    command.call
+
+    if command.failed?
+      flash[:alert] = command.errors.join("\n")
+    end
+
     redirect_to game_path(@user_game.game)
   end
 
