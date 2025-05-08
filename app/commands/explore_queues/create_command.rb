@@ -17,6 +17,7 @@ module ExploreQueues
         horse_setting: params[:horse_setting],
         seek_land: params[:seek_land],
         )
+      # TODO! move last_horse_setting to local storage to avoid extra db call
       @user_game.update(last_horse_setting: params[:horse_setting])
     rescue StandardError => e
       @errors << e.message
