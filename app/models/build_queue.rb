@@ -4,16 +4,16 @@
 # Table name: build_queues
 #
 #  id            :bigint           not null, primary key
-#  building_type :integer
-#  gold          :integer
-#  iron          :integer
-#  on_hold       :boolean          default(FALSE)
-#  position      :integer
-#  quantity      :integer
-#  queue_type    :integer
-#  time_needed   :integer
-#  turn_added    :integer
-#  wood          :integer
+#  building_type :integer          not null
+#  gold          :integer          default(0), not null
+#  iron          :integer          default(0), not null
+#  on_hold       :boolean          default(FALSE), not null
+#  position      :integer          not null
+#  quantity      :integer          default(0), not null
+#  queue_type    :integer          not null
+#  time_needed   :integer          default(0), not null
+#  turn_added    :integer          default(0), not null
+#  wood          :integer          default(0), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  user_game_id  :bigint           not null

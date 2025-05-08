@@ -64,8 +64,7 @@ module ExploreQueues
         horse_setting: params[:horse_setting],
         seek_land: params[:seek_land],
         food: food_needed,
-        # TODO! add column
-        # horses: horses_used,
+        horses: horses_used,
         turn: trip_length,
         turns_used: 0
       )

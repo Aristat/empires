@@ -5,65 +5,65 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.references :game, null: false, foreign_key: true
       t.references :civilization, null: false, foreign_key: true
 
-      t.bigint :score
-      t.integer :turn
+      t.bigint :score, null: false, default: 0
+      t.integer :turn, null: false, default: 0
       t.datetime :last_turn_at
-      t.integer :current_turns
-      t.integer :food_ratio
-      t.integer :last_horse_setting
+      t.integer :current_turns, null: false, default: 0
+      t.integer :food_ratio, null: false, default: 0
+      t.integer :last_horse_setting, null: false, default: 0
 
       # builders
-      t.integer :tool_maker
-      t.integer :wood_cutter
-      t.integer :gold_mine
-      t.integer :hunter
-      t.integer :tower
-      t.integer :town_center
-      t.integer :market
-      t.integer :iron_mine
-      t.integer :house
-      t.integer :farm
-      t.integer :weaponsmith
-      t.integer :fort
-      t.integer :warehouse
-      t.integer :stable
-      t.integer :mage_tower
-      t.integer :winery
+      t.integer :tool_maker, null: false, default: 0
+      t.integer :wood_cutter, null: false, default: 0
+      t.integer :gold_mine, null: false, default: 0
+      t.integer :hunter, null: false, default: 0
+      t.integer :tower, null: false, default: 0
+      t.integer :town_center, null: false, default: 0
+      t.integer :market, null: false, default: 0
+      t.integer :iron_mine, null: false, default: 0
+      t.integer :house, null: false, default: 0
+      t.integer :farm, null: false, default: 0
+      t.integer :weaponsmith, null: false, default: 0
+      t.integer :fort, null: false, default: 0
+      t.integer :warehouse, null: false, default: 0
+      t.integer :stable, null: false, default: 0
+      t.integer :mage_tower, null: false, default: 0
+      t.integer :winery, null: false, default: 0
 
       # buildings statuses
-      t.integer :hunter_status, default: 100
-      t.integer :farm_status, default: 100
-      t.integer :wood_cutter_status, default: 100
-      t.integer :gold_mine_status, default: 100
-      t.integer :iron_mine_status, default: 100
-      t.integer :tool_maker_status, default: 100
-      t.integer :winery_status, default: 100
-      t.integer :weaponsmith_status, default: 100
-      t.integer :stable_status, default: 100
-      t.integer :mage_tower_status, default: 100
+      t.integer :hunter_status, null: false, default: 100
+      t.integer :farm_status, null: false, default: 100
+      t.integer :wood_cutter_status, null: false, default: 100
+      t.integer :gold_mine_status, null: false, default: 100
+      t.integer :iron_mine_status, null: false, default: 100
+      t.integer :tool_maker_status, null: false, default: 100
+      t.integer :winery_status, null: false, default: 100
+      t.integer :weaponsmith_status, null: false, default: 100
+      t.integer :stable_status, null: false, default: 100
+      t.integer :mage_tower_status, null: false, default: 100
 
       # land
-      t.integer :f_land
-      t.integer :m_land
-      t.integer :p_land
+      t.integer :f_land, null: false, default: 0
+      t.integer :m_land, null: false, default: 0
+      t.integer :p_land, null: false, default: 0
 
       # units
-      t.integer :swordsman
-      t.integer :archers
-      t.integer :horseman
+      t.integer :swordsman, null: false, default: 0
+      t.integer :archers, null: false, default: 0
+      t.integer :horseman, null: false, default: 0
 
       # resources
-      t.integer :wood
-      t.integer :food
-      t.integer :iron
-      t.integer :gold
-      t.integer :tools
-      t.integer :people
-      t.integer :wine
-      t.integer :horses
+      t.integer :wood, null: false, default: 0
+      t.integer :food, null: false, default: 0
+      t.integer :iron, null: false, default: 0
+      t.integer :gold, null: false, default: 0
+      t.integer :tools, null: false, default: 0
+      t.integer :people, null: false, default: 0
+      t.integer :wine, null: false, default: 0
+      t.integer :horses, null: false, default: 0
 
-      t.integer :wall
-      t.integer :wall_build_per_turn
+      t.integer :wall, null: false, default: 0
+      t.integer :wall_build_per_turn, null: false, default: 0
 
       t.timestamps
     end

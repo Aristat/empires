@@ -4,55 +4,55 @@
 # Table name: user_games
 #
 #  id                  :bigint           not null, primary key
-#  archers             :integer
-#  current_turns       :integer
-#  f_land              :integer
-#  farm                :integer
-#  farm_status         :integer          default(100)
-#  food                :integer
-#  food_ratio          :integer
-#  fort                :integer
-#  gold                :integer
-#  gold_mine           :integer
-#  gold_mine_status    :integer          default(100)
-#  horseman            :integer
-#  horses              :integer
-#  house               :integer
-#  hunter              :integer
-#  hunter_status       :integer          default(100)
-#  iron                :integer
-#  iron_mine           :integer
-#  iron_mine_status    :integer          default(100)
-#  last_horse_setting  :integer
+#  archers             :integer          default(0), not null
+#  current_turns       :integer          default(0), not null
+#  f_land              :integer          default(0), not null
+#  farm                :integer          default(0), not null
+#  farm_status         :integer          default(100), not null
+#  food                :integer          default(0), not null
+#  food_ratio          :integer          default(0), not null
+#  fort                :integer          default(0), not null
+#  gold                :integer          default(0), not null
+#  gold_mine           :integer          default(0), not null
+#  gold_mine_status    :integer          default(100), not null
+#  horseman            :integer          default(0), not null
+#  horses              :integer          default(0), not null
+#  house               :integer          default(0), not null
+#  hunter              :integer          default(0), not null
+#  hunter_status       :integer          default(100), not null
+#  iron                :integer          default(0), not null
+#  iron_mine           :integer          default(0), not null
+#  iron_mine_status    :integer          default(100), not null
+#  last_horse_setting  :integer          default("without_horses"), not null
 #  last_message        :jsonb            not null
 #  last_turn_at        :datetime
-#  m_land              :integer
-#  mage_tower          :integer
-#  mage_tower_status   :integer          default(100)
-#  market              :integer
-#  p_land              :integer
-#  people              :integer
-#  score               :bigint
-#  stable              :integer
-#  stable_status       :integer          default(100)
-#  swordsman           :integer
-#  tool_maker          :integer
-#  tool_maker_status   :integer          default(100)
-#  tools               :integer
-#  tower               :integer
-#  town_center         :integer
-#  turn                :integer
-#  wall                :integer
-#  wall_build_per_turn :integer
-#  warehouse           :integer
-#  weaponsmith         :integer
-#  weaponsmith_status  :integer          default(100)
-#  wine                :integer
-#  winery              :integer
-#  winery_status       :integer          default(100)
-#  wood                :integer
-#  wood_cutter         :integer
-#  wood_cutter_status  :integer          default(100)
+#  m_land              :integer          default(0), not null
+#  mage_tower          :integer          default(0), not null
+#  mage_tower_status   :integer          default(100), not null
+#  market              :integer          default(0), not null
+#  p_land              :integer          default(0), not null
+#  people              :integer          default(0), not null
+#  score               :bigint           default(0), not null
+#  stable              :integer          default(0), not null
+#  stable_status       :integer          default(100), not null
+#  swordsman           :integer          default(0), not null
+#  tool_maker          :integer          default(0), not null
+#  tool_maker_status   :integer          default(100), not null
+#  tools               :integer          default(0), not null
+#  tower               :integer          default(0), not null
+#  town_center         :integer          default(0), not null
+#  turn                :integer          default(0), not null
+#  wall                :integer          default(0), not null
+#  wall_build_per_turn :integer          default(0), not null
+#  warehouse           :integer          default(0), not null
+#  weaponsmith         :integer          default(0), not null
+#  weaponsmith_status  :integer          default(100), not null
+#  wine                :integer          default(0), not null
+#  winery              :integer          default(0), not null
+#  winery_status       :integer          default(100), not null
+#  wood                :integer          default(0), not null
+#  wood_cutter         :integer          default(0), not null
+#  wood_cutter_status  :integer          default(100), not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  civilization_id     :bigint           not null

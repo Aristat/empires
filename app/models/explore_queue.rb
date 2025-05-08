@@ -4,15 +4,16 @@
 # Table name: explore_queues
 #
 #  id            :bigint           not null, primary key
-#  f_land        :integer
-#  food          :integer
-#  horse_setting :integer
-#  m_land        :integer
-#  p_land        :integer
-#  people        :integer
-#  seek_land     :integer
-#  turn          :integer
-#  turns_used    :integer
+#  f_land        :integer          default(0), not null
+#  food          :integer          default(0), not null
+#  horse_setting :integer          not null
+#  horses        :integer          not null
+#  m_land        :integer          default(0), not null
+#  p_land        :integer          default(0), not null
+#  people        :integer          not null
+#  seek_land     :integer          not null
+#  turn          :integer          not null
+#  turns_used    :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  user_game_id  :bigint           not null

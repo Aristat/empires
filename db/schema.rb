@@ -16,16 +16,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
 
   create_table "build_queues", force: :cascade do |t|
     t.bigint "user_game_id", null: false
-    t.integer "turn_added"
-    t.integer "iron"
-    t.integer "wood"
-    t.integer "gold"
-    t.integer "building_type"
-    t.integer "queue_type"
-    t.integer "position"
-    t.integer "quantity"
-    t.integer "time_needed"
-    t.boolean "on_hold", default: false
+    t.integer "turn_added", default: 0, null: false
+    t.integer "iron", default: 0, null: false
+    t.integer "wood", default: 0, null: false
+    t.integer "gold", default: 0, null: false
+    t.integer "building_type", null: false
+    t.integer "queue_type", null: false
+    t.integer "position", null: false
+    t.integer "quantity", default: 0, null: false
+    t.integer "time_needed", default: 0, null: false
+    t.boolean "on_hold", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_game_id", "position"], name: "index_build_queues_on_user_game_id_and_position"
@@ -54,15 +54,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
 
   create_table "explore_queues", force: :cascade do |t|
     t.bigint "user_game_id", null: false
-    t.integer "turn"
-    t.integer "people"
-    t.integer "food"
-    t.integer "m_land"
-    t.integer "p_land"
-    t.integer "f_land"
-    t.integer "seek_land"
-    t.integer "horse_setting"
-    t.integer "turns_used"
+    t.integer "turn", null: false
+    t.integer "people", null: false
+    t.integer "food", default: 0, null: false
+    t.integer "m_land", default: 0, null: false
+    t.integer "p_land", default: 0, null: false
+    t.integer "f_land", default: 0, null: false
+    t.integer "seek_land", null: false
+    t.integer "horse_setting", null: false
+    t.integer "horses", null: false
+    t.integer "turns_used", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_game_id"], name: "index_explore_queues_on_user_game_id"
@@ -82,54 +83,54 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.bigint "user_id", null: false
     t.bigint "game_id", null: false
     t.bigint "civilization_id", null: false
-    t.bigint "score"
-    t.integer "turn"
+    t.bigint "score", default: 0, null: false
+    t.integer "turn", default: 0, null: false
     t.datetime "last_turn_at"
-    t.integer "current_turns"
-    t.integer "food_ratio"
-    t.integer "last_horse_setting"
-    t.integer "tool_maker"
-    t.integer "wood_cutter"
-    t.integer "gold_mine"
-    t.integer "hunter"
-    t.integer "tower"
-    t.integer "town_center"
-    t.integer "market"
-    t.integer "iron_mine"
-    t.integer "house"
-    t.integer "farm"
-    t.integer "weaponsmith"
-    t.integer "fort"
-    t.integer "warehouse"
-    t.integer "stable"
-    t.integer "mage_tower"
-    t.integer "winery"
-    t.integer "hunter_status", default: 100
-    t.integer "farm_status", default: 100
-    t.integer "wood_cutter_status", default: 100
-    t.integer "gold_mine_status", default: 100
-    t.integer "iron_mine_status", default: 100
-    t.integer "tool_maker_status", default: 100
-    t.integer "winery_status", default: 100
-    t.integer "weaponsmith_status", default: 100
-    t.integer "stable_status", default: 100
-    t.integer "mage_tower_status", default: 100
-    t.integer "f_land"
-    t.integer "m_land"
-    t.integer "p_land"
-    t.integer "swordsman"
-    t.integer "archers"
-    t.integer "horseman"
-    t.integer "wood"
-    t.integer "food"
-    t.integer "iron"
-    t.integer "gold"
-    t.integer "tools"
-    t.integer "people"
-    t.integer "wine"
-    t.integer "horses"
-    t.integer "wall"
-    t.integer "wall_build_per_turn"
+    t.integer "current_turns", default: 0, null: false
+    t.integer "food_ratio", default: 0, null: false
+    t.integer "last_horse_setting", default: 0, null: false
+    t.integer "tool_maker", default: 0, null: false
+    t.integer "wood_cutter", default: 0, null: false
+    t.integer "gold_mine", default: 0, null: false
+    t.integer "hunter", default: 0, null: false
+    t.integer "tower", default: 0, null: false
+    t.integer "town_center", default: 0, null: false
+    t.integer "market", default: 0, null: false
+    t.integer "iron_mine", default: 0, null: false
+    t.integer "house", default: 0, null: false
+    t.integer "farm", default: 0, null: false
+    t.integer "weaponsmith", default: 0, null: false
+    t.integer "fort", default: 0, null: false
+    t.integer "warehouse", default: 0, null: false
+    t.integer "stable", default: 0, null: false
+    t.integer "mage_tower", default: 0, null: false
+    t.integer "winery", default: 0, null: false
+    t.integer "hunter_status", default: 100, null: false
+    t.integer "farm_status", default: 100, null: false
+    t.integer "wood_cutter_status", default: 100, null: false
+    t.integer "gold_mine_status", default: 100, null: false
+    t.integer "iron_mine_status", default: 100, null: false
+    t.integer "tool_maker_status", default: 100, null: false
+    t.integer "winery_status", default: 100, null: false
+    t.integer "weaponsmith_status", default: 100, null: false
+    t.integer "stable_status", default: 100, null: false
+    t.integer "mage_tower_status", default: 100, null: false
+    t.integer "f_land", default: 0, null: false
+    t.integer "m_land", default: 0, null: false
+    t.integer "p_land", default: 0, null: false
+    t.integer "swordsman", default: 0, null: false
+    t.integer "archers", default: 0, null: false
+    t.integer "horseman", default: 0, null: false
+    t.integer "wood", default: 0, null: false
+    t.integer "food", default: 0, null: false
+    t.integer "iron", default: 0, null: false
+    t.integer "gold", default: 0, null: false
+    t.integer "tools", default: 0, null: false
+    t.integer "people", default: 0, null: false
+    t.integer "wine", default: 0, null: false
+    t.integer "horses", default: 0, null: false
+    t.integer "wall", default: 0, null: false
+    t.integer "wall_build_per_turn", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "last_message", default: {}, null: false
