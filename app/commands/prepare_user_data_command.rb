@@ -107,6 +107,9 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:free_people] = free_people
     user_data[:free_house_space] = free_house_space
 
+    # TODO! count total_explorers
+    user_data[:total_explorers] = 0
+
     user_data
   end
 end

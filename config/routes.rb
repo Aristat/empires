@@ -33,5 +33,9 @@ Rails.application.routes.draw do
         delete :destroy_all
       end
     end
+
+    resources :explore_queues, only: [:create] do
+
+    end
   end
 end

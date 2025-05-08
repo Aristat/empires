@@ -1,0 +1,164 @@
+<%# Explore Tab Content %>
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Exploration</h5>
+    <%= link_to "Help", "#", class: "btn btn-sm btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#exploreHelpModal" } %>
+  </div>
+  <div class="card-body">
+    <%
+      total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
+      extra_food = (total_land.to_f / @data[:game_data][:extra_food_per_land]).ceil
+      food_per_explorer = @data[:buildings][:town_center][:settings][:food_per_explorer] + extra_food
+      max_explorers = @user_game.town_center * @data[:buildings][:town_center][:settings][:max_explorers]
+      send_explorers = (@user_game.food / food_per_explorer).floor
+      can_send = [max_explorers - @data[:user_data][:total_explorers], send_explorers].min
+    %>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h6 class="mb-3">Exploration Status</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Current Explorers:</span>
+                <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@data[:user_data][:total_explorers]) %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Maximum Explorers:</span>
+                <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(max_explorers) %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Available Horses:</span>
+                <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@user_game.horses) %></span>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6 class="mb-3">Resource Requirements</h6>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Food per Explorer:</span>
+                <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(food_per_explorer) %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Can Send (Food):</span>
+                <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(send_explorers) %></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>Can Send (Total):</span>
+                <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(can_send) %></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <% if total_land > 500_000 %>
+          <%
+            mult = total_land / 500_000.0
+            mult = 99 if mult >= 100
+            efficiency = (100 - mult).round(2)
+          %>
+          <div class="alert alert-warning mt-3">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            Due to your empire's large size, your explorers are <%= efficiency %>% efficient.
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%= form_with url: user_game_explore_queues_path(@user_game), method: :post, local: true, class: "mt-4" do |f| %>
+      <%= f.hidden_field :page, value: "explore" %>
+      <%= f.hidden_field :eflag, value: "send_explorers" %>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="row align-items-end">
+            <div class="col-md-3">
+              <div class="mb-3">
+                <%= f.label :qty, "Send explorers:", class: "form-label" %>
+                <%= f.number_field :qty,
+                    value: can_send,
+                    class: "form-control",
+                    min: 1,
+                    max: can_send %>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="mb-3">
+                <%= f.label :with_horses, "With horses:", class: "form-label" %>
+                <%= f.select :with_horses,
+                    options_for_select([
+                      ['No Horses', 0],
+                      ['1X Horses', 1],
+                      ['2X Horses', 2],
+                      ['3X Horses', 3]
+                    ], session[:last_horse_setting] || 0),
+                    {},
+                    class: "form-select" %>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="mb-3">
+                <%= f.label :seek_land, "Look for:", class: "form-label" %>
+                <%= f.select :seek_land,
+                    options_for_select([
+                      ['All Land', 0],
+                      ['Mountain Land', 1],
+                      ['Forest Land', 2],
+                      ['Plains Land', 3]
+                    ]),
+                    {},
+                    class: "form-select" %>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <%= f.submit "Send Explorers", class: "btn btn-primary w-100" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Explore Help Modal %>
+<div class="modal fade" id="exploreHelpModal" tabindex="-1" aria-labelledby="exploreHelpModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exploreHelpModalLabel">Exploration Help</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Send explorers to discover new land for your empire. The more explorers you send, the better your chances of finding land.</p>
+
+        <h6>Horse Multiplier:</h6>
+        <ul>
+          <li>No Horses: Base exploration speed</li>
+          <li>1X Horses: 2x exploration speed</li>
+          <li>2X Horses: 3x exploration speed</li>
+          <li>3X Horses: 4x exploration speed</li>
+        </ul>
+
+        <h6>Land Types:</h6>
+        <ul>
+          <li>All Land: Equal chance for any type</li>
+          <li>Mountain Land: Focus on finding mountains</li>
+          <li>Forest Land: Focus on finding forests</li>
+          <li>Plains Land: Focus on finding plains</li>
+        </ul>
+
+        <div class="alert alert-info mt-3">
+          <strong>Tip:</strong> Using horses increases the speed of exploration but requires more resources. Choose wisely based on your current needs and available resources.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

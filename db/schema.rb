@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_06_171951) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_06_171951) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_civilizations_on_key", unique: true
+  end
+
+  create_table "explore_queues", force: :cascade do |t|
+    t.bigint "user_game_id", null: false
+    t.integer "turn"
+    t.integer "people"
+    t.integer "food"
+    t.integer "m_land"
+    t.integer "p_land"
+    t.integer "f_land"
+    t.integer "seek_land"
+    t.integer "horses"
+    t.integer "turns_used"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_game_id"], name: "index_explore_queues_on_user_game_id"
   end
 
   create_table "games", force: :cascade do |t|
@@ -135,6 +151,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_06_171951) do
   end
 
   add_foreign_key "build_queues", "user_games"
+  add_foreign_key "explore_queues", "user_games"
   add_foreign_key "user_games", "civilizations"
   add_foreign_key "user_games", "games"
   add_foreign_key "user_games", "users"

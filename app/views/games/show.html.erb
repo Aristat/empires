@@ -152,6 +152,11 @@
       </button>
     </li>
     <li class="nav-item" role="presentation">
+      <button class="nav-link" id="explore-tab" data-bs-toggle="tab" data-bs-target="#explore" type="button" role="tab" aria-controls="explore" aria-selected="false">
+        Explore
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
       <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
         Management
       </button>
@@ -173,6 +178,11 @@
     <!-- Wall Tab -->
     <div class="tab-pane fade" id="wall" role="tabpanel" aria-labelledby="wall-tab">
       <%= render 'wall', user_game: @user_game %>
+    </div>
+
+    <!-- Explore Tab -->
+    <div class="tab-pane fade" id="explore" role="tabpanel" aria-labelledby="explore-tab">
+      <%= render 'explore', user_game: @user_game %>
     </div>
 
     <!-- Management Tab -->
