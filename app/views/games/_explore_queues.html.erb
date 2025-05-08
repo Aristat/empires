@@ -34,7 +34,7 @@
                     Mountains
                   <% when 'forest_land' %>
                     Forest
-                  <% when 'plains_land' %>
+                  <% when 'plain_land' %>
                     Plains
                   <% end %>
                 </td>
@@ -57,7 +57,7 @@
                   <% if ['all_land', 'forest_land'].include?(queue.seek_land) %>
                     <%= number_with_delimiter(queue.f_land) %> Forest<br>
                   <% end %>
-                  <% if ['all_land', 'plains_land'].include?(queue.seek_land) %>
+                  <% if ['all_land', 'plain_land'].include?(queue.seek_land) %>
                     <%= number_with_delimiter(queue.p_land) %> Plains
                   <% end %>
                 </td>
@@ -65,7 +65,7 @@
                   <% if queue.turn.positive? %>
                     <div class="progress" style="height: 20px;">
                       <% progress = ((queue.turns_used.to_f / (queue.turn + queue.turns_used)) * 100).round %>
-                      <div class="progress-bar" role="progressbar" style="width: <%= progress %>%;" 
+                      <div class="progress-bar" role="progressbar" style="width: <%= progress %>%;"
                            aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
                         <%= progress %>%
                       </div>
@@ -84,4 +84,4 @@
       </div>
     <% end %>
   </div>
-</div> 
+</div>

@@ -1,6 +1,6 @@
 module Games
   class EndTurnCommand
-    WINTER_MONTHS = [ 11, 12, 1, 2 ].freeze
+    WINTER_MONTHS = [11, 12, 1, 2].freeze
 
     def initialize(user_game:)
       @user_game = user_game
@@ -63,6 +63,7 @@ module Games
 
         people_eat_food
         process_building_queue
+        process_explorers
         update_resources
 
         if @user_game.people <= 100
@@ -586,6 +587,108 @@ module Games
             quantity: qty_remaining
           )
         end
+      end
+    end
+
+    def process_explorers
+      @user_game.explore_queues.order(:id).each do |queue|
+        if queue.turn.zero?
+          queue.destroy
+          next
+        end
+
+        # Calculate base land discovery
+        mountain_land = (queue.people * 0.13).ceil
+        forest_land = (queue.people * 0.26).ceil
+        plain_land = (queue.people * 0.58).ceil
+
+        # Calculate minimum land discovery
+        mountain_min = (mountain_land / 3.0).round
+        forest_min = (forest_land / 3.0).round
+        plains_min = (plain_land / 3.0).round
+
+        # Adjust based on land type preference
+        case queue.seek_land
+        when 'mountain_land'
+          mountain_land *= 3
+          mountain_min *= 3
+          forest_land = 0
+          forest_min = 0
+          plain_land = 0
+          plains_min = 0
+        when 'forest_land'
+          mountain_land = 0
+          mountain_min = 0
+          forest_land = (forest_land * 2.5).round
+          forest_min = (forest_min * 2.5).round
+          plain_land = 0
+          plains_min = 0
+        when 'plain_land'
+          mountain_land = 0
+          mountain_min = 0
+          forest_land = 0
+          forest_min = 0
+          plain_land *= 2
+          plains_min *= 2
+        end
+
+        # Randomize land discovery within range
+        mountain_land = rand(mountain_min..mountain_land)
+        forest_land = rand(forest_min..forest_land)
+        plain_land = rand(plains_min..plain_land)
+
+        # Calculate efficiency based on total land
+        total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
+        efficiency = if total_land > 500_000
+          mult = total_land / 500_000.0
+          mult = 99 if mult >= 100
+          (100 - mult) / 100.0
+        else
+          1.0
+        end
+
+        # Apply efficiency
+        mountain_land = (mountain_land * efficiency).round
+        forest_land = (forest_land * efficiency).round
+        plain_land = (plain_land * efficiency).round
+
+        # Update user game land
+        @user_game.m_land += mountain_land
+        @user_game.f_land += forest_land
+        @user_game.p_land += plain_land
+
+        # Add discovery message
+        if mountain_land.positive? || forest_land.positive? || plain_land.positive?
+          add_message(
+            "Your explorers have discovered #{mountain_land} mountain land, " \
+            "#{forest_land} forest land and #{plain_land} plain land",
+            'success'
+          )
+        else
+          add_message('Your explorers did not discover any land this turn', 'info')
+        end
+
+        # Update queue
+        new_turn = queue.turn - 1
+        if new_turn.zero?
+          add_message(
+            'Your explorers ended their mission discovering total ' \
+            "#{queue.m_land + mountain_land} mountain land, " \
+            "#{queue.f_land + forest_land} forest land and " \
+            "#{queue.p_land + plain_land} plain land",
+            'success'
+          )
+          queue.destroy
+          next
+        end
+
+        queue.update(
+          turn: new_turn,
+          turns_used: queue.turns_used + 1,
+          m_land: queue.m_land + mountain_land,
+          f_land: queue.f_land + forest_land,
+          p_land: queue.p_land + plain_land
+        )
       end
     end
 
