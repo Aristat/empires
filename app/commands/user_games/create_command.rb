@@ -46,6 +46,7 @@ module UserGames
         turn: 0,
         wall: 0,
         wall_build_per_turn: 0,
+        last_horse_setting: :without_horses,
         last_turn_at: Time.current,
         current_turns: game.start_turns
       )

@@ -23,6 +23,7 @@
 #  iron                :integer
 #  iron_mine           :integer
 #  iron_mine_status    :integer          default(100)
+#  last_horse_setting  :integer
 #  last_message        :jsonb            not null
 #  last_turn_at        :datetime
 #  m_land              :integer
@@ -72,10 +73,17 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class UserGame < ApplicationRecord
-    belongs_to :user
-    belongs_to :game
-    belongs_to :civilization
+  belongs_to :user
+  belongs_to :game
+  belongs_to :civilization
 
-    has_many :build_queues, dependent: :destroy
-    has_many :explore_queues, dependent: :destroy
+  has_many :build_queues, dependent: :destroy
+  has_many :explore_queues, dependent: :destroy
+
+  enum :last_horse_setting, {
+    without_horses: 0,
+    one_horse: 1,
+    two_horses: 2,
+    three_horses: 3
+  }, prefix: true
 end

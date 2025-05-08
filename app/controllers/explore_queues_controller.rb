@@ -3,8 +3,6 @@ class ExploreQueuesController < ApplicationController
   before_action :set_user_game
 
   def create
-    p 'test111', explore_queue_params
-
     redirect_to game_path(@user_game.game)
   end
 
@@ -15,6 +13,6 @@ class ExploreQueuesController < ApplicationController
   end
 
   def explore_queue_params
-    params.permit(:qty, :with_horses, :seek_land)
+    params.permit(:quantity, :horse_setting, :seek_land)
   end
 end

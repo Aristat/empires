@@ -5,10 +5,6 @@
     <%= link_to "Help", "#", class: "btn btn-sm btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#exploreHelpModal" } %>
   </div>
   <div class="card-body">
-    <%
-      total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
-    %>
-
     <div class="card mb-4">
       <div class="card-body">
         <div class="row">
@@ -63,8 +59,8 @@
           <div class="row align-items-end">
             <div class="col-md-3">
               <div class="mb-3">
-                <%= f.label :qty, "Send explorers:", class: "form-label" %>
-                <%= f.number_field :qty,
+                <%= f.label :quantity, "Send explorers:", class: "form-label" %>
+                <%= f.number_field :quantity,
                     value: @data[:user_data][:can_send_explorers],
                     class: "form-control",
                     min: 1,
@@ -74,14 +70,14 @@
 
             <div class="col-md-3">
               <div class="mb-3">
-                <%= f.label :with_horses, "With horses:", class: "form-label" %>
-                <%= f.select :with_horses,
+                <%= f.label :horse_setting, "With horses:", class: "form-label" %>
+                <%= f.select :horse_setting,
                     options_for_select([
-                      ['No Horses', 0],
-                      ['1X Horses', 1],
-                      ['2X Horses', 2],
-                      ['3X Horses', 3]
-                    ], session[:last_horse_setting] || 0),
+                      ['No Horses', 'without_horses'],
+                      ['1X Horses', 'one_horse'],
+                      ['2X Horses', 'two_horses'],
+                      ['3X Horses', 'three_horses']
+                    ], @user_game.last_horse_setting),
                     {},
                     class: "form-select" %>
               </div>
@@ -92,10 +88,10 @@
                 <%= f.label :seek_land, "Look for:", class: "form-label" %>
                 <%= f.select :seek_land,
                     options_for_select([
-                      ['All Land', 0],
-                      ['Mountain Land', 1],
-                      ['Forest Land', 2],
-                      ['Plains Land', 3]
+                      ['All Land', 'all_land'],
+                      ['Mountain Land', 'mountain_land'],
+                      ['Forest Land', 'forest_land'],
+                      ['Plain Land', 'plains_land']
                     ]),
                     {},
                     class: "form-select" %>

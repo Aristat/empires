@@ -61,7 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.integer "p_land"
     t.integer "f_land"
     t.integer "seek_land"
-    t.integer "horses"
+    t.integer "horse_setting"
     t.integer "turns_used"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.datetime "last_turn_at"
     t.integer "current_turns"
     t.integer "food_ratio"
+    t.integer "last_horse_setting"
     t.integer "tool_maker"
     t.integer "wood_cutter"
     t.integer "gold_mine"

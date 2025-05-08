@@ -10,6 +10,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.datetime :last_turn_at
       t.integer :current_turns
       t.integer :food_ratio
+      t.integer :last_horse_setting
 
       # builders
       t.integer :tool_maker

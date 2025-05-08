@@ -9,7 +9,7 @@ class CreateExploreQueues < ActiveRecord::Migration[7.1]
       t.integer :p_land
       t.integer :f_land
       t.integer :seek_land
-      t.integer :horses
+      t.integer :horse_setting
       t.integer :turns_used
 
       t.timestamps
