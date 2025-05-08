@@ -28,7 +28,7 @@ class PrepareUserDataCommand < BaseCommand
       user_game.mage_tower * buildings[:mage_tower][:settings][:squares]
 
     total_workers = 0
-    total_land = 0
+    total_building_land = 0
 
     [
       :wood_cutter, :hunter, :farm, :gold_mine, :iron_mine, :tool_maker, :winery, :mage_tower, :weaponsmith, :fort,
@@ -47,7 +47,7 @@ class PrepareUserDataCommand < BaseCommand
       total_workers += workers
 
       land = count * buildings[key][:settings][:squares]
-      total_land += land
+      total_building_land += land
 
       production =
         if buildings[key][:settings][:production_name]
@@ -77,6 +77,7 @@ class PrepareUserDataCommand < BaseCommand
       }.compact
     end
 
+    total_land = UserGames::CalculateTotalLandCommand.new(user_game: user_game).call
     num_builders = buildings[:tool_maker][:settings][:num_builders] * user_game.tool_maker + Building::DEFAULT_NUM_BUILDERS
 
     total_wall = (total_land * 0.05).round
@@ -92,8 +93,11 @@ class PrepareUserDataCommand < BaseCommand
       user_game.town_center * buildings[:town_center][:settings][:people]
     free_house_space = house_space - user_game.people
 
-    extra_food_per_land = (total_land.to_f / game_data[:extra_food_per_land]).ceil
-    food_per_explorer = buildings[:town_center][:settings][:food_per_explorer] + extra_food_per_land
+    food_per_explorer = UserGames::CalculateFoodPerExplorerCommand.new(
+      user_game: user_game,
+      buildings: buildings,
+      game_data: game_data
+    ).call
     max_explorers = user_game.town_center * buildings[:town_center][:settings][:max_explorers]
     send_explorers = (user_game.food / food_per_explorer).floor
     total_explorers = user_game.explore_queues.sum { _1.people }
@@ -111,6 +115,7 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:wall_builders] = wall_builders
     user_data[:wall_build] = wall_build
     user_data[:total_workers] = total_workers
+    user_data[:total_building_land] = total_building_land
     user_data[:total_land] = total_land
     user_data[:free_people] = free_people
     user_data[:free_house_space] = free_house_space

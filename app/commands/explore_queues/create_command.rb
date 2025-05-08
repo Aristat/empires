@@ -7,7 +7,9 @@ module ExploreQueues
     def initialize(user_game:, explore_queue_params:)
       @user_game = user_game
       @params = explore_queue_params
-      @game_data = PrepareGameDataCommand.new(game: user_game.game, civilization: user_game.civilization).call.with_indifferent_access
+      @game_data = PrepareGameDataCommand.new(
+        game: user_game.game, civilization: user_game.civilization
+      ).call.with_indifferent_access
       @buildings = PrepareBuildingsDataCommand.new(civilization: user_game.civilization).call.with_indifferent_access
 
       super()
@@ -110,11 +112,12 @@ module ExploreQueues
       end
     end
 
-    # TODO! move to separate command
     def calculate_food_needed(quantity)
-      total_land = user_game.m_land + user_game.f_land + user_game.p_land
-      extra_food = (total_land.to_f / game_data[:extra_food_per_land]).ceil
-      food_per_explorer = buildings[:town_center][:settings][:food_per_explorer] + extra_food
+      food_per_explorer = UserGames::CalculateFoodPerExplorerCommand.new(
+        user_game: user_game,
+        buildings: buildings,
+        game_data: game_data
+      ).call
       food_per_explorer * quantity
     end
   end
