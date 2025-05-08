@@ -77,4 +77,5 @@ class UserGame < ApplicationRecord
     belongs_to :civilization
 
     has_many :build_queues, dependent: :destroy
+    has_many :explore_queues, dependent: :destroy
 end

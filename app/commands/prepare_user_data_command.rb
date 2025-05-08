@@ -1,9 +1,10 @@
 class PrepareUserDataCommand < BaseCommand
-  attr_reader :user_game, :buildings
+  attr_reader :user_game, :buildings, :game_data
 
-  def initialize(user_game:, buildings:)
+  def initialize(user_game:, buildings:, game_data:)
     @user_game = user_game
     @buildings = buildings
+    @game_data = game_data
   end
 
   def call
@@ -91,6 +92,13 @@ class PrepareUserDataCommand < BaseCommand
       user_game.town_center * buildings[:town_center][:settings][:people]
     free_house_space = house_space - user_game.people
 
+    extra_food_per_land = (total_land.to_f / game_data[:extra_food_per_land]).ceil
+    food_per_explorer = buildings[:town_center][:settings][:food_per_explorer] + extra_food_per_land
+    max_explorers = user_game.town_center * buildings[:town_center][:settings][:max_explorers]
+    send_explorers = (user_game.food / food_per_explorer).floor
+    total_explorers = user_game.explore_queues.sum { _1.people }
+    can_send_explorers = [ max_explorers - total_explorers, send_explorers ].min
+
     user_data[:used_mountains] = used_mountains
     user_data[:free_mountains] = user_game.m_land - used_mountains
     user_data[:used_forest] = used_forest
@@ -107,8 +115,14 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:free_people] = free_people
     user_data[:free_house_space] = free_house_space
 
-    # TODO! count total_explorers
-    user_data[:total_explorers] = 0
+    user_data[:food_per_explorer] = food_per_explorer
+    user_data[:max_explorers] = max_explorers
+    user_data[:send_explorers] = send_explorers
+    user_data[:total_explorers] = total_explorers
+    user_data[:can_send_explorers] = can_send_explorers
+    user_data[:efficiency_of_explore] = UserGames::CalculateEfficiencyOfExploreCommand.new(
+      total_land: total_land
+    ).call
 
     user_data
   end
