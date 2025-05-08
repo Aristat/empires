@@ -34,8 +34,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :explore_queues, only: [:create] do
-
-    end
+    resources :explore_queues, only: [:create, :destroy]
   end
 end

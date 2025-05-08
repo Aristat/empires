@@ -1,0 +1,87 @@
+<%# Explore Queues Table %>
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">Active Explorations</h5>
+  </div>
+  <div class="card-body">
+    <% if @user_game.explore_queues.any? %>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Explorers</th>
+              <th>Land Type</th>
+              <th>Time Remaining</th>
+              <th>Land Discovered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @user_game.explore_queues.order(:id).each do |queue| %>
+              <tr>
+                <td>
+                  <% if queue.turn.zero? %>
+                    <span class="text-danger">DONE</span>
+                  <% else %>
+                    <%= number_with_delimiter(queue.people) %>
+                  <% end %>
+                </td>
+                <td>
+                  <% case queue.seek_land %>
+                  <% when 'all_land' %>
+                    All
+                  <% when 'mountain_land' %>
+                    Mountains
+                  <% when 'forest_land' %>
+                    Forest
+                  <% when 'plains_land' %>
+                    Plains
+                  <% end %>
+                </td>
+                <td>
+                  <%= queue.turn %>
+                  <% if queue.turns_used.zero? && queue.created_at > 15.minutes.ago %>
+                    <div class="mt-1">
+                      <%= button_to "Cancel",
+                          user_game_explore_queue_path(@user_game, queue),
+                          method: :delete,
+                          class: "btn btn-sm btn-outline-danger",
+                          form: { data: { turbo_confirm: "Are you sure you want to cancel this exploration?" } } %>
+                    </div>
+                  <% end %>
+                </td>
+                <td>
+                  <% if ['all_land', 'mountain_land'].include?(queue.seek_land) %>
+                    <%= number_with_delimiter(queue.m_land) %> Mountains<br>
+                  <% end %>
+                  <% if ['all_land', 'forest_land'].include?(queue.seek_land) %>
+                    <%= number_with_delimiter(queue.f_land) %> Forest<br>
+                  <% end %>
+                  <% if ['all_land', 'plains_land'].include?(queue.seek_land) %>
+                    <%= number_with_delimiter(queue.p_land) %> Plains
+                  <% end %>
+                </td>
+                <td>
+                  <% if queue.turn.positive? %>
+                    <div class="progress" style="height: 20px;">
+                      <% progress = ((queue.turns_used.to_f / (queue.turn + queue.turns_used)) * 100).round %>
+                      <div class="progress-bar" role="progressbar" style="width: <%= progress %>%;" 
+                           aria-valuenow="<%= progress %>" aria-valuemin="0" aria-valuemax="100">
+                        <%= progress %>%
+                      </div>
+                    </div>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="alert alert-info mb-0">
+        <i class="bi bi-info-circle me-2"></i>
+        You do not have any explorers sent.
+      </div>
+    <% end %>
+  </div>
+</div> 

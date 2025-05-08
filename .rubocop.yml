@@ -42,6 +42,9 @@ Rails:
 Layout/TrailingWhitespace:
   Enabled: false
 
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: single_quotes
