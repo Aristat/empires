@@ -16,7 +16,7 @@ class ExploreQueuesController < ApplicationController
 
   def destroy
     ExploreQueues::DeleteCommand.new(user_game: @user_game, explore_queues: [@explore_queue]).call
-    flash[:notice] = 'All explore queues cleared'
+    flash[:notice] = t('explore_queues.messages.destroyed')
     redirect_to game_path(@user_game.game)
   end
 

@@ -17,7 +17,8 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class Civilization < ApplicationRecord
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true
+  validates :key, presence: true, uniqueness: true
 
   store_accessor :settings, :special_unit, :buildings
 end

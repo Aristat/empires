@@ -86,4 +86,20 @@ class UserGame < ApplicationRecord
     two_horses: 2,
     three_horses: 3
   }, prefix: true
+
+  validates :food_ratio, presence: true, numericality: { greater_than_or_equal_to: -2, less_than_or_equal_to: 4 }
+  validates :hunter_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :farm_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :wood_cutter_status, presence: true,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :gold_mine_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :iron_mine_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :tool_maker_status, presence: true,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :winery_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :weaponsmith_status, presence: true,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :stable_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+  validates :mage_tower_status, presence: true,
+            numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 end
