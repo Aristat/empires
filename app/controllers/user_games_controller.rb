@@ -11,7 +11,7 @@ class UserGamesController < ApplicationController
   def end_turn
     render json: { success: false }, status: :unprocessable_entity and return if @user_game.blank?
 
-    command = Games::EndTurnCommand.new(user_game: @user_game)
+    command = UserGames::EndTurnCommand.new(user_game: @user_game)
 
     if command.call
       render json: { success: true }

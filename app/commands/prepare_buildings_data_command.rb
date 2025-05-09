@@ -1,3 +1,4 @@
+# Buildings configurations based on civilization
 class PrepareBuildingsDataCommand < BaseCommand
   attr_reader :civilization
 

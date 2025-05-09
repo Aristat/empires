@@ -1,3 +1,4 @@
+# Game configuration based on civilization
 class PrepareGameDataCommand < BaseCommand
   attr_reader :game, :civilization
 

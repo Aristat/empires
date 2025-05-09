@@ -1,4 +1,4 @@
-module Games
+module UserGames
   class EndTurnCommand
     WINTER_MONTHS = [11, 12, 1, 2].freeze
 
