@@ -58,10 +58,10 @@ class PrepareUserDataCommand < BaseCommand
 
       consumption =
         if key == :tool_maker
-          "#{working * buildings[key][:settings][:wood_need]} wood\n" \
-            "#{working * buildings[key][:settings][:iron_need]} iron"
+          "#{working * buildings[key][:settings][:tool_wood_need]} wood\n" \
+            "#{working * buildings[key][:settings][:tool_iron_need]} iron"
         elsif key == :winery
-          "#{working * buildings[key][:settings][:gold_need]} gold"
+          "#{working * buildings[key][:settings][:wine_gold_need]} gold"
         else
           nil
         end

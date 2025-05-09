@@ -117,9 +117,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.integer "f_land", default: 0, null: false
     t.integer "m_land", default: 0, null: false
     t.integer "p_land", default: 0, null: false
-    t.integer "swordsman", default: 0, null: false
-    t.integer "archers", default: 0, null: false
-    t.integer "horseman", default: 0, null: false
     t.integer "wood", default: 0, null: false
     t.integer "food", default: 0, null: false
     t.integer "iron", default: 0, null: false
@@ -128,6 +125,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.integer "people", default: 0, null: false
     t.integer "wine", default: 0, null: false
     t.integer "horses", default: 0, null: false
+    t.integer "bow_weaponsmith", default: 0, null: false
+    t.integer "sword_weaponsmith", default: 0, null: false
+    t.integer "mace_weaponsmith", default: 0, null: false
+    t.integer "bows", default: 0, null: false
+    t.integer "swords", default: 0, null: false
+    t.integer "maces", default: 0, null: false
     t.integer "wall", default: 0, null: false
     t.integer "wall_build_per_turn", default: 0, null: false
     t.datetime "created_at", null: false

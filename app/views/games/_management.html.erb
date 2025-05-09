@@ -1,3 +1,74 @@
+<div class="card mt-4">
+  <div class="card-header bg-dark text-white">
+    <h5 class="mb-0">Weapon Production</h5>
+  </div>
+  <div class="card-body">
+    <%= form_with(url: user_game_path(@user_game), method: :put, local: true) do |f| %>
+      <div class="mb-3">
+        <p class="mb-3">You have <%= number_with_delimiter(@user_game.weaponsmith) %> weaponsmiths and:</p>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :bow_weaponsmith, "Producing bows:", class: "form-label" %>
+              <%= f.number_field :bow_weaponsmith,
+                                 value: @user_game.bow_weaponsmith,
+                                 class: "form-control",
+                                 min: 0,
+                                 max: @user_game.weaponsmith %>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :sword_weaponsmith, "Producing swords:", class: "form-label" %>
+              <%= f.number_field :sword_weaponsmith,
+                                 value: @user_game.sword_weaponsmith,
+                                 class: "form-control",
+                                 min: 0,
+                                 max: @user_game.weaponsmith %>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <%= f.label :mace_weaponsmith, "Producing maces:", class: "form-label" %>
+              <%= f.number_field :mace_weaponsmith,
+                                 value: @user_game.mace_weaponsmith,
+                                 class: "form-control",
+                                 min: 0,
+                                 max: @user_game.weaponsmith %>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label">Idle weaponsmiths:</label>
+              <div class="form-control bg-light">
+                <%= number_with_delimiter(@user_game.weaponsmith - @user_game.bow_weaponsmith - @user_game.sword_weaponsmith - @user_game.mace_weaponsmith) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <p class="mb-0">Your weaponsmiths are using:</p>
+          <ul class="mb-0">
+            <li><%= number_with_delimiter(@user_game.bow_weaponsmith * 2 + @user_game.mace_weaponsmith * 3) %> wood per month</li>
+            <li><%= number_with_delimiter(@user_game.sword_weaponsmith * 2 + @user_game.mace_weaponsmith * 2) %> iron per month</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <%= f.submit 'Change Production', class: 'btn btn-dark' %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
 <div class="card">
   <div class="card-header bg-dark text-white">
     <h5 class="mb-0">Food Rationing</h5>

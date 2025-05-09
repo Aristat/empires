@@ -4,7 +4,8 @@
 # Table name: user_games
 #
 #  id                  :bigint           not null, primary key
-#  archers             :integer          default(0), not null
+#  bow_weaponsmith     :integer          default(0), not null
+#  bows                :integer          default(0), not null
 #  current_turns       :integer          default(0), not null
 #  f_land              :integer          default(0), not null
 #  farm                :integer          default(0), not null
@@ -15,7 +16,6 @@
 #  gold                :integer          default(0), not null
 #  gold_mine           :integer          default(0), not null
 #  gold_mine_status    :integer          default(100), not null
-#  horseman            :integer          default(0), not null
 #  horses              :integer          default(0), not null
 #  house               :integer          default(0), not null
 #  hunter              :integer          default(0), not null
@@ -26,6 +26,8 @@
 #  last_message        :jsonb            not null
 #  last_turn_at        :datetime
 #  m_land              :integer          default(0), not null
+#  mace_weaponsmith    :integer          default(0), not null
+#  maces               :integer          default(0), not null
 #  mage_tower          :integer          default(0), not null
 #  mage_tower_status   :integer          default(100), not null
 #  market              :integer          default(0), not null
@@ -34,7 +36,8 @@
 #  score               :bigint           default(0), not null
 #  stable              :integer          default(0), not null
 #  stable_status       :integer          default(100), not null
-#  swordsman           :integer          default(0), not null
+#  sword_weaponsmith   :integer          default(0), not null
+#  swords              :integer          default(0), not null
 #  tool_maker          :integer          default(0), not null
 #  tool_maker_status   :integer          default(100), not null
 #  tools               :integer          default(0), not null

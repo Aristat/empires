@@ -20,6 +20,9 @@ module UserGames
       @r_tools = @user_game.tools
       @r_wine = @user_game.wine
       @r_horses = @user_game.horses
+      @r_bows = @user_game.bows
+      @r_swords = @user_game.swords
+      @r_maces = @user_game.maces
 
       # produced
       @p_wood = 0
@@ -55,6 +58,7 @@ module UserGames
         gold_production
         iron_production
         tools_production
+        weapons_production
         horses_production
         wine_production
         # mage_tower_production
@@ -241,15 +245,15 @@ module UserGames
         add_message('Not enough people to work at tool makers.', 'warning')
       end
 
-      wood_need = can_produce * tool_maker_building[:wood_need]
+      wood_need = can_produce * tool_maker_building[:tool_wood_need]
       if @r_wood < wood_need
-        can_produce = (@r_wood / tool_maker_building[:wood_need]).to_i
+        can_produce = (@r_wood / tool_maker_building[:tool_wood_need]).to_i
         add_message('Not enough wood to work at tool makers.', 'warning')
       end
 
-      iron_need = can_produce * tool_maker_building[:iron_need]
+      iron_need = can_produce * tool_maker_building[:tool_iron_need]
       if @r_iron < iron_need
-        can_produce = (@r_iron / tool_maker_building[:iron_need]).to_i
+        can_produce = (@r_iron / tool_maker_building[:tool_iron_need]).to_i
         add_message('Not enough iron to work at tool makers.', 'warning')
       end
 
@@ -259,15 +263,125 @@ module UserGames
 
       @r_people -= can_produce * tool_maker_building[:workers]
 
-      @c_wood += can_produce * tool_maker_building[:wood_need]
-      @r_wood -= can_produce * tool_maker_building[:wood_need]
+      @c_wood += can_produce * tool_maker_building[:tool_wood_need]
+      @r_wood -= can_produce * tool_maker_building[:tool_wood_need]
 
-      @c_iron += can_produce * tool_maker_building[:iron_need]
-      @r_iron -= can_produce * tool_maker_building[:iron_need]
+      @c_iron += can_produce * tool_maker_building[:tool_iron_need]
+      @r_iron -= can_produce * tool_maker_building[:tool_iron_need]
 
       @p_tools = can_produce * tool_maker_building[:production]
       @r_tools += @p_tools
       add_message("Tool makers produced #{@p_tools} tools", 'success')
+    end
+
+    def weapons_production
+      return if @user_game.weaponsmith <= 0 || @user_game.weaponsmith_status <= 0
+
+      # Check if total assigned weaponsmiths exceed total available
+      if @user_game.sword_weaponsmith + @user_game.bow_weaponsmith + @user_game.mace_weaponsmith > @user_game.weaponsmith
+        bow_ratio = 0
+        mace_ratio = 0
+        sword_ratio = 0
+        had_buildings = @user_game.sword_weaponsmith + @user_game.bow_weaponsmith + @user_game.mace_weaponsmith
+        has_buildings = @user_game.weaponsmith
+
+        if had_buildings > 0
+          bow_ratio = @user_game.bow_weaponsmith.to_f / had_buildings
+          sword_ratio = @user_game.sword_weaponsmith.to_f / had_buildings
+          mace_ratio = @user_game.mace_weaponsmith.to_f / had_buildings
+        end
+
+        @user_game.bow_weaponsmith = (has_buildings * bow_ratio).to_i
+        @user_game.sword_weaponsmith = (has_buildings * sword_ratio).to_i
+        @user_game.mace_weaponsmith = (has_buildings * mace_ratio).to_i
+      end
+
+      weaponsmith_building = @data[:buildings][:weaponsmith][:settings]
+
+      # Produce swords
+      can_produce = (@user_game.sword_weaponsmith * (@user_game.weaponsmith_status / 100.0)).round
+      people_need = can_produce * weaponsmith_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / weaponsmith_building[:workers]).to_i
+        add_message('Not enough people to produce swords.', 'warning')
+      end
+
+      iron_need = can_produce * weaponsmith_building[:sword_iron_need]
+      if @r_iron < iron_need
+        can_produce = (@r_iron / weaponsmith_building[:sword_iron_need]).to_i
+        add_message('Not enough iron to produce all swords.', 'warning')
+      end
+
+      can_produce = 0 if can_produce < 0
+
+      @r_people -= can_produce * weaponsmith_building[:workers]
+      @c_iron += can_produce * weaponsmith_building[:sword_iron_need]
+      @r_iron -= can_produce * weaponsmith_building[:sword_iron_need]
+
+      p_swords = can_produce * weaponsmith_building[:production]
+      @r_swords += p_swords
+
+      # Produce bows
+      can_produce = (@user_game.bow_weaponsmith * (@user_game.weaponsmith_status / 100.0)).round
+      people_need = can_produce * weaponsmith_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / weaponsmith_building[:workers]).to_i
+        add_message('Not enough people to produce bows.', 'warning')
+      end
+
+      wood_need = can_produce * weaponsmith_building[:bow_wood_need]
+      if @r_wood < wood_need
+        can_produce = (@r_wood / weaponsmith_building[:bow_wood_need]).to_i
+        add_message('Not enough wood to produce all bows.', 'warning')
+      end
+
+      can_produce = 0 if can_produce < 0
+
+      @r_people -= can_produce * weaponsmith_building[:workers]
+      @c_wood += can_produce * weaponsmith_building[:bow_wood_need]
+      @r_wood -= can_produce * weaponsmith_building[:bow_wood_need]
+
+      p_bows = can_produce * weaponsmith_building[:production]
+      @r_bows += p_bows
+
+      # Produce maces
+      can_produce = (@user_game.mace_weaponsmith * (@user_game.weaponsmith_status / 100.0)).round
+      people_need = can_produce * weaponsmith_building[:workers]
+
+      if @r_people < people_need
+        can_produce = (@r_people / weaponsmith_building[:workers]).to_i
+        add_message('Not enough people to produce maces.', 'warning')
+      end
+
+      wood_need = can_produce * weaponsmith_building[:mace_wood_need]
+      if @r_wood < wood_need
+        can_produce = (@r_wood / weaponsmith_building[:mace_wood_need]).to_i
+        add_message('Not enough wood to produce all maces.', 'warning')
+      end
+
+      iron_need = can_produce * weaponsmith_building[:mace_iron_need]
+      if @r_iron < iron_need
+        can_produce = (@r_iron / weaponsmith_building[:mace_iron_need]).to_i
+        add_message('Not enough iron to produce all maces.', 'warning')
+      end
+
+      can_produce = 0 if can_produce < 0
+
+      @r_people -= can_produce * weaponsmith_building[:workers]
+      @c_wood += can_produce * weaponsmith_building[:mace_wood_need]
+      @r_wood -= can_produce * weaponsmith_building[:mace_wood_need]
+      @c_iron += can_produce * weaponsmith_building[:mace_iron_need]
+      @r_iron -= can_produce * weaponsmith_building[:mace_iron_need]
+
+      p_maces = can_produce * weaponsmith_building[:production]
+      @r_maces += p_maces
+
+      # Add production messages
+      add_message("Produced #{p_swords} swords", 'success') if p_swords > 0
+      add_message("Produced #{p_bows} bows", 'success') if p_bows > 0
+      add_message("Produced #{p_maces} maces", 'success') if p_maces > 0
     end
 
     def horses_production
@@ -311,9 +425,9 @@ module UserGames
         add_message('Not enough people to work at wineries.', 'warning')
       end
 
-      gold_need = can_produce * winery_building[:gold_need]
+      gold_need = can_produce * winery_building[:wine_gold_need]
       if @r_gold < gold_need
-        can_produce = (@r_gold / winery_building[:gold_need]).to_i
+        can_produce = (@r_gold / winery_building[:wine_gold_need]).to_i
         add_message('Not enough gold to work at wineries.', 'warning')
       end
 
@@ -321,8 +435,8 @@ module UserGames
 
       @r_people = @r_people - (can_produce * winery_building[:workers])
 
-      @c_gold += can_produce * winery_building[:gold_need]
-      @r_gold -= can_produce * winery_building[:gold_need]
+      @c_gold += can_produce * winery_building[:wine_gold_need]
+      @r_gold -= can_produce * winery_building[:wine_gold_need]
 
       @p_wine = can_produce * winery_building[:production]
       @r_wine += @p_wine
@@ -559,22 +673,22 @@ module UserGames
         end
 
         if constructed
-          # if queue.building_type == 'weaponsmith' # demolished weapon smith
-          #   # Try to preserve ratio
-          #   bow_ratio = 0
-          #   mace_ratio = 0
-          #   sword_ratio = 0
-          #
-          #   if had_buildings > 0
-          #     bow_ratio = @user_game.bow_weaponsmith.to_f / had_buildings
-          #     sword_ratio = @user_game.sword_weaponsmith.to_f / had_buildings
-          #     mace_ratio = @user_game.mace_weaponsmith.to_f / had_buildings
-          #   end
-          #
-          #   @user_game.bow_weaponsmith = (has_buildings * bow_ratio).to_i
-          #   @user_game.sword_weaponsmith = (has_buildings * sword_ratio).to_i
-          #   @user_game.mace_weaponsmith = (has_buildings * mace_ratio).to_i
-          # end
+          # recalculate weapons production
+          if queue.building_type == 'weaponsmith'
+            bow_ratio = 0
+            mace_ratio = 0
+            sword_ratio = 0
+
+            if had_buildings > 0
+              bow_ratio = @user_game.bow_weaponsmith.to_f / had_buildings
+              sword_ratio = @user_game.sword_weaponsmith.to_f / had_buildings
+              mace_ratio = @user_game.mace_weaponsmith.to_f / had_buildings
+            end
+
+            @user_game.bow_weaponsmith = (has_buildings * bow_ratio).to_i
+            @user_game.sword_weaponsmith = (has_buildings * sword_ratio).to_i
+            @user_game.mace_weaponsmith = (has_buildings * mace_ratio).to_i
+          end
 
           @user_game.send("#{queue.building_type}=", has_buildings)
         end
@@ -706,6 +820,9 @@ module UserGames
       @user_game.tools = @r_tools
       @user_game.wine = @r_wine
       @user_game.horses = @r_horses
+      @user_game.bows = @r_bows
+      @user_game.swords = @r_swords
+      @user_game.maces = @r_maces
 
       total_resources = (@user_game.wood + @user_game.food + @user_game.iron + @user_game.tools +
         @user_game.wine + @user_game.horses).to_f

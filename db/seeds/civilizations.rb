@@ -201,7 +201,7 @@ civilizations_data = [
           max_explorers: 5
         },
         mage_tower: {
-          gold_need: 200
+          research_gold_need: 200
         }
       },
       game: {
@@ -239,7 +239,7 @@ civilizations_data = [
           max_trades: 100
         },
         mage_tower: {
-          gold_need: 25
+          research_gold_need: 25
         }
       }
     }
@@ -262,8 +262,8 @@ civilizations_data = [
           squares: 3
         },
         weaponsmith: {
-          wood_need: 20,
-          iron_need: 20
+          bow_wood_need: 20,
+          sword_iron_need: 20
         },
         house: {
           squares: 4
@@ -305,4 +305,4 @@ civilizations_data.each do |civilization_data|
     civilization.settings = civilization_data[:settings]
   end
   puts "Created/Updated civilization: #{civilization_data[:name]}"
-end 
+end

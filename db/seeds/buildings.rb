@@ -96,7 +96,7 @@ buildings_data = [
       cost_gold: 1000,
       allow_off: true,
       production: 1,
-      gold_need: 10,
+      wine_gold_need: 10,
       production_name: "wine"
     }
   },
@@ -114,8 +114,8 @@ buildings_data = [
       cost_gold: 200,
       allow_off: true,
       production: 1,
-      wood_need: 2,
-      iron_need: 2,
+      tool_wood_need: 2,
+      tool_iron_need: 2,
       production_name: "tools",
       num_builders: 6
     }
@@ -134,10 +134,10 @@ buildings_data = [
       cost_gold: 600,
       allow_off: true,
       production: 1,
-      wood_need: 25,
-      iron_need: 25,
-      mace_wood: 6,
-      mace_iron: 6,
+      bow_wood_need: 25,
+      sword_iron_need: 25,
+      mace_wood_need: 6,
+      mace_iron_need: 6,
       production_name: "weapons"
     }
   },
@@ -259,7 +259,7 @@ buildings_data = [
       cost_gold: 2000,
       allow_off: true,
       production: 1,
-      gold_need: 100,
+      research_gold_need: 100,
       production_name: "research_points"
     }
   },
@@ -285,4 +285,4 @@ buildings_data.each do |building_data|
     building.name = building_data[:name]
     building.settings = building_data[:settings]
   end
-end 
+end

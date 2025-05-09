@@ -46,11 +46,6 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :m_land, null: false, default: 0
       t.integer :p_land, null: false, default: 0
 
-      # units
-      t.integer :swordsman, null: false, default: 0
-      t.integer :archers, null: false, default: 0
-      t.integer :horseman, null: false, default: 0
-
       # resources
       t.integer :wood, null: false, default: 0
       t.integer :food, null: false, default: 0
@@ -60,6 +55,14 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :people, null: false, default: 0
       t.integer :wine, null: false, default: 0
       t.integer :horses, null: false, default: 0
+
+      # weapons
+      t.integer :bow_weaponsmith, null: false, default: 0
+      t.integer :sword_weaponsmith, null: false, default: 0
+      t.integer :mace_weaponsmith, null: false, default: 0
+      t.integer :bows, null: false, default: 0
+      t.integer :swords, null: false, default: 0
+      t.integer :maces, null: false, default: 0
 
       t.integer :wall, null: false, default: 0
       t.integer :wall_build_per_turn, null: false, default: 0
