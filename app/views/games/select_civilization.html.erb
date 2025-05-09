@@ -9,12 +9,12 @@
           <div class="card-body">
             <h5 class="card-title"><%= civilization.name %></h5>
             <p class="card-text"><%= civilization.description %></p>
-            
+
             <h6>Bonuses:</h6>
             <ul class="list-unstyled">
               <% civilization.buildings.to_a.each do |key, value| %>
                 <li>
-                  <%= key.humanize %>: 
+                  <%= key.humanize %>:
                   <% if value.present? %>
                     <span class="text-success">+<%= value %>%</span>
                   <% end %>
@@ -22,7 +22,7 @@
               <% end %>
             </ul>
 
-            <%= button_to 'Choose Civilization', 
+            <%= button_to 'Choose Civilization',
                          join_game_path(@game, civilization_id: civilization.id),
                          method: :post,
                          class: 'btn btn-primary' %>
@@ -31,4 +31,4 @@
       </div>
     <% end %>
   </div>
-</div> 
+</div>
