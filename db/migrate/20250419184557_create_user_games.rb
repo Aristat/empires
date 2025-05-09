@@ -10,7 +10,6 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.datetime :last_turn_at
       t.integer :current_turns, null: false, default: 0
       t.integer :food_ratio, null: false, default: 0
-      t.integer :last_horse_setting, null: false, default: 0
 
       # builders
       t.integer :tool_maker, null: false, default: 0

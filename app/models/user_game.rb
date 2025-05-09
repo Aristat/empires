@@ -23,7 +23,6 @@
 #  iron                :integer          default(0), not null
 #  iron_mine           :integer          default(0), not null
 #  iron_mine_status    :integer          default(100), not null
-#  last_horse_setting  :integer          default("without_horses"), not null
 #  last_message        :jsonb            not null
 #  last_turn_at        :datetime
 #  m_land              :integer          default(0), not null
@@ -79,13 +78,6 @@ class UserGame < ApplicationRecord
 
   has_many :build_queues, dependent: :destroy
   has_many :explore_queues, dependent: :destroy
-
-  enum :last_horse_setting, {
-    without_horses: 0,
-    one_horse: 1,
-    two_horses: 2,
-    three_horses: 3
-  }, prefix: true
 
   validates :food_ratio, presence: true, numericality: { greater_than_or_equal_to: -2, less_than_or_equal_to: 4 }
   validates :hunter_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }

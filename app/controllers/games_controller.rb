@@ -50,6 +50,6 @@ class GamesController < ApplicationController
   def update_turns
     return if @user_game.nil?
 
-    UserGames::UpdateTurnsCommand.new(user_game: @user_game).call
+    UserGames::UpdateTurnsCommand.new(game: @game, user_game: @user_game).call
   end
 end

@@ -88,7 +88,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.datetime "last_turn_at"
     t.integer "current_turns", default: 0, null: false
     t.integer "food_ratio", default: 0, null: false
-    t.integer "last_horse_setting", default: 0, null: false
     t.integer "tool_maker", default: 0, null: false
     t.integer "wood_cutter", default: 0, null: false
     t.integer "gold_mine", default: 0, null: false

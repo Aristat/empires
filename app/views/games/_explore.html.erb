@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <%= form_with url: user_game_explore_queues_path(@user_game), method: :post, local: true, class: "mt-4" do |f| %>
+    <%= form_with url: user_game_explore_queues_path(@user_game), method: :post, local: true, class: "mt-4", data: { controller: "explore" } do |f| %>
       <div class="card">
         <div class="card-body">
           <div class="row align-items-end">
@@ -79,9 +79,13 @@
                       ['1X Horses', 'one_horse'],
                       ['2X Horses', 'two_horses'],
                       ['3X Horses', 'three_horses']
-                    ], @user_game.last_horse_setting),
+                    ]),
                     {},
-                    class: "form-select" %>
+                    class: "form-select",
+                    data: {
+                      action: "change->explore#updateHorseSetting",
+                      explore_target: "horseSetting"
+                    } %>
               </div>
             </div>
 
@@ -93,7 +97,7 @@
                       ['All Land', 'all_land'],
                       ['Mountain Land', 'mountain_land'],
                       ['Forest Land', 'forest_land'],
-                      ['Plain Land', 'plain_land']
+                      ['Plain Land', 'plains_land']
                     ]),
                     {},
                     class: "form-select" %>
@@ -147,3 +151,20 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize horse setting from localStorage or default value
+    const horseSettingSelect = document.querySelector('[data-explore-target="horseSetting"]');
+    const storedHorseSetting = localStorage.getItem('exploreHorseSetting');
+
+    if (storedHorseSetting) {
+      horseSettingSelect.value = storedHorseSetting;
+    }
+
+    // Add change event listener to save horse setting
+    horseSettingSelect.addEventListener('change', function() {
+      localStorage.setItem('exploreHorseSetting', this.value);
+    });
+  });
+</script>

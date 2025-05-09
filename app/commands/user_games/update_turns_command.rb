@@ -1,8 +1,9 @@
 module UserGames
   class UpdateTurnsCommand
-    attr_reader :user_game
+    attr_reader :game, :user_game
 
-    def initialize(user_game:)
+    def initialize(game:, user_game:)
+      @game = game
       @user_game = user_game
     end
 

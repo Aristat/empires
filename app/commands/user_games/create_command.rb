@@ -33,7 +33,6 @@ module UserGames
         gold: 100000,
         tools: 250,
         wall_build_per_turn: 0,
-        last_horse_setting: :without_horses,
         last_turn_at: Time.current,
         current_turns: game.start_turns
       )

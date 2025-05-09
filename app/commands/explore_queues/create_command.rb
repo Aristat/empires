@@ -80,8 +80,7 @@ module ExploreQueues
       user_game.update!(
         people: user_game.people - quantity,
         food: user_game.food - food_needed,
-        horses: user_game.horses - horses_used,
-        last_horse_setting: params[:horse_setting]
+        horses: user_game.horses - horses_used
       )
     end
 
