@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <%= form_with url: user_game_explore_queues_path(@user_game), method: :post, local: true, class: "mt-4", data: { controller: "explore" } do |f| %>
+    <%= form_with url: user_game_explore_queues_path(@user_game), method: :post, local: true, class: "mt-4" do |f| %>
       <div class="card">
         <div class="card-body">
           <div class="row align-items-end">
@@ -82,10 +82,7 @@
                     ]),
                     {},
                     class: "form-select",
-                    data: {
-                      action: "change->explore#updateHorseSetting",
-                      explore_target: "horseSetting"
-                    } %>
+                    data: { explore_setting: "horse" } %>
               </div>
             </div>
 
@@ -100,7 +97,8 @@
                       ['Plain Land', 'plains_land']
                     ]),
                     {},
-                    class: "form-select" %>
+                    class: "form-select",
+                    data: { explore_setting: "land" } %>
               </div>
             </div>
 
@@ -153,18 +151,34 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize horse setting from localStorage or default value
-    const horseSettingSelect = document.querySelector('[data-explore-target="horseSetting"]');
-    const storedHorseSetting = localStorage.getItem('exploreHorseSetting');
+  // Run this script before the page renders
+  (function() {
+    // Get stored values
+    const storedHorseSetting = localStorage.getItem('exploreHorseSetting') || 'without_horses';
+    const storedLandSetting = localStorage.getItem('exploreLandSetting') || 'all_land';
 
-    if (storedHorseSetting) {
-      horseSettingSelect.value = storedHorseSetting;
+    // Function to initialize selects
+    function initializeSelects() {
+      const horseSelect = document.querySelector('[data-explore-setting="horse"]');
+      const landSelect = document.querySelector('[data-explore-setting="land"]');
+
+      if (horseSelect && landSelect) {
+        horseSelect.value = storedHorseSetting;
+        landSelect.value = storedLandSetting;
+      }
     }
 
-    // Add change event listener to save horse setting
-    horseSettingSelect.addEventListener('change', function() {
-      localStorage.setItem('exploreHorseSetting', this.value);
+    // Start initialization
+    initializeSelects();
+
+    // Add change event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('[data-explore-setting]').forEach(select => {
+        select.addEventListener('change', function() {
+          const setting = this.dataset.exploreSetting;
+          localStorage.setItem(`explore${setting.charAt(0).toUpperCase() + setting.slice(1)}Setting`, this.value);
+        });
+      });
     });
-  });
+  })();
 </script>
