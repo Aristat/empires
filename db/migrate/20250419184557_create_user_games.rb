@@ -64,6 +64,17 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :swords, null: false, default: 0
       t.integer :maces, null: false, default: 0
 
+      # trade
+      t.integer :trades_this_turn, null: false, default: 0
+      t.integer :auto_buy_wood, null: false, default: 0
+      t.integer :auto_buy_food, null: false, default: 0
+      t.integer :auto_buy_iron, null: false, default: 0
+      t.integer :auto_buy_tools, null: false, default: 0
+      t.integer :auto_sell_wood, null: false, default: 0
+      t.integer :auto_sell_food, null: false, default: 0
+      t.integer :auto_sell_iron, null: false, default: 0
+      t.integer :auto_sell_tools, null: false, default: 0
+
       t.integer :wall, null: false, default: 0
       t.integer :wall_build_per_turn, null: false, default: 0
 

@@ -103,6 +103,24 @@ class PrepareUserDataCommand < BaseCommand
     total_explorers = user_game.explore_queues.sum { _1.people }
     can_send_explorers = [ max_explorers - total_explorers, send_explorers ].min
 
+    max_trades = user_game.market * buildings[:town_center][:settings][:max_local_trades]
+    trades_remaining = max_trades - user_game.trades_this_turn
+    trade_multiplier = calculate_local_trade_multiplier
+
+    total_auto_trade = user_game.auto_buy_wood + user_game.auto_buy_food + user_game.auto_buy_iron +
+      user_game.auto_buy_tools + user_game.auto_sell_wood + user_game.auto_sell_food + user_game.auto_sell_iron +
+      user_game.auto_sell_tools
+    auto_trade_remaining = max_trades - total_auto_trade
+
+    wood_buy_price = (game_data[:local_wood_buy_price] * trade_multiplier).round
+    food_buy_price = (game_data[:local_food_buy_price] * trade_multiplier).round
+    iron_buy_price = (game_data[:local_iron_buy_price] * trade_multiplier).round
+    tools_buy_price = (game_data[:local_tools_buy_price] * trade_multiplier).round
+    wood_sell_price = (game_data[:local_wood_sell_price] * (1 / trade_multiplier)).round
+    food_sell_price = (game_data[:local_food_sell_price] * (1 / trade_multiplier)).round
+    iron_sell_price = (game_data[:local_iron_sell_price] * (1 / trade_multiplier)).round
+    tools_sell_price = (game_data[:local_tools_sell_price] * (1 / trade_multiplier)).round
+
     user_data[:used_mountains] = used_mountains
     user_data[:free_mountains] = user_game.m_land - used_mountains
     user_data[:used_forest] = used_forest
@@ -125,10 +143,37 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:send_explorers] = send_explorers
     user_data[:total_explorers] = total_explorers
     user_data[:can_send_explorers] = can_send_explorers
+    user_data[:max_trades] = max_trades
+    user_data[:trades_remaining] = trades_remaining
+    user_data[:total_auto_trade] = total_auto_trade
+    user_data[:auto_trade_remaining] = auto_trade_remaining
+    user_data[:wood_buy_price] = wood_buy_price
+    user_data[:food_buy_price] = food_buy_price
+    user_data[:iron_buy_price] = iron_buy_price
+    user_data[:tools_buy_price] = tools_buy_price
+    user_data[:wood_sell_price] = wood_sell_price
+    user_data[:food_sell_price] = food_sell_price
+    user_data[:iron_sell_price] = iron_sell_price
+    user_data[:tools_sell_price] = tools_sell_price
+
     user_data[:efficiency_of_explore] = UserGames::CalculateEfficiencyOfExploreCommand.new(
       total_land: total_land
     ).call
 
     user_data
+  end
+
+  private
+
+  def calculate_local_trade_multiplier
+    extra = 1.0
+    s = user_game.score
+
+    while s > 100000
+      extra += 0.05
+      s /= 2
+    end
+
+    extra
   end
 end

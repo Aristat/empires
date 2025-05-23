@@ -35,5 +35,13 @@ Rails.application.routes.draw do
     end
 
     resources :explore_queues, only: [:create, :destroy]
+
+    resources :trades, only: [] do
+      collection do
+        post :local_buy
+        post :local_sell
+        post :update_auto_trade
+      end
+    end
   end
 end

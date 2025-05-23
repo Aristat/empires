@@ -131,6 +131,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.integer "bows", default: 0, null: false
     t.integer "swords", default: 0, null: false
     t.integer "maces", default: 0, null: false
+    t.integer "trades_this_turn", default: 0, null: false
+    t.integer "auto_buy_wood", default: 0, null: false
+    t.integer "auto_buy_food", default: 0, null: false
+    t.integer "auto_buy_iron", default: 0, null: false
+    t.integer "auto_buy_tools", default: 0, null: false
+    t.integer "auto_sell_wood", default: 0, null: false
+    t.integer "auto_sell_food", default: 0, null: false
+    t.integer "auto_sell_iron", default: 0, null: false
+    t.integer "auto_sell_tools", default: 0, null: false
     t.integer "wall", default: 0, null: false
     t.integer "wall_build_per_turn", default: 0, null: false
     t.datetime "created_at", null: false

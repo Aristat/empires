@@ -1,0 +1,161 @@
+<div class="card mt-4">
+  <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Local Trade</h5>
+    <%= link_to "Help", "#", class: "text-white", data: { bs_toggle: "modal", bs_target: "#tradeHelpModal" } %>
+  </div>
+  <div class="card-body">
+    <p class="text-center mb-4">
+      Local trade lets you trade small amounts of necessary goods between your people.<br>
+      Number of goods traded depends on how many markets you have.
+    </p>
+
+    <p class="text-center mb-4">
+      You have traded <%= number_with_delimiter(@user_game.trades_this_turn) %> goods this turn
+      <% if @data[:user_data][:trades_remaining] > 0 %>
+        and you can still trade <%= number_with_delimiter(@data[:user_data][:trades_remaining]) %> goods this turn.
+      <% else %>
+        and you already sold maximum amount available.
+      <% end %>
+    </p>
+
+    <% if @data[:user_data][:trades_remaining] > 0 %>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th></th>
+              <th class="text-center">
+                Wood<br>
+                <small>(You have <%= number_with_delimiter(@user_game.wood) %>)</small>
+              </th>
+              <th class="text-center">
+                Food<br>
+                <small>(You have <%= number_with_delimiter(@user_game.food) %>)</small>
+              </th>
+              <th class="text-center">
+                Iron<br>
+                <small>(You have <%= number_with_delimiter(@user_game.iron) %>)</small>
+              </th>
+              <th class="text-center">
+                Tools<br>
+                <small>(You have <%= number_with_delimiter(@user_game.tools) %>)</small>
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= form_with url: local_buy_user_game_trades_path(@user_game), method: :post, local: true do |f| %>
+              <tr>
+                <td>Buy</td>
+                <td>
+                  <%= f.number_field :buy_wood, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:wood_buy_price]) %> gold each</small>
+                </td>
+                <td>
+                  <%= f.number_field :buy_food, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:food_buy_price]) %> gold each</small>
+                </td>
+                <td>
+                  <%= f.number_field :buy_iron, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:iron_buy_price]) %> gold each</small>
+                </td>
+                <td>
+                  <%= f.number_field :buy_tools, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:tools_buy_price]) %> gold each</small>
+                </td>
+                <td><%= f.submit 'Buy', class: 'btn btn-dark' %></td>
+              </tr>
+            <% end %>
+
+            <%= form_with url: local_sell_user_game_trades_path(@user_game), method: :post, local: true do |f| %>
+              <tr>
+                <td>Sell</td>
+                <td>
+                  <%= f.number_field :sell_wood, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:wood_sell_price]) %> gold each</small>
+                </td>
+                <td>
+                  <%= f.number_field :sell_food, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:food_sell_price]) %> gold each</small>
+                </td>
+                <td>
+                  <%= f.number_field :sell_iron, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:iron_sell_price]) %> gold each</small>
+                </td>
+                <td>
+                  <%= f.number_field :sell_tools, value: 0, class: "form-control", min: 0 %>
+                  <small><%= number_with_delimiter(@data[:user_data][:tools_sell_price]) %> gold each</small>
+                </td>
+                <td><%= f.submit 'Sell', class: 'btn btn-dark' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <div class="mt-5">
+      <h4 class="mb-3">Automatic Trade</h4>
+      <p class="mb-4">
+        You might also automate your local trade and create automatic trades.<br>
+        Those trades will occur each time you end your turn.<br>
+        Maximum number of goods you can autotrade is the same<br>
+        as number of goods you can trade normally (<%= number_with_delimiter(@data[:user_data][:max_trades]) %>).<br>
+        You are currently auto trading <%= number_with_delimiter(@data[:user_data][:total_auto_trade]) %> goods<br>
+        and you can auto trade <%= number_with_delimiter(@data[:user_data][:auto_trade_remaining]) %> more goods.
+      </p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Type</th>
+              <th class="text-center">Wood</th>
+              <th class="text-center">Food</th>
+              <th class="text-center">Iron</th>
+              <th class="text-center">Tools</th>
+              <th class="text-center">Gold</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= form_with url: update_auto_trade_user_game_trades_path(@user_game), method: :post, local: true do |f| %>
+              <tr>
+                <td>Auto Buy</td>
+                <td><%= f.number_field :auto_buy_wood, value: @user_game.auto_buy_wood, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_buy_food, value: @user_game.auto_buy_food, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_buy_iron, value: @user_game.auto_buy_iron, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_buy_tools, value: @user_game.auto_buy_tools, class: "form-control", min: 0 %></td>
+                <td class="text-end">
+                  <% use_gold = @user_game.auto_buy_wood * @data[:user_data][:wood_buy_price] +
+                               @user_game.auto_buy_food * @data[:user_data][:food_buy_price] +
+                               @user_game.auto_buy_iron * @data[:user_data][:iron_buy_price] +
+                               @user_game.auto_buy_tools * @data[:user_data][:tools_buy_price] %>
+                  <%= use_gold > 0 ? "-" : "" %><%= number_with_delimiter(use_gold) %>
+                </td>
+              </tr>
+              <tr>
+                <td>Auto Sell</td>
+                <td><%= f.number_field :auto_sell_wood, value: @user_game.auto_sell_wood, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_sell_food, value: @user_game.auto_sell_food, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_sell_iron, value: @user_game.auto_sell_iron, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_sell_tools, value: @user_game.auto_sell_tools, class: "form-control", min: 0 %></td>
+                <td class="text-end">
+                  <% get_gold = @user_game.auto_sell_wood * @data[:user_data][:wood_sell_price] +
+                               @user_game.auto_sell_food * @data[:user_data][:food_sell_price] +
+                               @user_game.auto_sell_iron * @data[:user_data][:iron_sell_price] +
+                               @user_game.auto_sell_tools * @data[:user_data][:tools_sell_price] %>
+                  <%= number_with_delimiter(get_gold) %>
+                </td>
+              </tr>
+              <tr class="table-dark">
+                <td><%= f.submit 'Update', class: 'btn btn-light btn-sm' %></td>
+                <td colspan="4" class="text-end">Total:</td>
+                <td class="text-end"><%= number_with_delimiter(get_gold - use_gold) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

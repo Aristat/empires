@@ -157,6 +157,11 @@
       </button>
     </li>
     <li class="nav-item" role="presentation">
+      <button class="nav-link" id="local-trade-tab" data-bs-toggle="tab" data-bs-target="#local-trade" type="button" role="tab" aria-controls="local-trade" aria-selected="false">
+        Local Trade
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
       <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
         Management
       </button>
@@ -183,6 +188,11 @@
     <!-- Explore Tab -->
     <div class="tab-pane fade" id="explore" role="tabpanel" aria-labelledby="explore-tab">
       <%= render 'explore', user_game: @user_game %>
+    </div>
+
+    <!-- Local Trade Tab -->
+    <div class="tab-pane fade" id="local-trade" role="tabpanel" aria-labelledby="local-trade-tab">
+      <%= render 'local_trade', user_game: @user_game %>
     </div>
 
     <!-- Management Tab -->

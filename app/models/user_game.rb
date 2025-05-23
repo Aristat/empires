@@ -4,6 +4,14 @@
 # Table name: user_games
 #
 #  id                  :bigint           not null, primary key
+#  auto_buy_food       :integer          default(0), not null
+#  auto_buy_iron       :integer          default(0), not null
+#  auto_buy_tools      :integer          default(0), not null
+#  auto_buy_wood       :integer          default(0), not null
+#  auto_sell_food      :integer          default(0), not null
+#  auto_sell_iron      :integer          default(0), not null
+#  auto_sell_tools     :integer          default(0), not null
+#  auto_sell_wood      :integer          default(0), not null
 #  bow_weaponsmith     :integer          default(0), not null
 #  bows                :integer          default(0), not null
 #  current_turns       :integer          default(0), not null
@@ -43,6 +51,7 @@
 #  tools               :integer          default(0), not null
 #  tower               :integer          default(0), not null
 #  town_center         :integer          default(0), not null
+#  trades_this_turn    :integer          default(0), not null
 #  turn                :integer          default(0), not null
 #  wall                :integer          default(0), not null
 #  wall_build_per_turn :integer          default(0), not null
