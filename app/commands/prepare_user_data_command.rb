@@ -105,7 +105,7 @@ class PrepareUserDataCommand < BaseCommand
 
     max_trades = user_game.market * buildings[:town_center][:settings][:max_local_trades]
     trades_remaining = max_trades - user_game.trades_this_turn
-    trade_multiplier = calculate_local_trade_multiplier
+    trade_multiplier = Trades::CalculateLocalTradeMultiplierCommand.new(user_game: user_game).call
 
     total_auto_trade = user_game.auto_buy_wood + user_game.auto_buy_food + user_game.auto_buy_iron +
       user_game.auto_buy_tools + user_game.auto_sell_wood + user_game.auto_sell_food + user_game.auto_sell_iron +
@@ -161,19 +161,5 @@ class PrepareUserDataCommand < BaseCommand
     ).call
 
     user_data
-  end
-
-  private
-
-  def calculate_local_trade_multiplier
-    extra = 1.0
-    s = user_game.score
-
-    while s > 100000
-      extra += 0.05
-      s /= 2
-    end
-
-    extra
   end
 end
