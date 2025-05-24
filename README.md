@@ -1,24 +1,29 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## History
 
-Things you may want to cover:
+In my free time I port the game from cloudfusion to rails. Original source code https://sourceforge.net/projects/ad1000/files/
 
-* Ruby version
+## TODO list
 
-* System dependencies
+- [ ] Finish research mechanic
+- [ ] Implement score tables
+- [ ] Implement train army logic
+- [ ] Implement attack logic
+- [ ] Implement glob trade market
+- [ ] Refactoring magic constant in game, prepare documentation, formulas, etc
+- [ ] Right now I use `Cursor` to generate FE/UI, need to refactor and improve better visibility
+- [ ] Improve buildings and other tables to related per Game to be able run multiple different games with different settings
+- [ ] Cover by specs and tests BE logic
+- [ ] Cover by E2E tests FE logic
+- [ ] Implement CI/CD and deploy to cloud solution like EC2/Heroku/other place by Docker container
+- [ ] Implement LRU cache logic to reduce SQL queries
 
-* Configuration
+## How to run the game
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+1. Clone the repository
+2. Run `bundle install`
+3. Run `rails db:create db:migrate db:seed`
+4. Run `rails s`
+5. Open your browser and go to `http://localhost:3000`
+6. Join to game
