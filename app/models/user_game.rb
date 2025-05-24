@@ -198,6 +198,8 @@ class UserGame < ApplicationRecord
   validates :mage_tower_status_buildings_statuses, presence: true,
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 
+  validates :military_losses_researches, presence: true, numericality: { less_than_or_equal_to: 50 }
+
   def set_default_settings
     BUILDING_STATUSES.each do |key, default|
       self.send("#{key}_buildings_statuses=", default)

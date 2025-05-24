@@ -121,12 +121,7 @@ class PrepareUserDataCommand < BaseCommand
     iron_sell_price = (game_data[:local_iron_sell_price] * (1 / trade_multiplier)).round
     tools_sell_price = (game_data[:local_tools_sell_price] * (1 / trade_multiplier)).round
 
-    total_research_levels = user_game.attack_points_researches + user_game.defense_points_researches +
-      user_game.thieves_strength_researches + user_game.military_losses_researches +
-      user_game.food_production_researches + user_game.mine_production_researches +
-      user_game.weapons_tools_production_researches + user_game.space_effectiveness_researches +
-      user_game.markets_output_researches + user_game.explorers_researches +
-      user_game.catapults_strength_researches + user_game.wood_production_researches
+    total_research_levels = Researches::TotalResearchLevelsCommand.new(user_game: user_game).call
     next_research_level_points = 10 + (
       total_research_levels * total_research_levels * Math.sqrt(total_research_levels)
     ).round

@@ -63,8 +63,8 @@ module UserGames
         weapons_production
         horses_production
         wine_production
-        # mage_tower_production
-        # update researches
+        mage_tower_production
+        update_researches
         update_wall
 
         people_eat_food
@@ -445,6 +445,85 @@ module UserGames
       @p_wine = can_produce * winery_building[:production]
       @r_wine += @p_wine
       add_message("Wineries produced #{@p_wine} wine", 'success')
+    end
+
+    def mage_tower_production
+      return if @user_game.mage_tower <= 0 || @user_game.mage_tower_status_buildings_statuses <= 0 || @user_game.current_research.blank?
+
+      mage_tower_building = @data[:buildings][:mage_tower][:settings]
+      can_produce = (@user_game.mage_tower * (@user_game.mage_tower_status_buildings_statuses / 100.0)).round
+
+      people_need = can_produce * mage_tower_building[:workers]
+      if @r_people < people_need
+        can_produce = (@r_people / mage_tower_building[:workers]).to_i
+        add_message('Not enough people to work at mage towers.', 'red')
+      end
+
+      gold_need = can_produce * mage_tower_building[:research_gold_need]
+      if @r_gold < gold_need
+        can_produce = (@r_gold / mage_tower_building[:research_gold_need]).to_i
+        add_message('Not enough gold to do all research.', 'red')
+      end
+
+      can_produce = 0 if can_produce < 0
+
+      @r_people -= can_produce * mage_tower_building[:workers]
+      @c_gold += can_produce * mage_tower_building[:research_gold_need]
+      @r_gold -= can_produce * mage_tower_building[:research_gold_need]
+
+      @user_game.research_points += (can_produce * mage_tower_building[:production]).round
+    end
+
+    def update_researches
+      return if @user_game.current_research.blank? || @user_game.research_points <= 0
+
+      total_research_levels = Researches::TotalResearchLevelsCommand.new(user_game: @user_game).call
+      need_research_points = Researches::NextResearchLevelPointsCommand.new(
+        total_research_levels: total_research_levels
+      ).call
+
+      while @user_game.research_points >= need_research_points
+        if @user_game.current_research == 'military_losses' && @user_game.military_losses_researches >= 50
+          add_message('You can only have up to 50 research levels for military loss', 'red')
+          break
+        end
+
+        @user_game.research_points -= need_research_points
+        total_research_levels += 1
+
+        case @user_game.current_research
+        when 'attack_points'
+          @user_game.attack_points_researches += 1
+        when 'defense_points'
+          @user_game.defense_points_researches += 1
+        when 'thieves_strength'
+          @user_game.thieves_strength_researches += 1
+        when 'military_losses'
+          @user_game.military_losses_researches += 1
+        when 'food_production'
+          @user_game.food_production_researches += 1
+        when 'mine_production'
+          @user_game.mine_production_researches += 1
+        when 'weapons_tools_production'
+          @user_game.weapons_tools_production_researches += 1
+        when 'space_effectiveness'
+          @user_game.space_effectiveness_researches += 1
+        when 'markets_output'
+          @user_game.markets_output_researches += 1
+        when 'explorers'
+          @user_game.explorers_researches += 1
+        when 'catapults_strength'
+          @user_game.catapults_strength_researches += 1
+        when 'wood_production'
+          @user_game.wood_production_researches += 1
+        end
+
+        research_name = @user_game.current_research.titleize.gsub('_', ' ')
+        add_message("Finished research of #{research_name}", 'yellow')
+        need_research_points = Researches::NextResearchLevelPointsCommand.new(
+          total_research_levels: total_research_levels
+        ).call
+      end
     end
 
     def update_wall
