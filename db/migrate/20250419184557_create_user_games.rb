@@ -56,6 +56,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :maces, null: false, default: 0
 
       # researches
+      t.integer :current_research, null: true
       t.integer :research_points, null: false, default: 0
       t.jsonb :researches, null: false, default: {}
 

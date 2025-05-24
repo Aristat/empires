@@ -1,0 +1,141 @@
+<% if user_game.mage_tower.zero? %>
+  <div class="alert alert-danger">
+    <strong>Build mage towers to start research.</strong>
+  </div>
+<% else %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Research Status</h5>
+      <p>You have a total of <%= number_with_delimiter(@data[:user_data][:total_research_levels]) %> research levels.</p>
+
+      <%= form_with url: user_game_path(user_game), method: :patch, local: true do |f| %>
+        <div class="mb-3">
+          <label class="form-label">Set current research:</label>
+          <%= f.select :current_research,
+              options_for_select([
+                ['--- None ---', nil],
+                ['Attack Points', 'attack_points'],
+                ['Defense Points', 'defense_points'],
+                ['Thieves Strength', 'thieves_strength'],
+                ['Military Losses', 'military_losses'],
+                ['Food Production', 'food_production'],
+                ['Mine Production', 'mine_production'],
+                ['Weapons/Tools Production', 'weapons_tools_production'],
+                ['Space Effectiveness', 'space_effectiveness'],
+                ['Markets Output', 'markets_output'],
+                ['Explorers', 'explorers'],
+                ['Catapults Strength', 'catapults_strength'],
+                ['Wood Production', 'wood_production']
+              ], user_game.current_research),
+              {}, class: 'form-select' %>
+        </div>
+
+        <% if user_game.current_research.present? %>
+          <p>
+            <%= number_with_delimiter(user_game.research_points) %> out of <%= number_with_delimiter(@data[:user_data][:next_research_level_points]) %>
+            (<%= number_with_precision((user_game.research_points.to_f / @data[:user_data][:next_research_level_points]) * 100, precision: 1) %>% complete)
+          </p>
+
+          <p class="small">
+            You have <%= number_with_delimiter(@data[:user_data][:active_mage_towers]) %> mage towers active producing <%= number_with_delimiter(@data[:user_data][:research_produced]) %> research points
+            and using <%= number_with_delimiter(@data[:user_data][:research_gold_needed]) %> gold every month.
+
+            <% if @data[:user_data][:research_produced].positive? %>
+              <br>It takes your mage towers <%= number_with_precision(@data[:user_data][:next_research_level_points].to_f / @data[:user_data][:research_produced], precision: 1) %> months to advance research level.
+            <% end %>
+          </p>
+        <% end %>
+
+        <%= f.submit 'Change Research', class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Research Levels</h5>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Research Name</th>
+            <th class="text-center">Current</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="3" class="table-primary"><strong>Military Research</strong></td>
+          </tr>
+          <tr>
+            <td>Attack Points</td>
+            <td class="text-center"><%= user_game.attack_points_researches %></td>
+            <td>Your army attack points are increased by <%= user_game.attack_points_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Defense Points</td>
+            <td class="text-center"><%= user_game.defense_points_researches %></td>
+            <td>Your army defense points are increased by <%= user_game.defense_points_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Thieves Strength</td>
+            <td class="text-center"><%= user_game.thieves_strength_researches %></td>
+            <td>Your thieves are <%= user_game.thieves_strength_researches %>% stronger</td>
+          </tr>
+          <tr>
+            <td>Catapults Strength</td>
+            <td class="text-center"><%= user_game.catapults_strength_researches %></td>
+            <td>Your catapults are <%= user_game.catapults_strength_researches %>% stronger</td>
+          </tr>
+          <tr>
+            <td>Military Losses</td>
+            <td class="text-center"><%= user_game.military_losses_researches %></td>
+            <td>You lose <%= user_game.military_losses_researches %>% less army in battles</td>
+          </tr>
+
+          <tr>
+            <td colspan="3" class="table-primary"><strong>Production Research</strong></td>
+          </tr>
+          <tr>
+            <td>Food Production</td>
+            <td class="text-center"><%= user_game.food_production_researches %></td>
+            <td>Your food production is increased by <%= user_game.food_production_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Wood Production</td>
+            <td class="text-center"><%= user_game.wood_production_researches %></td>
+            <td>Your wood production is increased by <%= user_game.wood_production_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Mine Production</td>
+            <td class="text-center"><%= user_game.mine_production_researches %></td>
+            <td>Your mine production is increased by <%= user_game.mine_production_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Weapons/Tools Production</td>
+            <td class="text-center"><%= user_game.weapons_tools_production_researches %></td>
+            <td>Your weaponsmiths and tool makers are <%= user_game.weapons_tools_production_researches %>% more effective</td>
+          </tr>
+
+          <tr>
+            <td colspan="3" class="table-primary"><strong>Other Research</strong></td>
+          </tr>
+          <tr>
+            <td>Space Effectiveness</td>
+            <td class="text-center"><%= user_game.space_effectiveness_researches %></td>
+            <td>Your storage and housing space is increased by <%= user_game.space_effectiveness_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Markets Output</td>
+            <td class="text-center"><%= user_game.markets_output_researches %></td>
+            <td>You can transfer/aid <%= (user_game.markets_output_researches * 10) %>% more goods</td>
+          </tr>
+          <tr>
+            <td>Explorers</td>
+            <td class="text-center"><%= user_game.explorers_researches %></td>
+            <td>Your explorers find <%= user_game.explorers_researches %>% more land</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>

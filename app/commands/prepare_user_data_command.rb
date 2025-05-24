@@ -121,6 +121,19 @@ class PrepareUserDataCommand < BaseCommand
     iron_sell_price = (game_data[:local_iron_sell_price] * (1 / trade_multiplier)).round
     tools_sell_price = (game_data[:local_tools_sell_price] * (1 / trade_multiplier)).round
 
+    total_research_levels = user_game.attack_points_researches + user_game.defense_points_researches +
+      user_game.thieves_strength_researches + user_game.military_losses_researches +
+      user_game.food_production_researches + user_game.mine_production_researches +
+      user_game.weapons_tools_production_researches + user_game.space_effectiveness_researches +
+      user_game.markets_output_researches + user_game.explorers_researches +
+      user_game.catapults_strength_researches + user_game.wood_production_researches
+    next_research_level_points = 10 + (
+      total_research_levels * total_research_levels * Math.sqrt(total_research_levels)
+    ).round
+    active_mage_towers = (user_game.mage_tower_status_buildings_statuses.to_f / 100 * user_game.mage_tower).round
+    research_produced = (active_mage_towers * buildings[:mage_tower][:settings][:production]).round
+    research_gold_needed = (active_mage_towers * buildings[:mage_tower][:settings][:research_gold_need]).round
+
     user_data[:used_mountains] = used_mountains
     user_data[:free_mountains] = user_game.m_land - used_mountains
     user_data[:used_forest] = used_forest
@@ -155,6 +168,12 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:food_sell_price] = food_sell_price
     user_data[:iron_sell_price] = iron_sell_price
     user_data[:tools_sell_price] = tools_sell_price
+
+    user_data[:total_research_levels] = total_research_levels
+    user_data[:next_research_level_points] = next_research_level_points
+    user_data[:active_mage_towers] = active_mage_towers
+    user_data[:research_produced] = research_produced
+    user_data[:research_gold_needed] = research_gold_needed
 
     user_data[:efficiency_of_explore] = UserGames::CalculateEfficiencyOfExploreCommand.new(
       total_land: total_land

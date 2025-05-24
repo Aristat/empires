@@ -122,6 +122,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.integer "bows", default: 0, null: false
     t.integer "swords", default: 0, null: false
     t.integer "maces", default: 0, null: false
+    t.integer "current_research"
     t.integer "research_points", default: 0, null: false
     t.jsonb "researches", default: {}, null: false
     t.integer "trades_this_turn", default: 0, null: false

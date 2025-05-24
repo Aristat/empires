@@ -7,6 +7,7 @@
 #  bow_weaponsmith     :integer          default(0), not null
 #  bows                :integer          default(0), not null
 #  buildings_statuses  :jsonb            not null
+#  current_research    :integer
 #  current_turns       :integer          default(0), not null
 #  f_land              :integer          default(0), not null
 #  farm                :integer          default(0), not null
@@ -116,6 +117,28 @@ class UserGame < ApplicationRecord
   has_many :build_queues, dependent: :destroy
   has_many :explore_queues, dependent: :destroy
 
+  # TODO!: Add more researches like
+  # Conquered land
+  # Army Upkeep cost
+  # Army Training cost
+  # Wine production
+  # Horses production
+  # Fort space
+  enum :current_research, {
+    attack_points: 0,
+    defense_points: 1,
+    thieves_strength: 2,
+    military_losses: 3,
+    food_production: 4,
+    mine_production: 5,
+    weapons_tools_production: 6,
+    space_effectiveness: 7,
+    markets_output: 8,
+    explorers: 9,
+    catapults_strength: 10,
+    wood_production: 11
+  }, prefix: true
+
   store_accessor :buildings_statuses, *BUILDING_STATUSES.keys, suffix: true
   store_accessor :researches, *RESEARCHES.keys, suffix: true
   store_accessor :trades, *TRADES.keys, suffix: true
@@ -177,15 +200,15 @@ class UserGame < ApplicationRecord
 
   def set_default_settings
     BUILDING_STATUSES.each do |key, default|
-      self.send("#{key}_buildings_statuses=", default) if self.send("#{key}_buildings_statuses").nil?
+      self.send("#{key}_buildings_statuses=", default)
     end
 
     RESEARCHES.each do |key, default|
-      self.send("#{key}_researches=", default) if self.send("#{key}_researches").nil?
+      self.send("#{key}_researches=", default)
     end
 
     TRADES.each do |key, default|
-      self.send("#{key}_trades=", default) if self.send("#{key}_trades").nil?
+      self.send("#{key}_trades=", default)
     end
   end
 end

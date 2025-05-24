@@ -30,7 +30,7 @@ class UserGamesController < ApplicationController
       :tool_maker_status_buildings_statuses, :winery_status_buildings_statuses,
       :weaponsmith_status_buildings_statuses, :stable_status_buildings_statuses,
       :mage_tower_status_buildings_statuses,
-      :wall_build_per_turn, :bow_weaponsmith, :sword_weaponsmith, :mace_weaponsmith
+      :wall_build_per_turn, :bow_weaponsmith, :sword_weaponsmith, :mace_weaponsmith, :current_research
     )
   end
 
