@@ -1,5 +1,7 @@
 module UserGames
   class EndTurnCommand
+    include ActionView::Helpers::NumberHelper
+
     WINTER_MONTHS = [11, 12, 1, 2].freeze
 
     def initialize(user_game:)
@@ -68,6 +70,7 @@ module UserGames
         people_eat_food
         process_building_queue
         process_explorers
+        process_auto_trade
         update_resources
 
         if @user_game.people <= 100
@@ -804,6 +807,106 @@ module UserGames
           f_land: queue.f_land + forest_land,
           p_land: queue.p_land + plain_land
         )
+      end
+    end
+
+    def process_auto_trade
+      calculate_local_trade_multiplier = Trades::CalculateLocalTradeMultiplierCommand.new(user_game: @user_game).call
+
+      if @user_game.auto_sell_wood > 0 && @r_wood >= @user_game.auto_sell_wood
+        wood_price = (@data[:game_data][:local_wood_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
+        get_gold = wood_price * @user_game.auto_sell_wood
+        @r_wood -= @user_game.auto_sell_wood
+        @r_gold += get_gold
+        add_message(
+          "Sold #{number_with_delimiter(@user_game.auto_sell_wood)} wood for #{number_with_delimiter(get_gold)}",
+          'success'
+        )
+      end
+
+      if @user_game.auto_sell_food > 0 && @r_food >= @user_game.auto_sell_food
+        food_price = (@data[:game_data][:local_food_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
+        get_gold = food_price * @user_game.auto_sell_food
+        @r_food -= @user_game.auto_sell_food
+        @r_gold += get_gold
+        add_message(
+          "Sold #{number_with_delimiter(@user_game.auto_sell_food)} food for #{number_with_delimiter(get_gold)}",
+          'success'
+        )
+      end
+
+      if @user_game.auto_sell_iron > 0 && @r_iron >= @user_game.auto_sell_iron
+        iron_price = (@data[:game_data][:local_iron_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
+        get_gold = iron_price * @user_game.auto_sell_iron
+        @r_iron -= @user_game.auto_sell_iron
+        @r_gold += get_gold
+        add_message(
+          "Sold #{number_with_delimiter(@user_game.auto_sell_iron)} iron for #{number_with_delimiter(get_gold)}",
+          'success'
+        )
+      end
+
+      if @user_game.auto_sell_tools > 0 && @r_tools >= @user_game.auto_sell_tools
+        tool_price = (@data[:game_data][:local_tools_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
+        get_gold = tool_price * @user_game.auto_sell_tools
+        @r_tools -= @user_game.auto_sell_tools
+        @r_gold += get_gold
+        add_message(
+          "Sold #{number_with_delimiter(@user_game.auto_sell_tools)} tools for #{number_with_delimiter(get_gold)}",
+          'success'
+        )
+      end
+
+      if @user_game.auto_buy_wood > 0
+        wood_price = (@data[:game_data][:local_wood_buy_price] * calculate_local_trade_multiplier).round
+        use_gold = wood_price * @user_game.auto_buy_wood
+        if @r_gold >= use_gold
+          @r_wood += @user_game.auto_buy_wood
+          @r_gold -= use_gold
+          add_message(
+            "Bought #{number_with_delimiter(@user_game.auto_buy_wood)} wood for #{number_with_delimiter(use_gold)}",
+            'success'
+          )
+        end
+      end
+
+      if @user_game.auto_buy_food > 0
+        food_price = (@data[:game_data][:local_food_buy_price] * calculate_local_trade_multiplier).round
+        use_gold = food_price * @user_game.auto_buy_food
+        if @r_gold >= use_gold
+          @r_food += @user_game.auto_buy_food
+          @r_gold -= use_gold
+          add_message(
+            "Bought #{number_with_delimiter(@user_game.auto_buy_food)} food for #{number_with_delimiter(use_gold)}",
+            'success'
+          )
+        end
+      end
+
+      if @user_game.auto_buy_iron > 0
+        iron_price = (@data[:game_data][:local_iron_buy_price] * calculate_local_trade_multiplier).round
+        use_gold = iron_price * @user_game.auto_buy_iron
+        if @r_gold >= use_gold
+          @r_iron += @user_game.auto_buy_iron
+          @r_gold -= use_gold
+          add_message(
+            "Bought #{number_with_delimiter(@user_game.auto_buy_iron)} iron for #{number_with_delimiter(use_gold)}",
+            'success'
+          )
+        end
+      end
+
+      if @user_game.auto_buy_tools > 0
+        tool_price = (@data[:game_data][:local_tools_buy_price] * calculate_local_trade_multiplier).round
+        use_gold = tool_price * @user_game.auto_buy_tools
+        if @r_gold >= use_gold
+          @r_tools += @user_game.auto_buy_tools
+          @r_gold -= use_gold
+          add_message(
+            "Bought #{number_with_delimiter(@user_game.auto_buy_tools)} tools for #{number_with_delimiter(use_gold)}",
+            'success'
+          )
+        end
       end
     end
 
