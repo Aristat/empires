@@ -36,8 +36,8 @@ class PrepareUserDataCommand < BaseCommand
     ].each do |key|
       count = user_game.send(key)
 
-      if user_game.has_attribute?("#{key}_status")
-        status = user_game.send("#{key}_status")
+      if user_game.respond_to?("#{key}_status_buildings_statuses")
+        status = user_game.send("#{key}_status_buildings_statuses")
         working = (count * (status / 100.0)).round
         workers = working * buildings[key][:settings][:workers].to_i
       else
@@ -107,9 +107,9 @@ class PrepareUserDataCommand < BaseCommand
     trades_remaining = max_trades - user_game.trades_this_turn
     trade_multiplier = Trades::CalculateLocalTradeMultiplierCommand.new(user_game: user_game).call
 
-    total_auto_trade = user_game.auto_buy_wood + user_game.auto_buy_food + user_game.auto_buy_iron +
-      user_game.auto_buy_tools + user_game.auto_sell_wood + user_game.auto_sell_food + user_game.auto_sell_iron +
-      user_game.auto_sell_tools
+    total_auto_trade = user_game.auto_buy_wood_trades + user_game.auto_buy_food_trades +
+      user_game.auto_buy_iron_trades + user_game.auto_buy_tools_trades + user_game.auto_sell_wood_trades +
+      user_game.auto_sell_food_trades + user_game.auto_sell_iron_trades + user_game.auto_sell_tools_trades
     auto_trade_remaining = max_trades - total_auto_trade
 
     wood_buy_price = (game_data[:local_wood_buy_price] * trade_multiplier).round

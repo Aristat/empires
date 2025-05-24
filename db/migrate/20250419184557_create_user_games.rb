@@ -30,16 +30,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :winery, null: false, default: 0
 
       # buildings statuses
-      t.integer :hunter_status, null: false, default: 100
-      t.integer :farm_status, null: false, default: 100
-      t.integer :wood_cutter_status, null: false, default: 100
-      t.integer :gold_mine_status, null: false, default: 100
-      t.integer :iron_mine_status, null: false, default: 100
-      t.integer :tool_maker_status, null: false, default: 100
-      t.integer :winery_status, null: false, default: 100
-      t.integer :weaponsmith_status, null: false, default: 100
-      t.integer :stable_status, null: false, default: 100
-      t.integer :mage_tower_status, null: false, default: 100
+      t.jsonb :buildings_statuses, null: false, default: {}
 
       # land
       t.integer :f_land, null: false, default: 0
@@ -70,14 +61,7 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
 
       # trade
       t.integer :trades_this_turn, null: false, default: 0
-      t.integer :auto_buy_wood, null: false, default: 0
-      t.integer :auto_buy_food, null: false, default: 0
-      t.integer :auto_buy_iron, null: false, default: 0
-      t.integer :auto_buy_tools, null: false, default: 0
-      t.integer :auto_sell_wood, null: false, default: 0
-      t.integer :auto_sell_food, null: false, default: 0
-      t.integer :auto_sell_iron, null: false, default: 0
-      t.integer :auto_sell_tools, null: false, default: 0
+      t.jsonb :trades, null: false, default: {}
 
       t.integer :wall, null: false, default: 0
       t.integer :wall_build_per_turn, null: false, default: 0

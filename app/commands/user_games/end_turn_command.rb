@@ -114,11 +114,11 @@ module UserGames
     end
 
     def hunters_production
-      return if @user_game.hunter <= 0 || @user_game.hunter_status <= 0
+      return if @user_game.hunter <= 0 || @user_game.hunter_status_buildings_statuses <= 0
 
       hunter_building = @data[:buildings][:hunter][:settings]
 
-      can_produce = (@user_game.hunter * (@user_game.hunter_status / 100.0)).round
+      can_produce = (@user_game.hunter * (@user_game.hunter_status_buildings_statuses / 100.0)).round
       people_need = can_produce * hunter_building[:workers]
 
       if @r_people < people_need
@@ -133,12 +133,12 @@ module UserGames
     end
 
     def farms_production
-      return if @user_game.farm <= 0 || @user_game.farm_status <= 0
+      return if @user_game.farm <= 0 || @user_game.farm_status_buildings_statuses <= 0
 
       farm_building = @data[:buildings][:farm][:settings]
 
       if @month >= 4 && @month <= 10
-        can_produce = (@user_game.farm * (@user_game.farm_status / 100.0)).round
+        can_produce = (@user_game.farm * (@user_game.farm_status_buildings_statuses / 100.0)).round
         people_need = can_produce * farm_building[:workers]
 
         if @r_people < people_need
@@ -156,11 +156,11 @@ module UserGames
     end
 
     def wood_production
-      return if @user_game.wood_cutter <= 0 || @user_game.wood_cutter_status <= 0
+      return if @user_game.wood_cutter <= 0 || @user_game.wood_cutter_status_buildings_statuses <= 0
 
       wood_cutter_building = @data[:buildings][:wood_cutter][:settings]
 
-      can_produce = (@user_game.wood_cutter * (@user_game.wood_cutter_status / 100.0)).round
+      can_produce = (@user_game.wood_cutter * (@user_game.wood_cutter_status_buildings_statuses / 100.0)).round
       people_need = can_produce * wood_cutter_building[:workers]
 
       if @r_people < people_need
@@ -197,11 +197,11 @@ module UserGames
     end
 
     def gold_production
-      return if @user_game.gold_mine <= 0 || @user_game.gold_mine_status <= 0
+      return if @user_game.gold_mine <= 0 || @user_game.gold_mine_status_buildings_statuses <= 0
 
       gold_mine_building = @data[:buildings][:gold_mine][:settings]
 
-      can_produce = (@user_game.gold_mine * (@user_game.gold_mine_status / 100.0)).round
+      can_produce = (@user_game.gold_mine * (@user_game.gold_mine_status_buildings_statuses / 100.0)).round
       people_need = can_produce * gold_mine_building[:workers]
 
       if @r_people < people_need
@@ -217,11 +217,11 @@ module UserGames
     end
 
     def iron_production
-      return if @user_game.iron_mine <= 0 || @user_game.iron_mine_status <= 0
+      return if @user_game.iron_mine <= 0 || @user_game.iron_mine_status_buildings_statuses <= 0
 
       iron_mine_building = @data[:buildings][:iron_mine][:settings]
 
-      can_produce = (@user_game.iron_mine * (@user_game.iron_mine_status / 100.0)).round
+      can_produce = (@user_game.iron_mine * (@user_game.iron_mine_status_buildings_statuses / 100.0)).round
       people_need = can_produce * iron_mine_building[:workers]
 
       if @r_people < people_need
@@ -237,11 +237,11 @@ module UserGames
     end
 
     def tools_production
-      return if @user_game.tool_maker <= 0 || @user_game.tool_maker_status <= 0
+      return if @user_game.tool_maker <= 0 || @user_game.tool_maker_status_buildings_statuses <= 0
 
       tool_maker_building = @data[:buildings][:tool_maker][:settings]
 
-      can_produce = (@user_game.tool_maker * (@user_game.tool_maker_status / 100.0)).round
+      can_produce = (@user_game.tool_maker * (@user_game.tool_maker_status_buildings_statuses / 100.0)).round
       people_need = can_produce * tool_maker_building[:workers]
 
       if @r_people < people_need
@@ -279,7 +279,7 @@ module UserGames
     end
 
     def weapons_production
-      return if @user_game.weaponsmith <= 0 || @user_game.weaponsmith_status <= 0
+      return if @user_game.weaponsmith <= 0 || @user_game.weaponsmith_status_buildings_statuses <= 0
 
       # Check if total assigned weaponsmiths exceed total available
       if @user_game.sword_weaponsmith + @user_game.bow_weaponsmith + @user_game.mace_weaponsmith > @user_game.weaponsmith
@@ -303,7 +303,7 @@ module UserGames
       weaponsmith_building = @data[:buildings][:weaponsmith][:settings]
 
       # Produce swords
-      can_produce = (@user_game.sword_weaponsmith * (@user_game.weaponsmith_status / 100.0)).round
+      can_produce = (@user_game.sword_weaponsmith * (@user_game.weaponsmith_status_buildings_statuses / 100.0)).round
       people_need = can_produce * weaponsmith_building[:workers]
 
       if @r_people < people_need
@@ -327,7 +327,7 @@ module UserGames
       @r_swords += p_swords
 
       # Produce bows
-      can_produce = (@user_game.bow_weaponsmith * (@user_game.weaponsmith_status / 100.0)).round
+      can_produce = (@user_game.bow_weaponsmith * (@user_game.weaponsmith_status_buildings_statuses / 100.0)).round
       people_need = can_produce * weaponsmith_building[:workers]
 
       if @r_people < people_need
@@ -351,7 +351,7 @@ module UserGames
       @r_bows += p_bows
 
       # Produce maces
-      can_produce = (@user_game.mace_weaponsmith * (@user_game.weaponsmith_status / 100.0)).round
+      can_produce = (@user_game.mace_weaponsmith * (@user_game.weaponsmith_status_buildings_statuses / 100.0)).round
       people_need = can_produce * weaponsmith_building[:workers]
 
       if @r_people < people_need
@@ -393,7 +393,7 @@ module UserGames
 
       stable_building = @data[:buildings][:stable][:settings]
 
-      can_produce = (@user_game.stable * (@user_game.stable_status / 100.0)).round
+      can_produce = (@user_game.stable * (@user_game.stable_status_buildings_statuses / 100.0)).round
       people_need = can_produce * stable_building[:workers]
 
       if @r_people < people_need
@@ -417,11 +417,11 @@ module UserGames
     end
 
     def wine_production
-      return if @user_game.winery <= 0 || @user_game.winery_status <= 0
+      return if @user_game.winery <= 0 || @user_game.winery_status_buildings_statuses <= 0
 
       winery_building = @data[:buildings][:winery][:settings]
 
-      can_produce = (@user_game.winery * (@user_game.winery_status / 100.0)).round
+      can_produce = (@user_game.winery * (@user_game.winery_status_buildings_statuses / 100.0)).round
       people_need = can_produce * winery_building[:workers]
 
       if @r_people < people_need
@@ -813,21 +813,21 @@ module UserGames
     def process_auto_trade
       calculate_local_trade_multiplier = Trades::CalculateLocalTradeMultiplierCommand.new(user_game: @user_game).call
 
-      if @user_game.auto_sell_wood > 0 && @r_wood >= @user_game.auto_sell_wood
+      if @user_game.auto_sell_wood_trades > 0 && @r_wood >= @user_game.auto_sell_wood_trades
         wood_price = (@data[:game_data][:local_wood_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
-        get_gold = wood_price * @user_game.auto_sell_wood
-        @r_wood -= @user_game.auto_sell_wood
+        get_gold = wood_price * @user_game.auto_sell_wood_trades
+        @r_wood -= @user_game.auto_sell_wood_trades
         @r_gold += get_gold
         add_message(
-          "Sold #{number_with_delimiter(@user_game.auto_sell_wood)} wood for #{number_with_delimiter(get_gold)}",
+          "Sold #{number_with_delimiter(@user_game.auto_sell_wood_trades)} wood for #{number_with_delimiter(get_gold)}",
           'success'
         )
       end
 
-      if @user_game.auto_sell_food > 0 && @r_food >= @user_game.auto_sell_food
+      if @user_game.auto_sell_food_trades > 0 && @r_food >= @user_game.auto_sell_food_trades
         food_price = (@data[:game_data][:local_food_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
-        get_gold = food_price * @user_game.auto_sell_food
-        @r_food -= @user_game.auto_sell_food
+        get_gold = food_price * @user_game.auto_sell_food_trades
+        @r_food -= @user_game.auto_sell_food_trades
         @r_gold += get_gold
         add_message(
           "Sold #{number_with_delimiter(@user_game.auto_sell_food)} food for #{number_with_delimiter(get_gold)}",
@@ -835,75 +835,75 @@ module UserGames
         )
       end
 
-      if @user_game.auto_sell_iron > 0 && @r_iron >= @user_game.auto_sell_iron
+      if @user_game.auto_sell_iron_trades > 0 && @r_iron >= @user_game.auto_sell_iron_trades
         iron_price = (@data[:game_data][:local_iron_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
-        get_gold = iron_price * @user_game.auto_sell_iron
-        @r_iron -= @user_game.auto_sell_iron
+        get_gold = iron_price * @user_game.auto_sell_iron_trades
+        @r_iron -= @user_game.auto_sell_iron_trades
         @r_gold += get_gold
         add_message(
-          "Sold #{number_with_delimiter(@user_game.auto_sell_iron)} iron for #{number_with_delimiter(get_gold)}",
+          "Sold #{number_with_delimiter(@user_game.auto_sell_iron_trades)} iron for #{number_with_delimiter(get_gold)}",
           'success'
         )
       end
 
-      if @user_game.auto_sell_tools > 0 && @r_tools >= @user_game.auto_sell_tools
+      if @user_game.auto_sell_tools_trades > 0 && @r_tools >= @user_game.auto_sell_tools_trades
         tool_price = (@data[:game_data][:local_tools_sell_price] * (1.0 / calculate_local_trade_multiplier)).round
-        get_gold = tool_price * @user_game.auto_sell_tools
-        @r_tools -= @user_game.auto_sell_tools
+        get_gold = tool_price * @user_game.auto_sell_tools_trades
+        @r_tools -= @user_game.auto_sell_tools_trades
         @r_gold += get_gold
         add_message(
-          "Sold #{number_with_delimiter(@user_game.auto_sell_tools)} tools for #{number_with_delimiter(get_gold)}",
+          "Sold #{number_with_delimiter(@user_game.auto_sell_tools_trades)} tools for #{number_with_delimiter(get_gold)}",
           'success'
         )
       end
 
-      if @user_game.auto_buy_wood > 0
+      if @user_game.auto_buy_wood_trades > 0
         wood_price = (@data[:game_data][:local_wood_buy_price] * calculate_local_trade_multiplier).round
-        use_gold = wood_price * @user_game.auto_buy_wood
+        use_gold = wood_price * @user_game.auto_buy_wood_trades
         if @r_gold >= use_gold
-          @r_wood += @user_game.auto_buy_wood
+          @r_wood += @user_game.auto_buy_wood_trades
           @r_gold -= use_gold
           add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_wood)} wood for #{number_with_delimiter(use_gold)}",
+            "Bought #{number_with_delimiter(@user_game.auto_buy_wood_trades)} wood for #{number_with_delimiter(use_gold)}",
             'success'
           )
         end
       end
 
-      if @user_game.auto_buy_food > 0
+      if @user_game.auto_buy_food_trades > 0
         food_price = (@data[:game_data][:local_food_buy_price] * calculate_local_trade_multiplier).round
-        use_gold = food_price * @user_game.auto_buy_food
+        use_gold = food_price * @user_game.auto_buy_food_trades
         if @r_gold >= use_gold
-          @r_food += @user_game.auto_buy_food
+          @r_food += @user_game.auto_buy_food_trades
           @r_gold -= use_gold
           add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_food)} food for #{number_with_delimiter(use_gold)}",
+            "Bought #{number_with_delimiter(@user_game.auto_buy_food_trades)} food for #{number_with_delimiter(use_gold)}",
             'success'
           )
         end
       end
 
-      if @user_game.auto_buy_iron > 0
+      if @user_game.auto_buy_iron_trades > 0
         iron_price = (@data[:game_data][:local_iron_buy_price] * calculate_local_trade_multiplier).round
-        use_gold = iron_price * @user_game.auto_buy_iron
+        use_gold = iron_price * @user_game.auto_buy_iron_trades
         if @r_gold >= use_gold
-          @r_iron += @user_game.auto_buy_iron
+          @r_iron += @user_game.auto_buy_iron_trades
           @r_gold -= use_gold
           add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_iron)} iron for #{number_with_delimiter(use_gold)}",
+            "Bought #{number_with_delimiter(@user_game.auto_buy_iron_trades)} iron for #{number_with_delimiter(use_gold)}",
             'success'
           )
         end
       end
 
-      if @user_game.auto_buy_tools > 0
+      if @user_game.auto_buy_tools_trades > 0
         tool_price = (@data[:game_data][:local_tools_buy_price] * calculate_local_trade_multiplier).round
-        use_gold = tool_price * @user_game.auto_buy_tools
+        use_gold = tool_price * @user_game.auto_buy_tools_trades
         if @r_gold >= use_gold
-          @r_tools += @user_game.auto_buy_tools
+          @r_tools += @user_game.auto_buy_tools_trades
           @r_gold -= use_gold
           add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_tools)} tools for #{number_with_delimiter(use_gold)}",
+            "Bought #{number_with_delimiter(@user_game.auto_buy_tools_trades)} tools for #{number_with_delimiter(use_gold)}",
             'success'
           )
         end

@@ -121,29 +121,29 @@
             <%= form_with url: update_auto_trade_user_game_trades_path(@user_game), method: :post, local: true do |f| %>
               <tr>
                 <td>Auto Buy</td>
-                <td><%= f.number_field :auto_buy_wood, value: @user_game.auto_buy_wood, class: "form-control", min: 0 %></td>
-                <td><%= f.number_field :auto_buy_food, value: @user_game.auto_buy_food, class: "form-control", min: 0 %></td>
-                <td><%= f.number_field :auto_buy_iron, value: @user_game.auto_buy_iron, class: "form-control", min: 0 %></td>
-                <td><%= f.number_field :auto_buy_tools, value: @user_game.auto_buy_tools, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_buy_wood, value: @user_game.auto_buy_wood_trades, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_buy_food, value: @user_game.auto_buy_food_trades, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_buy_iron, value: @user_game.auto_buy_iron_trades, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_buy_tools, value: @user_game.auto_buy_tools_trades, class: "form-control", min: 0 %></td>
                 <td class="text-end">
-                  <% use_gold = @user_game.auto_buy_wood * @data[:user_data][:wood_buy_price] +
-                               @user_game.auto_buy_food * @data[:user_data][:food_buy_price] +
-                               @user_game.auto_buy_iron * @data[:user_data][:iron_buy_price] +
-                               @user_game.auto_buy_tools * @data[:user_data][:tools_buy_price] %>
+                  <% use_gold = @user_game.auto_buy_wood_trades * @data[:user_data][:wood_buy_price] +
+                               @user_game.auto_buy_food_trades * @data[:user_data][:food_buy_price] +
+                               @user_game.auto_buy_iron_trades * @data[:user_data][:iron_buy_price] +
+                               @user_game.auto_buy_tools_trades * @data[:user_data][:tools_buy_price] %>
                   <%= use_gold > 0 ? "-" : "" %><%= number_with_delimiter(use_gold) %>
                 </td>
               </tr>
               <tr>
                 <td>Auto Sell</td>
-                <td><%= f.number_field :auto_sell_wood, value: @user_game.auto_sell_wood, class: "form-control", min: 0 %></td>
-                <td><%= f.number_field :auto_sell_food, value: @user_game.auto_sell_food, class: "form-control", min: 0 %></td>
-                <td><%= f.number_field :auto_sell_iron, value: @user_game.auto_sell_iron, class: "form-control", min: 0 %></td>
-                <td><%= f.number_field :auto_sell_tools, value: @user_game.auto_sell_tools, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_sell_wood, value: @user_game.auto_sell_wood_trades, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_sell_food, value: @user_game.auto_sell_food_trades, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_sell_iron, value: @user_game.auto_sell_iron_trades, class: "form-control", min: 0 %></td>
+                <td><%= f.number_field :auto_sell_tools, value: @user_game.auto_sell_tools_trades, class: "form-control", min: 0 %></td>
                 <td class="text-end">
-                  <% get_gold = @user_game.auto_sell_wood * @data[:user_data][:wood_sell_price] +
-                               @user_game.auto_sell_food * @data[:user_data][:food_sell_price] +
-                               @user_game.auto_sell_iron * @data[:user_data][:iron_sell_price] +
-                               @user_game.auto_sell_tools * @data[:user_data][:tools_sell_price] %>
+                  <% get_gold = @user_game.auto_sell_wood_trades * @data[:user_data][:wood_sell_price] +
+                               @user_game.auto_sell_food_trades * @data[:user_data][:food_sell_price] +
+                               @user_game.auto_sell_iron_trades * @data[:user_data][:iron_sell_price] +
+                               @user_game.auto_sell_tools_trades * @data[:user_data][:tools_sell_price] %>
                   <%= number_with_delimiter(get_gold) %>
                 </td>
               </tr>

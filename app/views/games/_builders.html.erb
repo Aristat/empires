@@ -161,7 +161,7 @@
         </tr>
         </thead>
         <tbody>
-        <%= form_with(url: user_game_path(@game), method: :put, local: true) do |f| %>
+        <%= form_with(url: user_game_path(@user_game), method: :put, local: true) do |f| %>
           <% @data[:buildings].each do |key, building| %>
             <% have = @data[:user_data][key][:count] %>
             <% status = @data[:user_data][key][:status] %>
@@ -176,7 +176,7 @@
               <td class="text-end"><%= number_with_delimiter(land) %> <%= building[:settings][:land] %></td>
               <td>
                 <% if building[:settings][:allow_off] %>
-                  <%= f.select "#{key}_status",
+                  <%= f.select "#{key}_status_buildings_statuses",
                                (0..10).map { |n| [n * 10, n * 10] },
                                { selected: status },
                                { class: 'form-select form-select-sm' }

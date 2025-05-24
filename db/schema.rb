@@ -104,16 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.integer "stable", default: 0, null: false
     t.integer "mage_tower", default: 0, null: false
     t.integer "winery", default: 0, null: false
-    t.integer "hunter_status", default: 100, null: false
-    t.integer "farm_status", default: 100, null: false
-    t.integer "wood_cutter_status", default: 100, null: false
-    t.integer "gold_mine_status", default: 100, null: false
-    t.integer "iron_mine_status", default: 100, null: false
-    t.integer "tool_maker_status", default: 100, null: false
-    t.integer "winery_status", default: 100, null: false
-    t.integer "weaponsmith_status", default: 100, null: false
-    t.integer "stable_status", default: 100, null: false
-    t.integer "mage_tower_status", default: 100, null: false
+    t.jsonb "buildings_statuses", default: {}, null: false
     t.integer "f_land", default: 0, null: false
     t.integer "m_land", default: 0, null: false
     t.integer "p_land", default: 0, null: false
@@ -134,14 +125,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_203335) do
     t.integer "research_points", default: 0, null: false
     t.jsonb "researches", default: {}, null: false
     t.integer "trades_this_turn", default: 0, null: false
-    t.integer "auto_buy_wood", default: 0, null: false
-    t.integer "auto_buy_food", default: 0, null: false
-    t.integer "auto_buy_iron", default: 0, null: false
-    t.integer "auto_buy_tools", default: 0, null: false
-    t.integer "auto_sell_wood", default: 0, null: false
-    t.integer "auto_sell_food", default: 0, null: false
-    t.integer "auto_sell_iron", default: 0, null: false
-    t.integer "auto_sell_tools", default: 0, null: false
+    t.jsonb "trades", default: {}, null: false
     t.integer "wall", default: 0, null: false
     t.integer "wall_build_per_turn", default: 0, null: false
     t.datetime "created_at", null: false

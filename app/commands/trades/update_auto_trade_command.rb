@@ -44,14 +44,14 @@ module Trades
 
     def process_auto_trade
       user_game.update!(
-        auto_buy_wood: buy_wood,
-        auto_sell_wood: sell_wood,
-        auto_buy_iron: buy_iron,
-        auto_sell_iron: sell_iron,
-        auto_buy_food: buy_food,
-        auto_sell_food: sell_food,
-        auto_buy_tools: buy_tools,
-        auto_sell_tools: sell_tools
+        auto_buy_wood_trades: buy_wood,
+        auto_sell_wood_trades: sell_wood,
+        auto_buy_iron_trades: buy_iron,
+        auto_sell_iron_trades: sell_iron,
+        auto_buy_food_trades: buy_food,
+        auto_sell_food_trades: sell_food,
+        auto_buy_tools_trades: buy_tools,
+        auto_sell_tools_trades: sell_tools
       )
     end
 
