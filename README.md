@@ -18,6 +18,7 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 - [ ] Cover by E2E tests FE logic
 - [ ] Implement CI/CD and deploy to cloud solution like EC2/Heroku/other place by Docker container
 - [ ] Implement LRU cache logic to reduce SQL queries
+- [ ] Move translations to I18n to support multi languages
 
 ## How to run the game
 
