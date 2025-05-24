@@ -128,6 +128,7 @@ module UserGames
 
       @r_people -= can_produce * hunter_building[:workers]
       get_food = can_produce * hunter_building[:production]
+      get_food = get_food + (get_food * (@user_game.food_production_researches / 100.0)).round
       @p_food += get_food
       add_message("Hunters produced #{get_food} food", 'success')
     end
@@ -148,6 +149,7 @@ module UserGames
 
         @r_people -= can_produce * farm_building[:workers]
         get_food = can_produce * farm_building[:production]
+        get_food = get_food + (get_food * (@user_game.food_production_researches / 100.0)).round
         @p_food += get_food
         add_message("Farms produced #{get_food} food", 'success')
       else
@@ -170,6 +172,7 @@ module UserGames
 
       @r_people -= can_produce * wood_cutter_building[:workers]
       get_wood = can_produce * wood_cutter_building[:production]
+      get_wood = get_wood + (get_wood * (@user_game.wood_production_researches / 100.0)).round
       @p_wood = get_wood
       @r_wood += @p_wood
       add_message("Woodcutters produced #{get_wood} wood", 'success')
@@ -211,6 +214,7 @@ module UserGames
 
       @r_people -= can_produce * gold_mine_building[:workers]
       get_gold = can_produce * gold_mine_building[:production]
+      get_gold = get_gold + (get_gold * (@user_game.mine_production_researches / 100.0)).round
       @p_gold = get_gold
       @r_gold += @p_gold
       add_message("Gold mines produced #{get_gold} gold", 'success')
@@ -231,6 +235,7 @@ module UserGames
 
       @r_people -= can_produce * iron_mine_building[:workers]
       get_iron = can_produce * iron_mine_building[:production]
+      get_iron = get_iron + (get_iron * (@user_game.mine_production_researches / 100.0)).round
       @p_iron = get_iron
       @r_iron += @p_iron
       add_message("Iron mines produced #{get_iron} iron", 'success')
@@ -273,7 +278,9 @@ module UserGames
       @c_iron += can_produce * tool_maker_building[:tool_iron_need]
       @r_iron -= can_produce * tool_maker_building[:tool_iron_need]
 
-      @p_tools = can_produce * tool_maker_building[:production]
+      get_tools = can_produce * tool_maker_building[:production]
+      get_tools = get_tools + (get_tools * (@user_game.weapons_tools_production_researches / 100.0)).round
+      @p_tools = get_tools
       @r_tools += @p_tools
       add_message("Tool makers produced #{@p_tools} tools", 'success')
     end
@@ -324,6 +331,7 @@ module UserGames
       @r_iron -= can_produce * weaponsmith_building[:sword_iron_need]
 
       p_swords = can_produce * weaponsmith_building[:production]
+      p_swords = p_swords + (p_swords * (@user_game.weapons_tools_production_researches / 100.0)).round
       @r_swords += p_swords
 
       # Produce bows
@@ -348,6 +356,7 @@ module UserGames
       @r_wood -= can_produce * weaponsmith_building[:bow_wood_need]
 
       p_bows = can_produce * weaponsmith_building[:production]
+      p_bows = p_bows + (p_bows * (@user_game.weapons_tools_production_researches / 100.0)).round
       @r_bows += p_bows
 
       # Produce maces
@@ -380,6 +389,7 @@ module UserGames
       @r_iron -= can_produce * weaponsmith_building[:mace_iron_need]
 
       p_maces = can_produce * weaponsmith_building[:production]
+      p_maces = p_maces + (p_maces * (@user_game.weapons_tools_production_researches / 100.0)).round
       @r_maces += p_maces
 
       # Add production messages
@@ -645,7 +655,9 @@ module UserGames
         @growth = 0
       end
 
-      house_space = @user_game.house * house_building[:people] + @user_game.town_center * town_center_building[:people]
+      house_space = UserGames::HouseSpaceCommand.new(
+        user_game: @user_game, buildings: @data[:buildings]
+      ).call
 
       if @growth > 0 && house_space > @user_game.people
         people_come = ((@growth / 10000.0) * @user_game.people * @data[:game_data][:pop_increase_modifier]).round
@@ -995,6 +1007,7 @@ module UserGames
 
       can_hold = @user_game.town_center * town_center_building[:resources_limit_increase] +
         @user_game.warehouse * warehouse_building[:resources_limit_increase]
+      can_hold = can_hold + (can_hold * (@user_game.space_effectiveness_researches / 100.0)).round
 
       @user_game.wood = @r_wood
       @user_game.food = @r_food

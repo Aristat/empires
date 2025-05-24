@@ -77,7 +77,7 @@ class PrepareUserDataCommand < BaseCommand
       }.compact
     end
 
-    total_land = UserGames::CalculateTotalLandCommand.new(user_game: user_game).call
+    total_land = UserGames::TotalLandCommand.new(user_game: user_game).call
     num_builders = buildings[:tool_maker][:settings][:num_builders] * user_game.tool_maker + Building::DEFAULT_NUM_BUILDERS
 
     total_wall = (total_land * 0.05).round
@@ -89,11 +89,10 @@ class PrepareUserDataCommand < BaseCommand
     free_people = user_game.people - total_workers - num_builders
     total_workers += free_people if free_people < 0
 
-    house_space = user_game.house * buildings[:house][:settings][:people] +
-      user_game.town_center * buildings[:town_center][:settings][:people]
+    house_space = UserGames::HouseSpaceCommand.new(user_game: user_game, buildings: buildings).call
     free_house_space = house_space - user_game.people
 
-    food_per_explorer = UserGames::CalculateFoodPerExplorerCommand.new(
+    food_per_explorer = UserGames::FoodPerExplorerCommand.new(
       user_game: user_game,
       buildings: buildings,
       game_data: game_data
@@ -170,7 +169,7 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:research_produced] = research_produced
     user_data[:research_gold_needed] = research_gold_needed
 
-    user_data[:efficiency_of_explore] = UserGames::CalculateEfficiencyOfExploreCommand.new(
+    user_data[:efficiency_of_explore] = UserGames::EfficiencyOfExploreCommand.new(
       total_land: total_land
     ).call
 

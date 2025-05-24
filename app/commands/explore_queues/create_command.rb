@@ -112,7 +112,7 @@ module ExploreQueues
     end
 
     def calculate_food_needed(quantity)
-      food_per_explorer = UserGames::CalculateFoodPerExplorerCommand.new(
+      food_per_explorer = UserGames::FoodPerExplorerCommand.new(
         user_game: user_game,
         buildings: buildings,
         game_data: game_data

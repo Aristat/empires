@@ -1,5 +1,5 @@
 module UserGames
-  class CalculateEfficiencyOfExploreCommand
+  class EfficiencyOfExploreCommand
     attr_reader :total_land
 
     def initialize(total_land:)

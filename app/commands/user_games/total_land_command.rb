@@ -1,5 +1,5 @@
 module UserGames
-  class CalculateTotalLandCommand
+  class TotalLandCommand
     attr_reader :user_game
 
     def initialize(user_game:)
