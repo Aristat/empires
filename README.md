@@ -6,7 +6,7 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 
 ## TODO list
 
-- [ ] Finish research mechanic
+- [x] Finish research mechanic
 - [ ] Implement scores tables
 - [ ] Implement train army logic
 - [ ] Implement attack logic
