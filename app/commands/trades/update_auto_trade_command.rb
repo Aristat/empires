@@ -66,7 +66,7 @@ module Trades
     end
 
     def max_trades
-      @max_trades ||= Trades::CalculateMaxTradesCommand.new(user_game: user_game, buildings: buildings).call
+      @max_trades ||= Trades::MaxTradesCommand.new(user_game: user_game, buildings: buildings).call
     end
 
     def buy_wood

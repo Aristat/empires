@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Trades
-  class CalculateLocalTradeMultiplierCommand < BaseCommand
+  class LocalTradeMultiplierCommand < BaseCommand
     attr_reader :user_game
 
     def initialize(user_game:)

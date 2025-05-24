@@ -846,6 +846,12 @@ module UserGames
         forest_land = rand(forest_min..forest_land)
         plain_land = rand(plains_min..plain_land)
 
+        if user_game.explorers_researches > 0
+          mountain_land = mountain_land + (mountain_land * (@user_game.explorers_researches / 100.0)).round
+          forest_land = forest_land + (forest_land * (@user_game.explorers_researches / 100.0)).round
+          plain_land = plain_land + (plain_land * (@user_game.explorers_researches / 100.0)).round
+        end
+
         # Calculate efficiency based on total land
         total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
         efficiency = if total_land > 500_000
@@ -902,7 +908,7 @@ module UserGames
     end
 
     def process_auto_trade
-      calculate_local_trade_multiplier = Trades::CalculateLocalTradeMultiplierCommand.new(user_game: @user_game).call
+      calculate_local_trade_multiplier = Trades::LocalTradeMultiplierCommand.new(user_game: @user_game).call
 
       if @user_game.auto_sell_wood_trades > 0 && @r_wood >= @user_game.auto_sell_wood_trades
         wood_price = (@data[:game_data][:local_wood_sell_price] * (1.0 / calculate_local_trade_multiplier)).round

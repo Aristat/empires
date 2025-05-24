@@ -102,9 +102,9 @@ class PrepareUserDataCommand < BaseCommand
     total_explorers = user_game.explore_queues.sum { _1.people }
     can_send_explorers = [ max_explorers - total_explorers, send_explorers ].min
 
-    max_trades = user_game.market * buildings[:town_center][:settings][:max_local_trades]
+    max_trades = Trades::MaxTradesCommand.new(user_game: user_game, buildings: buildings).call
     trades_remaining = max_trades - user_game.trades_this_turn
-    trade_multiplier = Trades::CalculateLocalTradeMultiplierCommand.new(user_game: user_game).call
+    trade_multiplier = Trades::LocalTradeMultiplierCommand.new(user_game: user_game).call
 
     total_auto_trade = user_game.auto_buy_wood_trades + user_game.auto_buy_food_trades +
       user_game.auto_buy_iron_trades + user_game.auto_buy_tools_trades + user_game.auto_sell_wood_trades +

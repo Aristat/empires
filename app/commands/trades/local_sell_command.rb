@@ -9,7 +9,7 @@ module Trades
     def initialize(user_game:, local_sell_params:)
       @user_game = user_game
       @params = local_sell_params
-      @calculate_local_trade_multiplier = Trades::CalculateLocalTradeMultiplierCommand.new(user_game: user_game).call
+      @calculate_local_trade_multiplier = Trades::LocalTradeMultiplierCommand.new(user_game: user_game).call
       @game_data = PrepareGameDataCommand.new(
         game: user_game.game, civilization: user_game.civilization
       ).call.with_indifferent_access
@@ -113,7 +113,7 @@ module Trades
     end
 
     def max_trades
-      @max_trades ||= Trades::CalculateMaxTradesCommand.new(user_game: user_game, buildings: buildings).call
+      @max_trades ||= Trades::MaxTradesCommand.new(user_game: user_game, buildings: buildings).call
     end
 
     def wood_price
