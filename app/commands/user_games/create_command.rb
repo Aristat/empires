@@ -36,6 +36,8 @@ module UserGames
         last_turn_at: Time.current,
         current_turns: game.start_turns
       )
+      user_game.set_default_settings
+      user_game.save!
 
       UserGames::UpdateScoreCommand.new(user_game: user_game).call
 

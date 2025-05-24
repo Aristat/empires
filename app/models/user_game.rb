@@ -41,6 +41,8 @@
 #  market              :integer          default(0), not null
 #  p_land              :integer          default(0), not null
 #  people              :integer          default(0), not null
+#  research_points     :integer          default(0), not null
+#  researches          :jsonb            not null
 #  score               :bigint           default(0), not null
 #  stable              :integer          default(0), not null
 #  stable_status       :integer          default(100), not null
@@ -84,12 +86,29 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class UserGame < ApplicationRecord
+  RESEARCHES = {
+    attack_points: 0,
+    defense_points: 0,
+    thieves_strength: 0,
+    military_losses: 0,
+    food_production: 0,
+    mine_production: 0,
+    weapons_tools_production: 0,
+    space_effectiveness: 0,
+    markets_output: 0,
+    explorers: 0,
+    catapults_strength: 0,
+    wood_production: 0
+  }.freeze
+
   belongs_to :user
   belongs_to :game
   belongs_to :civilization
 
   has_many :build_queues, dependent: :destroy
   has_many :explore_queues, dependent: :destroy
+
+  store_accessor :researches, *RESEARCHES.keys, suffix: true
 
   validates :food_ratio, presence: true, numericality: { greater_than_or_equal_to: -2, less_than_or_equal_to: 4 }
   validates :hunter_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
@@ -106,4 +125,10 @@ class UserGame < ApplicationRecord
   validates :stable_status, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
   validates :mage_tower_status, presence: true,
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+
+  def set_default_settings
+    RESEARCHES.each do |key, default|
+      self.send("#{key}_researches=", default) if self.send("#{key}_researches").nil?
+    end
+  end
 end
