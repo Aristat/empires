@@ -50,7 +50,8 @@ soldiers_data = [
       attack_points: 10,
       defense_points: 10,
       gold_per_turn: 5,
-      train_swords: 5,
+      train_swords: 1,
+      train_horses: 1,
       take_land: 0.15,
       food_eaten: 1,
     }

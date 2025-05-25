@@ -187,6 +187,7 @@ buildings_data = [
       cost_iron: 40,
       cost_gold: 2500,
       allow_off: false,
+      max_train: 2,
       max_units: 10,
       people: 100,
       resources_limit_increase: 1000,

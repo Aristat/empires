@@ -7,6 +7,85 @@
     <div class="card-body">
       <h5 class="card-title">Army Management</h5>
 
+      <div class="mb-4">
+        <p>
+          Your Forts and Town Centers can hold up to <%= number_with_delimiter(@data[:user_data][:total_soldiers_limit]) %> units<br>
+          and you can train <%= number_with_delimiter(@data[:user_data][:total_soldiers_limit_for_train]) %> units at a time.
+        </p>
+        <p>
+          You are using <%= number_with_precision(@data[:user_data][:total_soldiers_percentage], precision: 1) %>% of your maximum capacity.
+        </p>
+        <p>
+          You also have <%= number_with_delimiter(@user_game.swords) %> swords,
+          <%= number_with_delimiter(@user_game.bows) %> bows,
+          <%= number_with_delimiter(@user_game.horses) %> horses and
+          <%= number_with_delimiter(@user_game.maces) %> maces.
+        </p>
+      </div>
+
+      <hr class="border-secondary">
+
+      <div class="mb-4">
+        <h6>Military Strength:</h6>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Attacking Power</th>
+              <th>Defense Power</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Army</td>
+              <td><%= number_with_delimiter(@data[:user_data][:attack_power]) %></td>
+              <td><%= number_with_delimiter(@data[:user_data][:defense_power]) %></td>
+            </tr>
+            <tr>
+              <td>Catapults</td>
+              <td><%= number_with_delimiter(@data[:user_data][:catapult_attack_power]) %></td>
+              <td><%= number_with_delimiter(@data[:user_data][:catapult_defense_power]) %></td>
+            </tr>
+            <tr>
+              <td>Thieves</td>
+              <td><%= number_with_delimiter(@data[:user_data][:thieves_attack_power]) %></td>
+              <td><%= number_with_delimiter(@data[:user_data][:thieves_defense_power]) %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="border-secondary">
+
+      <% if @data[:user_data][:training_queue].present? %>
+        <div class="mb-4">
+          <h6>Training Queue:</h6>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Number</th>
+                <th>Turns Remaining</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @data[:user_data][:training_queue].each do |queue_item| %>
+                <tr>
+                  <td><%= queue_item[:name] %></td>
+                  <td><%= number_with_delimiter(queue_item[:quantity]) %></td>
+                  <td><%= queue_item[:turns_remaining] %></td>
+                  <td>
+                    <%= link_to 'Cancel', user_game_path(@user_game, queue_id: queue_item[:id], eflag: 'dequeue'),
+                        method: :patch, class: 'btn btn-sm btn-danger' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+
       <%= form_with url: user_game_path(@user_game), method: :patch, local: true do |f| %>
         <div class="table-responsive">
           <table class="table table-bordered">
@@ -43,8 +122,8 @@
                       F: <%= @data[:user_data][key][:food_eaten] %><br>
                     <% end %>
                   </td>
-                  <td><%= number_with_delimiter(0) %></td>
-                  <td><%= number_with_delimiter(0) %></td>
+                  <td><%= number_with_delimiter(@data[:user_data][key][:attacking]) %></td>
+                  <td><%= number_with_delimiter(@data[:user_data][key][:training]) %></td>
 
                   <td>
                     <% if soldier[:settings][:train_gold] > 0 %>
@@ -69,12 +148,21 @@
                       <%= soldier[:settings][:train_horses] %> Horses<br>
                     <% end %>
                   </td>
-                  <td><%= number_with_delimiter(0) %></td>
-                  <td><%= number_with_delimiter(0) %></td>
+                  <td>
+                    <%= number_with_delimiter(@data[:user_data][key][:maximum_training]) %>
+                  </td>
+                  <td>
+                    <div class="input-group">
+                      <%= f.number_field "train_#{key}", class: 'form-control form-control-sm', size: 5 %>
+                      <% if @data[:user_data][key][:maximum_training] > 0 %>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('train_<%= key %>').value = <%= @data[:user_data][key][:maximum_training] %>">M</button>
+                      <% end %>
+                    </div>
+                  </td>
                 </tr>
               <% end %>
 
-              <tr class="table">
+              <tr>
                 <td>
                 </td>
                 <td><%= number_with_delimiter(@data[:user_data][:total_soldiers_count]) %></td>
@@ -82,9 +170,32 @@
                   <%= number_with_delimiter(@data[:user_data][:total_soldiers_gold_per_turn]) %> gold<br>
                   <%= number_with_delimiter(@data[:user_data][:total_soldiers_food_per_turn]) %> food
                 </td>
+                <td><%= number_with_delimiter(@data[:user_data][:total_soldiers_attacking]) %></td>
+                <td><%= number_with_delimiter(@data[:user_data][:total_soldiers_training]) %></td>
+                <td></td>
+                <td><%= number_with_delimiter(@data[:user_data][:total_soldiers_can_train]) %></td>
+                <td class="text-center">
+                  <%= f.submit 'Train', class: 'btn btn-sm btn-primary' %>
+                </td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="mt-3">
+          <% if @data[:user_data][:total_soldiers_can_hold] == 0 %>
+            <p>Your forts and town center are full.</p>
+          <% elsif @data[:user_data][:total_soldiers_can_hold] > 0 %>
+            <p>You have room for <%= number_with_delimiter(@data[:user_data][:total_soldiers_can_hold]) %> more soldiers.</p>
+          <% else %>
+            <p class="text-danger"><%= number_with_delimiter(@data[:user_data][:total_soldiers_can_hold].abs) %> of your soldiers don't have any place to live.</p>
+          <% end %>
+
+          <p>
+            If you want to disband some of your soldiers,<br>
+            fill up the quantities above and press the button below
+          </p>
+          <%= f.submit 'Disband Army', class: 'btn btn-danger btn-sm', name: 'disband' %>
         </div>
       <% end %>
     </div>

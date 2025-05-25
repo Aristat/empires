@@ -179,6 +179,8 @@ class PrepareUserDataCommand < BaseCommand
     total_soldiers_wood_per_turn = 0
     total_soldiers_iron_per_turn = 0
     total_soldiers_food_per_turn = 0
+    total_soldiers_attacking = 0
+    total_soldiers_training = 0
 
     soldiers.each do |soldier_key, soldier_data|
       # Special for tower to skip
@@ -195,7 +197,9 @@ class PrepareUserDataCommand < BaseCommand
         gold_per_turn: gold_per_turn,
         wood_per_turn: wood_per_turn,
         iron_per_turn: iron_per_turn,
-        food_eaten: food_eaten
+        food_eaten: food_eaten,
+        attacking: 0,
+        training: 0
       }
       total_soldiers_count += count
       total_soldiers_gold_per_turn += gold_per_turn
@@ -204,11 +208,60 @@ class PrepareUserDataCommand < BaseCommand
       total_soldiers_food_per_turn += food_eaten
     end
 
+    # TODO! total_soldiers_count from attacking queue
+
+    total_soldiers_limit_for_train = user_game.town_center * buildings[:town_center][:settings][:max_train] +
+      user_game.fort * buildings[:fort][:settings][:max_train]
+    total_soldiers_limit = user_game.town_center * buildings[:town_center][:settings][:max_units] +
+      user_game.fort * buildings[:fort][:settings][:max_units]
+    total_soldiers_percentage = total_soldiers_limit > 0 ? (total_soldiers_count / total_soldiers_limit.to_f) * 100 : 0
+    total_soldiers_can_train = total_soldiers_limit_for_train - 0
+    total_soldiers_can_hold = total_soldiers_limit - total_soldiers_count - total_soldiers_can_train
+
+    soldiers.each do |soldier_key, soldier_data|
+      # Special for tower to skip
+      next unless user_game.respond_to?("#{soldier_key}_soldiers")
+
+      maximum_training = total_soldiers_can_train
+      maximum_training = total_soldiers_can_hold if maximum_training > total_soldiers_can_hold
+      maximum_training = 0 if maximum_training < 0
+
+      unless soldier_data[:settings][:train_bows].zero?
+        maximum_training = [maximum_training, (user_game.bows / soldier_data[:settings][:train_bows]).round].min
+      end
+      unless soldier_data[:settings][:train_swords].zero?
+        maximum_training = [maximum_training, (user_game.swords / soldier_data[:settings][:train_swords]).round].min
+      end
+      unless soldier_data[:settings][:train_maces].zero?
+        maximum_training = [maximum_training, (user_game.maces / soldier_data[:settings][:train_maces]).round].min
+      end
+      unless soldier_data[:settings][:train_horses].zero?
+        maximum_training = [maximum_training, (user_game.horses / soldier_data[:settings][:train_horses]).round].min
+      end
+
+      user_data[soldier_key][:maximum_training] = maximum_training
+    end
+
+    user_data[:total_soldiers_limit_for_train] = total_soldiers_limit_for_train
+    user_data[:total_soldiers_can_train] = total_soldiers_can_train
+    user_data[:total_soldiers_can_hold] = total_soldiers_can_hold
+    user_data[:total_soldiers_limit] = total_soldiers_limit
     user_data[:total_soldiers_count] = total_soldiers_count
+    user_data[:total_soldiers_percentage] = total_soldiers_percentage
     user_data[:total_soldiers_gold_per_turn] = total_soldiers_gold_per_turn
     user_data[:total_soldiers_wood_per_turn] = total_soldiers_wood_per_turn
     user_data[:total_soldiers_iron_per_turn] = total_soldiers_iron_per_turn
     user_data[:total_soldiers_food_per_turn] = total_soldiers_food_per_turn
+    user_data[:total_soldiers_attacking] = total_soldiers_attacking
+    user_data[:total_soldiers_training] = total_soldiers_training
+
+    # TODO! Implement later
+    user_data[:attack_power] = 0
+    user_data[:defense_power] = 0
+    user_data[:catapult_attack_power] = 0
+    user_data[:catapult_defense_power] = 0
+    user_data[:thieves_attack_power] = 0
+    user_data[:thieves_defense_power] = 0
 
     user_data
   end
