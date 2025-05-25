@@ -226,17 +226,30 @@ class PrepareUserDataCommand < BaseCommand
       maximum_training = total_soldiers_can_hold if maximum_training > total_soldiers_can_hold
       maximum_training = 0 if maximum_training < 0
 
+      if soldier_data[:key] == 'unique_unit'
+        maximum_training = [maximum_training, user_game.town_center].min
+      end
+
       unless soldier_data[:settings][:train_bows].zero?
-        maximum_training = [maximum_training, (user_game.bows / soldier_data[:settings][:train_bows]).round].min
+        maximum_training = [maximum_training, (user_game.bows / soldier_data[:settings][:train_bows]).floor].min
       end
       unless soldier_data[:settings][:train_swords].zero?
-        maximum_training = [maximum_training, (user_game.swords / soldier_data[:settings][:train_swords]).round].min
+        maximum_training = [maximum_training, (user_game.swords / soldier_data[:settings][:train_swords]).floor].min
       end
       unless soldier_data[:settings][:train_maces].zero?
-        maximum_training = [maximum_training, (user_game.maces / soldier_data[:settings][:train_maces]).round].min
+        maximum_training = [maximum_training, (user_game.maces / soldier_data[:settings][:train_maces]).floor].min
       end
       unless soldier_data[:settings][:train_horses].zero?
-        maximum_training = [maximum_training, (user_game.horses / soldier_data[:settings][:train_horses]).round].min
+        maximum_training = [maximum_training, (user_game.horses / soldier_data[:settings][:train_horses]).floor].min
+      end
+      unless soldier_data[:settings][:train_gold].zero?
+        maximum_training = [maximum_training, (user_game.gold / soldier_data[:settings][:train_gold]).floor].min
+      end
+      unless soldier_data[:settings][:train_wood].zero?
+        maximum_training = [maximum_training, (user_game.wood / soldier_data[:settings][:train_wood]).floor].min
+      end
+      unless soldier_data[:settings][:train_iron].zero?
+        maximum_training = [maximum_training, (user_game.iron / soldier_data[:settings][:train_iron]).floor].min
       end
 
       user_data[soldier_key][:maximum_training] = maximum_training
