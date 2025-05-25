@@ -57,7 +57,7 @@
 
       <hr class="border-secondary">
 
-      <% if @data[:user_data][:training_queue].present? %>
+      <% if @data[:user_data][:training_queues].present? %>
         <div class="mb-4">
           <h6>Training Queue:</h6>
           <table class="table table-bordered">
@@ -70,13 +70,13 @@
               </tr>
             </thead>
             <tbody>
-              <% @data[:user_data][:training_queue].each do |queue_item| %>
+              <% @data[:user_data][:training_queues].each do |queue_item| %>
                 <tr>
-                  <td><%= queue_item[:name] %></td>
+                  <td><%= queue_item[:soldier_key] %></td>
                   <td><%= number_with_delimiter(queue_item[:quantity]) %></td>
                   <td><%= queue_item[:turns_remaining] %></td>
                   <td>
-                    <%= link_to 'Cancel', user_game_path(@user_game, queue_id: queue_item[:id], eflag: 'dequeue'),
+                    <%= link_to 'Cancel', user_game_path(@user_game, queue_id: queue_item[:id]),
                         method: :patch, class: 'btn btn-sm btn-danger' %>
                   </td>
                 </tr>

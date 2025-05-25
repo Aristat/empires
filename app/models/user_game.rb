@@ -129,6 +129,7 @@ class UserGame < ApplicationRecord
 
   has_many :build_queues, dependent: :destroy
   has_many :explore_queues, dependent: :destroy
+  has_many :train_queues, dependent: :destroy
 
   # TODO!: Add more researches like
   # Conquered land

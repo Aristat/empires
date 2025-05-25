@@ -210,13 +210,15 @@ class PrepareUserDataCommand < BaseCommand
 
     # TODO! total_soldiers_count from attacking queue
 
+    training_queues = user_game.train_queues
+    total_soldiers_in_train = training_queues.sum { _1.quantity }
     total_soldiers_limit_for_train = user_game.town_center * buildings[:town_center][:settings][:max_train] +
       user_game.fort * buildings[:fort][:settings][:max_train]
     total_soldiers_limit = user_game.town_center * buildings[:town_center][:settings][:max_units] +
       user_game.fort * buildings[:fort][:settings][:max_units]
     total_soldiers_percentage = total_soldiers_limit > 0 ? (total_soldiers_count / total_soldiers_limit.to_f) * 100 : 0
-    total_soldiers_can_train = total_soldiers_limit_for_train - 0
-    total_soldiers_can_hold = total_soldiers_limit - total_soldiers_count - total_soldiers_can_train
+    total_soldiers_can_train = total_soldiers_limit_for_train - total_soldiers_in_train
+    total_soldiers_can_hold = total_soldiers_limit - total_soldiers_count - total_soldiers_in_train
 
     soldiers.each do |soldier_key, soldier_data|
       # Special for tower to skip
@@ -255,6 +257,7 @@ class PrepareUserDataCommand < BaseCommand
       user_data[soldier_key][:maximum_training] = maximum_training
     end
 
+    user_data[:training_queues] = training_queues
     user_data[:total_soldiers_limit_for_train] = total_soldiers_limit_for_train
     user_data[:total_soldiers_can_train] = total_soldiers_can_train
     user_data[:total_soldiers_can_hold] = total_soldiers_can_hold

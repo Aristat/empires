@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_25_102215) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -89,6 +89,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_102215) do
     t.index ["key"], name: "index_soldiers_on_key", unique: true
   end
 
+  create_table "train_queues", force: :cascade do |t|
+    t.bigint "user_game_id", null: false
+    t.integer "soldier_key", null: false
+    t.integer "time_needed", null: false
+    t.integer "quantity", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_game_id"], name: "index_train_queues_on_user_game_id"
+  end
+
   create_table "user_games", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "game_id", null: false
@@ -163,6 +173,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_102215) do
 
   add_foreign_key "build_queues", "user_games"
   add_foreign_key "explore_queues", "user_games"
+  add_foreign_key "train_queues", "user_games"
   add_foreign_key "user_games", "civilizations"
   add_foreign_key "user_games", "games"
   add_foreign_key "user_games", "users"
