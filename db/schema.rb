@@ -92,7 +92,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
   create_table "train_queues", force: :cascade do |t|
     t.bigint "user_game_id", null: false
     t.integer "soldier_key", null: false
-    t.integer "time_needed", null: false
+    t.integer "turns_remaining", null: false
     t.integer "quantity", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

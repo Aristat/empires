@@ -148,7 +148,7 @@ module TrainQueues
         user_game.train_queues.create!(
           soldier_key: soldier_key,
           quantity: quantity.to_i,
-          time_needed: soldier[:settings][:turns]
+          turns_remaining: soldier[:settings][:turns]
         )
       end
     end

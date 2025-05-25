@@ -3,13 +3,13 @@
 #
 # Table name: train_queues
 #
-#  id           :bigint           not null, primary key
-#  quantity     :integer          not null
-#  soldier_key  :integer          not null
-#  time_needed  :integer          not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  user_game_id :bigint           not null
+#  id              :bigint           not null, primary key
+#  quantity        :integer          not null
+#  soldier_key     :integer          not null
+#  turns_remaining :integer          not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  user_game_id    :bigint           not null
 #
 # Indexes
 #
