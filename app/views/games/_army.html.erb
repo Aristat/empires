@@ -76,8 +76,8 @@
                   <td><%= number_with_delimiter(queue_item[:quantity]) %></td>
                   <td><%= queue_item[:turns_remaining] %></td>
                   <td>
-                    <%= link_to 'Cancel', user_game_path(@user_game, queue_id: queue_item[:id]),
-                        method: :patch, class: 'btn btn-sm btn-danger' %>
+                    <%= button_to 'Cancel', user_game_train_queue_path(@user_game, queue_item[:id]),
+                        method: :delete, class: 'btn btn-sm btn-danger' %>
                   </td>
                 </tr>
               <% end %>

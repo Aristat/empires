@@ -17,21 +17,14 @@ class TrainQueuesController < ApplicationController
   end
 
   def destroy
-    # if params[:train_queues].present?
-    #   # Handle disband action
-    #   command = TrainQueues::DisbandCommand.new(user_game: @user_game, train_queue_params: train_queue_params)
-    #   command.call
-    #
-    #   if command.failed?
-    #     flash[:alert] = command.errors.join("\n")
-    #   else
-    #     flash[:notice] = t('train_queues.messages.disbanded')
-    #   end
-    # else
-    #   # Handle single queue deletion
-    #   command = TrainQueues::DeleteCommand.new(user_game: @user_game, train_queues: [@train_queue]).call
-    #   flash[:notice] = t('train_queues.messages.destroyed')
-    # end
+    command = TrainQueues::DeleteCommand.new(user_game: @user_game, train_queue: @train_queue)
+    command.call
+
+    if command.failed?
+      flash[:alert] = command.errors.join("\n")
+    else
+      flash[:notice] = t('train_queues.messages.destroyed')
+    end
 
     redirect_to game_path(@user_game.game)
   end
