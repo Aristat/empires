@@ -35,7 +35,11 @@ Rails.application.routes.draw do
     end
 
     resources :explore_queues, only: [:create, :destroy]
-    resources :train_queues, only: [:create, :destroy]
+    resources :train_queues, only: [:create, :destroy] do
+      collection do
+        post :disband
+      end
+    end
 
     resources :trades, only: [] do
       collection do

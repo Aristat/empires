@@ -153,7 +153,7 @@
                   </td>
                   <td>
                     <div class="input-group">
-                      <%= f.number_field "train_queues[#{key}]", class: 'form-control form-control-sm', size: 5 %>
+                      <%= f.number_field "train_queues[#{key}]", class: 'form-control form-control-sm train-queues-field', size: 5 %>
                       <% if @data[:user_data][key][:maximum_training] > 0 %>
                         <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('train_queues_<%= key %>_quantity').value = <%= @data[:user_data][key][:maximum_training] %>">M</button>
                       <% end %>
@@ -195,7 +195,51 @@
             If you want to disband some of your soldiers,<br>
             fill up the quantities above and press the button below
           </p>
-          <%= f.submit 'Disband Army', class: 'btn btn-danger btn-sm', name: 'disband' %>
+          <%= f.submit 'Disband Army', class: 'btn btn-danger btn-sm', onclick: "copyFormValues(event)" %>
+
+          <script>
+            function copyFormValues(event) {
+              event.preventDefault();
+
+              // Get all training input fields
+              const trainingInputs = document.querySelectorAll('input.train-queues-field');
+              let hasValues = false;
+              const formData = new FormData();
+
+              // Check if any field has a value and collect form data
+              trainingInputs.forEach(input => {
+                if (parseInt(input.value) > 0) {
+                  hasValues = true;
+                  formData.append(input.name, input.value);
+                }
+              });
+
+              if (!hasValues) {
+                alert('Please enter quantities to disband');
+                return;
+              }
+
+              // Submit using fetch
+              fetch('<%= disband_user_game_train_queues_path(@user_game) %>', {
+                method: 'POST',
+                headers: {
+                  'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+              })
+              .then(response => {
+                if (response.ok) {
+                  window.location.reload();
+                } else {
+                  alert('Error disbanding army');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('Error disbanding army');
+              });
+            }
+          </script>
         </div>
       <% end %>
     </div>

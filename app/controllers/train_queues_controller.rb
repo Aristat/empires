@@ -29,6 +29,19 @@ class TrainQueuesController < ApplicationController
     redirect_to game_path(@user_game.game)
   end
 
+  def disband
+    command = TrainQueues::DisbandCommand.new(user_game: @user_game, train_queue_params: train_queue_params)
+    command.call
+
+    if command.failed?
+      flash[:alert] = command.errors.join("\n")
+    else
+      flash[:notice] = t('train_queues.messages.disband')
+    end
+
+    redirect_to game_path(@user_game.game)
+  end
+
   private
 
   def set_user_game
