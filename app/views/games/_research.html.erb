@@ -127,7 +127,7 @@
           <tr>
             <td>Markets Output</td>
             <td class="text-center"><%= user_game.markets_output_researches %></td>
-            <td>You can transfer/aid <%= (user_game.markets_output_researches * 10) %>% more goods</td>
+            <td>You can transfer/aid <%= (user_game.markets_output_researches * UserGame::MARKETS_OUTPUT_RESEARCHES_MULTIPLIER) %>% more goods</td>
           </tr>
           <tr>
             <td>Explorers</td>

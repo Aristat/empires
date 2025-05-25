@@ -84,6 +84,7 @@ class UserGame < ApplicationRecord
     mage_tower_status: 100
   }.freeze
 
+  MARKETS_OUTPUT_RESEARCHES_MULTIPLIER = 10
   RESEARCHES = {
     attack_points: 0,
     defense_points: 0,
