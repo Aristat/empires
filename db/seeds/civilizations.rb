@@ -87,7 +87,7 @@ civilizations_data = [
           train_horses: 1,
           take_land: 0.3
         },
-        archers: {
+        archer: {
           defense_points: 15,
         },
         tower: {
@@ -175,10 +175,10 @@ civilizations_data = [
           train_bows: 1,
           take_land: 0.20
         },
-        archers: {
+        archer: {
           defense_points: 14,
         },
-        catapults: {
+        catapult: {
           attack_points: 30,
           defense_points: 30,
         }
@@ -231,7 +231,7 @@ civilizations_data = [
           train_gold: 100,
           gold_per_turn: 5
         },
-        thieves: {
+        thieve: {
           defense_points: 50
         }
       }
@@ -267,7 +267,7 @@ civilizations_data = [
           train_gold: 5000,
           gold_per_turn: 50
         },
-        thieves: {
+        thieve: {
           defense_points: 80
         },
         horseman: {
@@ -279,7 +279,7 @@ civilizations_data = [
         macemen: {
           attack_points: 8
         },
-        catapults: {
+        catapult: {
           attack_points: 16,
           defense_points: 20,
         }
@@ -322,10 +322,10 @@ civilizations_data = [
           take_land: 0.5,
           turns: 10
         },
-        thieves: {
+        thieve: {
           attack_points: 65
         },
-        trained_peasants: {
+        trained_peasant: {
           attack_points: 2,
           defense_points: 3,
           take_land: 0.04,

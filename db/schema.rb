@@ -137,6 +137,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_102215) do
     t.jsonb "researches", default: {}, null: false
     t.integer "trades_this_turn", default: 0, null: false
     t.jsonb "trades", default: {}, null: false
+    t.jsonb "soldiers", default: {}, null: false
     t.integer "wall", default: 0, null: false
     t.integer "wall_build_per_turn", default: 0, null: false
     t.datetime "created_at", null: false

@@ -1,0 +1,92 @@
+<% if @user_game.fort.zero? && @user_game.town_center.zero? %>
+  <div class="alert alert-danger">
+    <strong>Build forts or town centers to train units.</strong>
+  </div>
+<% else %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Army Management</h5>
+
+      <%= form_with url: user_game_path(@user_game), method: :patch, local: true do |f| %>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Unit Type</th>
+                <th>You Have</th>
+                <th>Upkeep Cost</th>
+                <th>Attacking</th>
+                <th>Training</th>
+                <th>Needed To Train</th>
+                <th>Max. Train</th>
+                <th>Num. Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @data[:soldiers].each do |key, soldier| %>
+                <% next if soldier[:settings][:turns].negative? %>
+
+                <tr>
+                  <td><%= soldier[:name] %></td>
+                  <td><%= number_with_delimiter( @data[:user_data][key][:count]) %></td>
+                  <td>
+                    <% if @data[:user_data][key][:gold_per_turn] > 0 %>
+                      G: <%= @data[:user_data][key][:gold_per_turn] %><br>
+                    <% end %>
+                    <% if @data[:user_data][key][:wood_per_turn] > 0 %>
+                      W: <%= @data[:user_data][key][:wood_per_turn] %><br>
+                    <% end %>
+                    <% if @data[:user_data][key][:iron_per_turn] > 0 %>
+                      I: <%= @data[:user_data][key][:iron_per_turn] %><br>
+                    <% end %>
+                    <% if @data[:user_data][key][:food_eaten] > 0 %>
+                      F: <%= @data[:user_data][key][:food_eaten] %><br>
+                    <% end %>
+                  </td>
+                  <td><%= number_with_delimiter(0) %></td>
+                  <td><%= number_with_delimiter(0) %></td>
+
+                  <td>
+                    <% if soldier[:settings][:train_gold] > 0 %>
+                      <%= soldier[:settings][:train_gold] %> Gold<br>
+                    <% end %>
+                    <% if soldier[:settings][:train_wood] > 0 %>
+                      <%= soldier[:settings][:train_wood] %> Wood<br>
+                    <% end %>
+                    <% if soldier[:settings][:train_iron] > 0 %>
+                      <%= soldier[:settings][:train_iron] %> Iron<br>
+                    <% end %>
+                    <% if soldier[:settings][:train_swords] > 0 %>
+                      <%= soldier[:settings][:train_swords] %> Swords<br>
+                    <% end %>
+                    <% if soldier[:settings][:train_bows] > 0 %>
+                      <%= soldier[:settings][:train_bows] %> Bows<br>
+                    <% end %>
+                    <% if soldier[:settings][:train_maces] > 0 %>
+                      <%= soldier[:settings][:train_maces] %> Maces<br>
+                    <% end %>
+                    <% if soldier[:settings][:train_horses] > 0 %>
+                      <%= soldier[:settings][:train_horses] %> Horses<br>
+                    <% end %>
+                  </td>
+                  <td><%= number_with_delimiter(0) %></td>
+                  <td><%= number_with_delimiter(0) %></td>
+                </tr>
+              <% end %>
+
+              <tr class="table">
+                <td>
+                </td>
+                <td><%= number_with_delimiter(@data[:user_data][:total_soldiers_count]) %></td>
+                <td>
+                  <%= number_with_delimiter(@data[:user_data][:total_soldiers_gold_per_turn]) %> gold<br>
+                  <%= number_with_delimiter(@data[:user_data][:total_soldiers_food_per_turn]) %> food
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

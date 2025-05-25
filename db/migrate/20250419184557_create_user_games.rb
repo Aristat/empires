@@ -64,6 +64,9 @@ class CreateUserGames < ActiveRecord::Migration[8.0]
       t.integer :trades_this_turn, null: false, default: 0
       t.jsonb :trades, null: false, default: {}
 
+      # soldiers
+      t.jsonb :soldiers, null: false, default: {}
+
       t.integer :wall, null: false, default: 0
       t.integer :wall_build_per_turn, null: false, default: 0
 

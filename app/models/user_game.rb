@@ -33,6 +33,7 @@
 #  research_points     :integer          default(0), not null
 #  researches          :jsonb            not null
 #  score               :bigint           default(0), not null
+#  soldiers            :jsonb            not null
 #  stable              :integer          default(0), not null
 #  sword_weaponsmith   :integer          default(0), not null
 #  swords              :integer          default(0), not null
@@ -111,6 +112,17 @@ class UserGame < ApplicationRecord
     auto_sell_tools: 0
   }.freeze
 
+  SOLDIERS = {
+    unique_unit: 0,
+    archer: 0,
+    swordsman: 0,
+    horseman: 0,
+    catapult: 0,
+    macemen: 0,
+    trained_peasant: 0,
+    thieve: 0
+  }.freeze
+
   belongs_to :user
   belongs_to :game
   belongs_to :civilization
@@ -143,6 +155,7 @@ class UserGame < ApplicationRecord
   store_accessor :buildings_statuses, *BUILDING_STATUSES.keys, suffix: true
   store_accessor :researches, *RESEARCHES.keys, suffix: true
   store_accessor :trades, *TRADES.keys, suffix: true
+  store_accessor :soldiers, *SOLDIERS.keys, suffix: true
 
   BUILDING_STATUSES.keys.each do |status|
     define_method("#{status}_buildings_statuses") do
@@ -173,6 +186,17 @@ class UserGame < ApplicationRecord
     end
 
     define_method("#{status}_trades=") do |value|
+      super(value.to_i)
+    end
+  end
+
+  SOLDIERS.keys.each do |status|
+    define_method("#{status}_soldiers") do
+      value = super()
+      value.to_i
+    end
+
+    define_method("#{status}_soldiers=") do |value|
       super(value.to_i)
     end
   end
@@ -212,6 +236,10 @@ class UserGame < ApplicationRecord
 
     TRADES.each do |key, default|
       self.send("#{key}_trades=", default)
+    end
+
+    SOLDIERS.each do |key, default|
+      self.send("#{key}_soldiers=", default)
     end
   end
 end

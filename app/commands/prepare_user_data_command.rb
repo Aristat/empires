@@ -1,9 +1,10 @@
 class PrepareUserDataCommand < BaseCommand
-  attr_reader :user_game, :buildings, :game_data
+  attr_reader :user_game, :buildings, :soldiers, :game_data
 
-  def initialize(user_game:, buildings:, game_data:)
+  def initialize(user_game:, buildings:, soldiers:, game_data:)
     @user_game = user_game
     @buildings = buildings
+    @soldiers = soldiers
     @game_data = game_data
   end
 
@@ -172,6 +173,42 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:efficiency_of_explore] = UserGames::EfficiencyOfExploreCommand.new(
       total_land: total_land
     ).call
+
+    total_soldiers_count = 0
+    total_soldiers_gold_per_turn = 0
+    total_soldiers_wood_per_turn = 0
+    total_soldiers_iron_per_turn = 0
+    total_soldiers_food_per_turn = 0
+
+    soldiers.each do |soldier_key, soldier_data|
+      # Special for tower to skip
+      next unless user_game.respond_to?("#{soldier_key}_soldiers")
+
+      count = user_game.send("#{soldier_key}_soldiers")
+      gold_per_turn = count * soldier_data[:settings][:gold_per_turn]
+      wood_per_turn = count * soldier_data[:settings][:wood_per_turn]
+      iron_per_turn = count * soldier_data[:settings][:iron_per_turn]
+      food_eaten = count * soldier_data[:settings][:food_eaten]
+
+      user_data[soldier_key] = {
+        count: count,
+        gold_per_turn: gold_per_turn,
+        wood_per_turn: wood_per_turn,
+        iron_per_turn: iron_per_turn,
+        food_eaten: food_eaten
+      }
+      total_soldiers_count += count
+      total_soldiers_gold_per_turn += gold_per_turn
+      total_soldiers_wood_per_turn += wood_per_turn
+      total_soldiers_iron_per_turn += iron_per_turn
+      total_soldiers_food_per_turn += food_eaten
+    end
+
+    user_data[:total_soldiers_count] = total_soldiers_count
+    user_data[:total_soldiers_gold_per_turn] = total_soldiers_gold_per_turn
+    user_data[:total_soldiers_wood_per_turn] = total_soldiers_wood_per_turn
+    user_data[:total_soldiers_iron_per_turn] = total_soldiers_iron_per_turn
+    user_data[:total_soldiers_food_per_turn] = total_soldiers_food_per_turn
 
     user_data
   end

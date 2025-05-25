@@ -15,7 +15,7 @@ soldiers_data = [
   },
   {
     name: "Archer",
-    key: "archers",
+    key: "archer",
     position: 1,
     settings: {
       turns: 6,
@@ -60,7 +60,7 @@ soldiers_data = [
     key: "tower",
     position: 4,
     settings: {
-      turns: 0,
+      turns: -1,
       attack_points: 0,
       defense_points: 50,
       gold_per_turn: 0,
@@ -70,13 +70,15 @@ soldiers_data = [
   },
   {
     name: "Catapult",
-    key: "catapults",
+    key: "catapult",
     position: 5,
     settings: {
       turns: 8,
       attack_points: 25,
       defense_points: 25,
       gold_per_turn: 0,
+      wood_per_turn: 1,
+      iron_per_turn: 0.2,
       train_wood: 250,
       train_iron: 250,
       take_land: 0,
@@ -92,13 +94,14 @@ soldiers_data = [
       attack_points: 6,
       defense_points: 3,
       gold_per_turn: 2,
+      train_maces: 1,
       take_land: 0.06,
       food_eaten: 0.2,
     }
   },
   {
     name: "Trained Peasant",
-    key: "trained_peasants",
+    key: "trained_peasant",
     position: 7,
     settings: {
       turns: 1,
@@ -111,7 +114,7 @@ soldiers_data = [
   },
   {
     name: "Thieves",
-    key: "thieves",
+    key: "thieve",
     position: 8,
     settings: {
       turns: 10,
@@ -125,6 +128,9 @@ soldiers_data = [
 ]
 
 default_train_settings = {
+  gold_per_turn: 0,
+  wood_per_turn: 0,
+  iron_per_turn: 0,
   train_gold: 0,
   train_wood: 0,
   train_iron: 0,
