@@ -68,9 +68,13 @@ module UserGames
         update_wall
 
         people_eat_food
+        soldiers_eat_food
         process_building_queue
+        process_train_queue
+        update_tools_for_builders
         process_explorers
         process_auto_trade
+        update_maintenance_of_soldiers
         update_resources
 
         if @user_game.people <= 100
@@ -684,6 +688,40 @@ module UserGames
       end
     end
 
+    def soldiers_eat_food
+      food_eaten = (
+        @user_game.unique_unit_soldiers * @data[:soldiers][:unique_unit][:settings][:food_eaten] +
+        @user_game.swordsman_soldiers * @data[:soldiers][:swordsman][:settings][:food_eaten] +
+        @user_game.archer_soldiers * @data[:soldiers][:archer][:settings][:food_eaten] +
+        @user_game.horseman_soldiers * @data[:soldiers][:horseman][:settings][:food_eaten] +
+        @user_game.macemen_soldiers * @data[:soldiers][:macemen][:settings][:food_eaten] +
+        @user_game.trained_peasant_soldiers * @data[:soldiers][:trained_peasant][:settings][:food_eaten] +
+        @user_game.thieve_soldiers * @data[:soldiers][:thieve][:settings][:food_eaten]
+      ).round
+
+      return if food_eaten <= 0
+
+      @c_food += food_eaten
+      @r_food -= food_eaten
+      add_message("Your soldiers ate #{number_with_delimiter(food_eaten)} food")
+
+      if @r_food < 0
+        # 5% of army dies when there isn't enough food
+        survival_rate = 0.95
+        add_message('Some soldiers died due to the lack of food', 'danger')
+
+        @user_game.unique_unit_soldiers = (@user_game.unique_unit_soldiers * survival_rate).round
+        @user_game.swordsman_soldiers = (@user_game.swordsman_soldiers * survival_rate).round
+        @user_game.archer_soldiers = (@user_game.archer_soldiers * survival_rate).round
+        @user_game.horseman_soldiers = (@user_game.horseman_soldiers * survival_rate).round
+        @user_game.macemen_soldiers = (@user_game.macemen_soldiers * survival_rate).round
+        @user_game.trained_peasant_soldiers = (@user_game.trained_peasant_soldiers * survival_rate).round
+        @user_game.thieve_soldiers = (@user_game.thieve_soldiers * survival_rate).round
+
+        @r_food = 0
+      end
+    end
+
     def process_building_queue
       m_used = @data[:user_data][:used_mountains]
       f_used = @data[:user_data][:used_forest]
@@ -796,6 +834,105 @@ module UserGames
             quantity: qty_remaining
           )
         end
+      end
+    end
+
+    def process_train_queue
+      @trained_unique_unit = 0
+      @trained_swordsman = 0
+      @trained_archers = 0
+      @trained_horseman = 0
+      @trained_macemen = 0
+      @trained_catapults = 0
+      @trained_trained_peasants = 0
+      @trained_thieves = 0
+
+      # TODO: move to command
+      max_soldiers = @user_game.fort * @data[:buildings][:fort][:settings][:max_units] +
+                    @user_game.town_center * @data[:buildings][:town_center][:settings][:max_units]
+
+      @user_game.train_queues.update_all('turns_remaining = turns_remaining - 1') # rubocop:disable Rails/SkipsModelValidations
+      @user_game.train_queues.where('turns_remaining <= 0').find_each do |queue|
+        total_army = @user_game.archer_soldiers + @user_game.swordsman_soldiers +
+                    @user_game.horseman_soldiers + @user_game.catapult_soldiers +
+                    @user_game.macemen_soldiers + @user_game.thieve_soldiers +
+                    @user_game.trained_peasant_soldiers
+        done = true
+        train_qty = queue.quantity
+
+        if queue.turns_remaining < 0
+          add_message("#{number_with_delimiter(train_qty)} training army units were disbanded because of lack of forts", 'danger')
+          @user_game.people += train_qty
+        else
+          if total_army + train_qty > max_soldiers
+            done = false
+            train_qty = max_soldiers - total_army
+            train_qty = 0 if train_qty < 0
+            add_message('Not enough forts to finish training army', 'danger')
+          end
+
+          case queue.soldier_key
+          when 'unique_unit'
+            @trained_unique_unit += train_qty
+            @user_game.unique_unit_soldiers += train_qty
+          when 'archer'
+            @trained_archers += train_qty
+            @user_game.archer_soldiers += train_qty
+          when 'swordsman'
+            @trained_swordsman += train_qty
+            @user_game.swordsman_soldiers += train_qty
+          when 'horseman'
+            @trained_horseman += train_qty
+            @user_game.horseman_soldiers += train_qty
+          when 'catapult'
+            @trained_catapults += train_qty
+            @user_game.catapult_soldiers += train_qty
+          when 'macemen'
+            @trained_macemen += train_qty
+            @user_game.macemen_soldiers += train_qty
+          when 'trained_peasant'
+            @trained_trained_peasants += train_qty
+            @user_game.trained_peasant_soldiers += train_qty
+          when 'thieve'
+            @trained_thieves += train_qty
+            @user_game.thieve_soldiers += train_qty
+          end
+        end
+
+        if done
+          queue.destroy
+        else
+          queue.update(quantity: queue.quantity - train_qty)
+        end
+      end
+
+      add_message("#{number_with_delimiter(@trained_unique_unit)} #{@data[:soldiers][:unique_unit][:name]} have finished their training and are ready to serve you", 'success') if @trained_unique_unit > 0
+      add_message("#{number_with_delimiter(@trained_swordsman)} swordsmen have finished their training and are ready to serve you", 'success') if @trained_swordsman > 0
+      add_message("#{number_with_delimiter(@trained_archers)} archers have finished their training and are ready to serve you", 'success') if @trained_archers > 0
+      add_message("#{number_with_delimiter(@trained_horseman)} horsemen have finished their training and are ready to serve you", 'success') if @trained_horseman > 0
+      add_message("#{number_with_delimiter(@trained_macemen)} macemen have finished their training and are ready to serve you", 'success') if @trained_macemen > 0
+      add_message("#{number_with_delimiter(@trained_catapults)} catapults have finished their training and are ready to serve you", 'success') if @trained_catapults > 0
+      add_message("#{number_with_delimiter(@trained_trained_peasants)} trained peasants have finished their training and are ready to serve you", 'success') if @trained_trained_peasants > 0
+      add_message("#{number_with_delimiter(@trained_thieves)} thieves have finished their training and are ready to serve you", 'success') if @trained_thieves > 0
+    end
+
+    def update_tools_for_builders
+      # Only process in months 5 and 10
+      return unless [5, 10].include?(@month)
+
+      # Calculate tools used (10-20% of builders)
+      tools_used = rand(10..20)
+      tools_used = (@num_builders * tools_used / 100.0).round
+
+      return if tools_used <= 0
+
+      add_message("#{number_with_delimiter(tools_used)} tools wore out")
+
+      if @r_tools >= tools_used
+        # If has enough tools, supply builders with them
+        @r_tools -= tools_used
+      else
+        @r_tools = 0
       end
     end
 
@@ -1005,6 +1142,10 @@ module UserGames
           )
         end
       end
+    end
+
+    # TODO! implement maintenance of soldiers
+    def update_maintenance_of_soldiers
     end
 
     def update_resources

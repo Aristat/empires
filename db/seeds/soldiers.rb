@@ -129,6 +129,7 @@ soldiers_data = [
 ]
 
 default_train_settings = {
+  food_eaten: 0,
   gold_per_turn: 0,
   wood_per_turn: 0,
   iron_per_turn: 0,
