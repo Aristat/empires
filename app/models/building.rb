@@ -22,15 +22,6 @@ class Building < ApplicationRecord
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true
 
-  # custom settings are
-  # cost_food_per_turn
-  # cost_gold_per_turn
-  # cost_wood_per_turn
-  # cost_iron_per_turn
-  # number_of_builders
-  # resources_limit_increase
-  # max_explorer
-  # food_per_explorer
   store_accessor :settings,
                  # resources for build
                  :land,

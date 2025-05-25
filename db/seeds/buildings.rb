@@ -266,6 +266,7 @@ buildings_data = [
   {
     name: "House",
     key: "house",
+    position: 10,
     settings: {
       land: :plain,
       workers: 0,
@@ -284,5 +285,6 @@ buildings_data.each do |building_data|
   Building.find_or_create_by!(key: building_data[:key]) do |building|
     building.name = building_data[:name]
     building.settings = building_data[:settings]
+    building.position = building_data[:position]
   end
 end

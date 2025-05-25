@@ -3,6 +3,7 @@
 
 require_relative 'seeds/buildings'
 require_relative 'seeds/civilizations'
+require_relative 'seeds/soldiers'
 
 games = [
   {
