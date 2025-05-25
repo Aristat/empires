@@ -847,9 +847,10 @@ module UserGames
       @trained_trained_peasants = 0
       @trained_thieves = 0
 
-      # TODO: move to command
-      max_soldiers = @user_game.fort * @data[:buildings][:fort][:settings][:max_units] +
-                    @user_game.town_center * @data[:buildings][:town_center][:settings][:max_units]
+      total_soldiers_limit = TrainQueues::SoldiersLimitCommand.new(
+        user_game: @user_game,
+        buildings: @data[:buildings]
+      ).call
 
       @user_game.train_queues.update_all('turns_remaining = turns_remaining - 1') # rubocop:disable Rails/SkipsModelValidations
       @user_game.train_queues.where('turns_remaining <= 0').find_each do |queue|
@@ -864,9 +865,9 @@ module UserGames
           add_message("#{number_with_delimiter(train_qty)} training army units were disbanded because of lack of forts", 'danger')
           @user_game.people += train_qty
         else
-          if total_army + train_qty > max_soldiers
+          if total_army + train_qty > total_soldiers_limit
             done = false
-            train_qty = max_soldiers - total_army
+            train_qty = total_soldiers_limit - total_army
             train_qty = 0 if train_qty < 0
             add_message('Not enough forts to finish training army', 'danger')
           end
