@@ -212,8 +212,10 @@ class PrepareUserDataCommand < BaseCommand
 
     training_queues = user_game.train_queues
     total_soldiers_in_train = training_queues.sum { _1.quantity }
-    total_soldiers_limit_for_train = user_game.town_center * buildings[:town_center][:settings][:max_train] +
-      user_game.fort * buildings[:fort][:settings][:max_train]
+    total_soldiers_limit_for_train = TrainQueues::LimitForTrainCommand.new(
+      user_game: user_game,
+      buildings: buildings
+    ).call
     total_soldiers_limit = user_game.town_center * buildings[:town_center][:settings][:max_units] +
       user_game.fort * buildings[:fort][:settings][:max_units]
     total_soldiers_percentage = total_soldiers_limit > 0 ? (total_soldiers_count / total_soldiers_limit.to_f) * 100 : 0

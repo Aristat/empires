@@ -50,14 +50,14 @@ module TrainQueues
       total_quantity = params.values.sum(&:to_i)
       return if total_quantity.zero?
 
-      # TODO! move to command
-      max_train = user_game.town_center * buildings[:town_center][:settings][:max_train] +
-        user_game.fort * buildings[:fort][:settings][:max_train]
+      total_soldiers_limit_for_train = TrainQueues::LimitForTrainCommand.new(
+        user_game: user_game, buildings: buildings
+      ).call
       current_training = user_game.train_queues.sum(:quantity)
       new_training = current_training + total_quantity
 
-      if new_training > max_train
-        @errors << "You can only train #{number_with_delimiter(max_train)} soldiers."
+      if new_training > total_soldiers_limit_for_train
+        @errors << "You can only train #{number_with_delimiter(total_soldiers_limit_for_train)} soldiers."
         return true
       end
 

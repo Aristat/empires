@@ -39,3 +39,7 @@ en:
   explore_queues:
     messages:
       destroyed: "All explore queues cleared"
+  train_queues:
+    messages:
+      created: "Training queue created successfully"
+      destroyed: "Training queue item removed"
