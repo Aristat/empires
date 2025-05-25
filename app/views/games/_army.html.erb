@@ -86,7 +86,7 @@
         </div>
       <% end %>
 
-      <%= form_with url: user_game_path(@user_game), method: :patch, local: true do |f| %>
+      <%= form_with url: user_game_train_queues_path(@user_game), method: :post, local: true do |f| %>
         <div class="table-responsive">
           <table class="table table-bordered">
             <thead>
@@ -153,9 +153,9 @@
                   </td>
                   <td>
                     <div class="input-group">
-                      <%= f.number_field "train_#{key}", class: 'form-control form-control-sm', size: 5 %>
+                      <%= f.number_field "train_queues[#{key}]", class: 'form-control form-control-sm', size: 5 %>
                       <% if @data[:user_data][key][:maximum_training] > 0 %>
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('train_<%= key %>').value = <%= @data[:user_data][key][:maximum_training] %>">M</button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('train_queues_<%= key %>_quantity').value = <%= @data[:user_data][key][:maximum_training] %>">M</button>
                       <% end %>
                     </div>
                   </td>

@@ -232,6 +232,8 @@ class PrepareUserDataCommand < BaseCommand
         maximum_training = [maximum_training, user_game.town_center].min
       end
 
+      maximum_training = [maximum_training, user_game.people].min
+
       unless soldier_data[:settings][:train_bows].zero?
         maximum_training = [maximum_training, (user_game.bows / soldier_data[:settings][:train_bows]).floor].min
       end

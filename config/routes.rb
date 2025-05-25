@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     end
 
     resources :explore_queues, only: [:create, :destroy]
+    resources :train_queues, only: [:create, :destroy]
 
     resources :trades, only: [] do
       collection do
