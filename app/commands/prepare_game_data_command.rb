@@ -45,6 +45,6 @@ class PrepareGameDataCommand < BaseCommand
     }
 
     civ_overrides = @civilization.settings.dig('game') || {}
-    game_settings.merge(civ_overrides)
+    game_settings.merge(civ_overrides).with_indifferent_access
   end
 end

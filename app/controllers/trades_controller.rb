@@ -29,6 +29,15 @@ class TradesController < ApplicationController
   end
 
   def global_sell
+    command = Trades::GlobalSellCommand.new(user_game: @user_game, global_sell_params: global_sell_params)
+    command.call
+
+    if command.success?
+      flash[:notice] = command.messages.join("\n")
+    else
+      flash[:alert] = command.errors.join("\n")
+    end
+
     redirect_to game_path(@user_game.game)
   end
 
@@ -59,6 +68,13 @@ class TradesController < ApplicationController
 
   def local_sell_params
     params.permit(:sell_wood, :sell_food, :sell_iron, :sell_tools)
+  end
+
+  def global_sell_params
+    params.permit(
+      :sell_wood, :price_wood, :sell_food, :price_food, :sell_iron, :price_iron, :sell_tools, :price_tools,
+      :sell_swords, :price_swords, :sell_bows, :price_bows, :sell_maces, :price_maces, :sell_horses, :price_horses
+    )
   end
 
   def update_auto_trade_params

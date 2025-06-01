@@ -123,6 +123,8 @@ class UserGame < ApplicationRecord
     thieve: 0
   }.freeze
 
+  GLOBAL_TRADE_RESOURCES = %w[wood food iron tools swords bows maces horses].freeze
+
   belongs_to :user
   belongs_to :game
   belongs_to :civilization

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_01_195500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -105,6 +105,34 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
     t.index ["user_game_id"], name: "index_train_queues_on_user_game_id"
   end
 
+  create_table "transfer_queues", force: :cascade do |t|
+    t.bigint "user_game_id", null: false
+    t.bigint "to_user_game_id"
+    t.integer "transfer_type", null: false
+    t.integer "turns_remaining", null: false
+    t.integer "gold"
+    t.integer "wood"
+    t.integer "wood_price"
+    t.integer "food"
+    t.integer "food_price"
+    t.integer "iron"
+    t.integer "iron_price"
+    t.integer "tools"
+    t.integer "tools_price"
+    t.integer "swords"
+    t.integer "swords_price"
+    t.integer "bows"
+    t.integer "bows_price"
+    t.integer "maces"
+    t.integer "maces_price"
+    t.integer "horses"
+    t.integer "horses_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["to_user_game_id"], name: "index_transfer_queues_on_to_user_game_id"
+    t.index ["user_game_id"], name: "index_transfer_queues_on_user_game_id"
+  end
+
   create_table "user_games", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "game_id", null: false
@@ -183,6 +211,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
   add_foreign_key "explore_queues", "user_games"
   add_foreign_key "soldiers", "games"
   add_foreign_key "train_queues", "user_games"
+  add_foreign_key "transfer_queues", "user_games"
+  add_foreign_key "transfer_queues", "user_games", column: "to_user_game_id"
   add_foreign_key "user_games", "civilizations"
   add_foreign_key "user_games", "games"
   add_foreign_key "user_games", "users"
