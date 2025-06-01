@@ -114,13 +114,7 @@
                 </div>
                 <div class="mt-3">
                   <%= f.submit 'Change Prices', class: 'btn btn-primary btn-sm' %>
-                  <%= link_to 'Withdraw from market',
-                      global_withdraw_user_game_trades_path(@user_game, transfer_queue_id: transfer.id),
-                      class: 'btn btn-danger btn-sm ms-2',
-                      data: {
-                        turbo_method: :post,
-                        turbo_confirm: 'Are you sure? There is a 10% withdrawal fee.'
-                      } %>
+                  <button onclick="return withdrawFromMarket(<%= transfer.id %>)" class="btn btn-sm btn-danger">Withdraw from market</button>
                 </div>
               <% end %>
             <% end %>
@@ -130,3 +124,29 @@
     </div>
   </div>
 <% end %>
+
+<script>
+function withdrawFromMarket(transferId) {
+  if (confirm('Are you sure? There is a 10% withdrawal fee.')) {
+    fetch('<%= global_withdraw_user_game_trades_path(@user_game) %>', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({ transfer_queue_id: transferId })
+    }).then(response => {
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        alert('Failed to withdraw from market. Please try again.');
+      }
+    }).catch(error => {
+      console.error('Error:', error);
+      alert('Failed to withdraw from market. Please try again.');
+    });
+  }
+  return false;
+}
+</script>

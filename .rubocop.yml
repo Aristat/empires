@@ -45,6 +45,9 @@ Layout/TrailingWhitespace:
 Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false
 
+Rails/ActionControllerFlashBeforeRender:
+  Enabled: false
+
 Style/StringLiterals:
   Enabled: true
   EnforcedStyle: single_quotes

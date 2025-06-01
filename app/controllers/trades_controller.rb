@@ -65,7 +65,7 @@ class TradesController < ApplicationController
     command.call
 
     if command.success?
-      flash[:notice] = command.messages.join("\n")
+      flash[:notice] = command.messages.join("\n") if command.messages.present?
     else
       flash[:alert] = command.errors.join("\n")
     end
@@ -74,7 +74,7 @@ class TradesController < ApplicationController
   end
 
   def global_withdraw
-    redirect_to game_path(@user_game.game)
+    render json: { success: true }
   end
 
   private

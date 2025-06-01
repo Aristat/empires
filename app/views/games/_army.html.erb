@@ -155,7 +155,7 @@
                     <div class="input-group">
                       <%= f.number_field "train_queues[#{key}]", class: 'form-control form-control-sm train-queues-field', size: 5 %>
                       <% if @data[:user_data][key][:maximum_training] > 0 %>
-                        <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('train_queues_<%= key %>_quantity').value = <%= @data[:user_data][key][:maximum_training] %>">M</button>
+                        <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('train_queues[<%= key %>]').value = <%= @data[:user_data][key][:maximum_training] %>">M</button>
                       <% end %>
                     </div>
                   </td>
@@ -195,12 +195,10 @@
             If you want to disband some of your soldiers,<br>
             fill up the quantities above and press the button below
           </p>
-          <%= f.submit 'Disband Army', class: 'btn btn-danger btn-sm', onclick: "copyFormValues(event)" %>
+          <%= f.submit 'Disband Army', class: 'btn btn-danger btn-sm', onclick: "return copyFormValues()" %>
 
           <script>
-            function copyFormValues(event) {
-              event.preventDefault();
-
+            function copyFormValues() {
               // Get all training input fields
               const trainingInputs = document.querySelectorAll('input.train-queues-field');
               let hasValues = false;
@@ -238,6 +236,8 @@
                 console.error('Error:', error);
                 alert('Error disbanding army');
               });
+
+              return false;
             }
           </script>
         </div>

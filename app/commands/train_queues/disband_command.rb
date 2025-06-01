@@ -2,7 +2,7 @@
 
 module TrainQueues
   class DisbandCommand < BaseCommand
-    attr_reader :user_game, :train_queue, :soldiers
+    attr_reader :user_game, :params, :train_queue, :soldiers
 
     def initialize(user_game:, train_queue_params:)
       @user_game = user_game
@@ -17,9 +17,6 @@ module TrainQueues
     end
 
     def call
-      validate!
-      return if failed?
-
       update_params = {}
       params.each do |soldier_key, quantity|
         quantity = quantity.to_i

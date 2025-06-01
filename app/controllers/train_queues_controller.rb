@@ -39,7 +39,7 @@ class TrainQueuesController < ApplicationController
       flash[:notice] = t('train_queues.messages.disband')
     end
 
-    redirect_to game_path(@user_game.game)
+    render json: { success: true }
   end
 
   private
