@@ -40,8 +40,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
     t.integer "position", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id", "key"], name: "index_buildings_on_game_id_and_key", unique: true
     t.index ["game_id"], name: "index_buildings_on_game_id"
-    t.index ["key"], name: "index_buildings_on_key", unique: true
   end
 
   create_table "civilizations", force: :cascade do |t|
@@ -52,8 +52,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
     t.jsonb "settings", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id", "key"], name: "index_civilizations_on_game_id_and_key", unique: true
     t.index ["game_id"], name: "index_civilizations_on_game_id"
-    t.index ["key"], name: "index_civilizations_on_key", unique: true
   end
 
   create_table "explore_queues", force: :cascade do |t|
@@ -91,8 +91,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
     t.integer "position", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id", "key"], name: "index_soldiers_on_game_id_and_key", unique: true
     t.index ["game_id"], name: "index_soldiers_on_game_id"
-    t.index ["key"], name: "index_soldiers_on_key", unique: true
   end
 
   create_table "train_queues", force: :cascade do |t|

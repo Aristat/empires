@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       collection do
         post :local_buy
         post :local_sell
+        post :global_sell
         post :update_auto_trade
       end
     end

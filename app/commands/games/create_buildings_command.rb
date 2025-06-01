@@ -292,8 +292,7 @@ module Games
       ]
 
       buildings_data.each do |building_data|
-        Building.find_or_create_by!(key: building_data[:key]) do |building|
-          building.game = game
+        Building.find_or_create_by!(game_id: game.id, key: building_data[:key]) do |building|
           building.name = building_data[:name]
           building.settings = building_data[:settings]
           building.position = building_data[:position]

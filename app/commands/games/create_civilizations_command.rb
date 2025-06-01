@@ -368,12 +368,11 @@ module Games
       ]
 
       civilizations_data.each do |civilization_data|
-        Civilization.find_or_create_by!(key: civilization_data[:key]) do |civilization|
-          civilization.game = game
+        Civilization.find_or_create_by!(game_id: game.id, key: civilization_data[:key]) do |civilization|
           civilization.name = civilization_data[:name]
           civilization.settings = civilization_data[:settings]
         end
-        Rails.logger.info("Created/Updated civilization: #{civilization_data[:name]}")
+        Rails.logger.warn("Created/Updated civilization: #{civilization_data[:name]}")
       end
     end
   end

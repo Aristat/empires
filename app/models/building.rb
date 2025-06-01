@@ -14,8 +14,8 @@
 #
 # Indexes
 #
-#  index_buildings_on_game_id  (game_id)
-#  index_buildings_on_key      (key) UNIQUE
+#  index_buildings_on_game_id          (game_id)
+#  index_buildings_on_game_id_and_key  (game_id,key) UNIQUE
 #
 # Foreign Keys
 #
@@ -28,7 +28,7 @@ class Building < ApplicationRecord
   belongs_to :game
 
   validates :name, presence: true
-  validates :key, presence: true, uniqueness: true
+  validates :key, presence: true
 
   store_accessor :settings,
                  # resources for build

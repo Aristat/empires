@@ -28,6 +28,10 @@ class TradesController < ApplicationController
     redirect_to game_path(@user_game.game)
   end
 
+  def global_sell
+    redirect_to game_path(@user_game.game)
+  end
+
   def update_auto_trade
     command = Trades::UpdateAutoTradeCommand.new(
       user_game: @user_game, update_auto_trade_params: update_auto_trade_params

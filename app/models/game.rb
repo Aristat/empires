@@ -29,7 +29,12 @@ class Game < ApplicationRecord
                  :people_eat_one_food, :extra_food_per_land,
                  :people_burn_one_wood, :pop_increase_modifier,
                  :wall_use_gold, :wall_use_iron,
-                 :wall_use_wood, :wall_use_wine
+                 :wall_use_wood, :wall_use_wine,
+                 :global_fee_percent, :global_wood_min_price, :global_wood_max_price, :global_food_min_price,
+                 :global_food_max_price, :global_iron_min_price, :global_iron_max_price, :global_tools_min_price,
+                 :global_tools_max_price, :global_bows_min_price, :global_bows_max_price, :global_swords_min_price,
+                 :global_swords_max_price, :global_maces_min_price, :global_maces_max_price, :global_horses_min_price,
+                 :global_horses_max_price
 
   validates :name, presence: true
 end

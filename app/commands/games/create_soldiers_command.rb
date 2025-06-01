@@ -152,8 +152,7 @@ module Games
       }
 
       soldiers_data.each do |soldier_data|
-        Soldier.find_or_create_by!(key: soldier_data[:key]) do |soldier|
-          soldier.game = game
+        Soldier.find_or_create_by!(game_id: game.id, key: soldier_data[:key]) do |soldier|
           soldier.name = soldier_data[:name]
           soldier.settings = default_train_settings.merge(soldier_data[:settings])
           soldier.position = soldier_data[:position]

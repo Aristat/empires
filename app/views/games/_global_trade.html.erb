@@ -1,0 +1,66 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Global Market</h5>
+    <p class="card-text">
+      You can send goods to the public market.<br>
+      You need market places to send goods.<br>
+      There is <%= number_with_delimiter(@data[:game_data][:global_fee_percent]) %>% fee after you sell the goods.
+    </p>
+
+    <div class="alert alert-info">
+      Your markets allow you to send <%= number_with_delimiter(@data[:user_data][:max_trades]) %> goods each month,
+      <span class="<%= @data[:user_data][:trades_remaining].zero? ? 'text-danger' : '' %>">
+        out of which <%= number_with_delimiter(@data[:user_data][:trades_remaining]) %> are still available.
+      </span>
+    </div>
+
+    <%= form_with url: global_sell_user_game_trades_path(@user_game), method: :post, local: true do |f| %>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>Resource</th>
+              <th class="text-end">You Have</th>
+              <th>Sell Amount</th>
+              <th>Price (per unit)</th>
+              <th class="text-end">Min Price</th>
+              <th class="text-end">Max Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% [
+              { name: 'Wood', field: 'wood', value: @user_game.wood, min_price: @data[:game_data][:global_wood_min_price], max_price: @data[:game_data][:global_wood_max_price] },
+              { name: 'Food', field: 'food', value: @user_game.food, min_price: @data[:game_data][:global_food_min_price], max_price: @data[:game_data][:global_food_max_price] },
+              { name: 'Iron', field: 'iron', value: @user_game.iron, min_price: @data[:game_data][:global_iron_min_price], max_price: @data[:game_data][:global_iron_max_price] },
+              { name: 'Tools', field: 'tools', value: @user_game.tools, min_price: @data[:game_data][:global_tools_min_price], max_price: @data[:game_data][:global_tools_max_price] },
+              { name: 'Swords', field: 'swords', value: @user_game.swords, min_price: @data[:game_data][:global_swords_min_price], max_price: @data[:game_data][:global_swords_max_price] },
+              { name: 'Bows', field: 'bows', value: @user_game.bows, min_price: @data[:game_data][:global_bows_min_price], max_price: @data[:game_data][:global_bows_max_price] },
+              { name: 'Maces', field: 'maces', value: @user_game.maces, min_price: @data[:game_data][:global_maces_min_price], max_price: @data[:game_data][:global_maces_max_price] },
+              { name: 'Horses', field: 'horses', value: @user_game.horses, min_price: @data[:game_data][:global_horses_min_price], max_price: @data[:game_data][:global_horses_max_price] }
+            ].each do |resource| %>
+              <tr>
+                <td><%= resource[:name] %></td>
+                <td class="text-end"><%= number_with_delimiter(resource[:value]) %></td>
+                <td>
+                  <%= f.number_field "sell_#{resource[:field]}", class: 'form-control form-control-sm', min: 0, max: resource[:value] %>
+                </td>
+                <td>
+                  <%= f.number_field "price_#{resource[:field]}", class: 'form-control form-control-sm', min: resource[:min_price], max: resource[:max_price] %>
+                </td>
+                <td class="text-end"><%= number_with_delimiter(resource[:min_price]) %></td>
+                <td class="text-end"><%= number_with_delimiter(resource[:max_price]) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="6" class="text-end">
+                <%= f.submit 'Sell', class: 'btn btn-primary' %>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>

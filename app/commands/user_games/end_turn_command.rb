@@ -1225,7 +1225,7 @@ module UserGames
       else
         @r_gold -= pay_gold
         @c_gold += pay_gold
-        add_message("Your soldiers have been paid #{number_with_delimiter(pay_gold)} gold", 'success')
+        add_message("Your soldiers have been paid #{number_with_delimiter(pay_gold)} gold", 'success') unless pay_gold.zero?
       end
 
       if @user_game.unique_unit_soldiers > @user_game.town_center

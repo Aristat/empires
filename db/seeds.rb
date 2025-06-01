@@ -16,6 +16,23 @@ games = [
       local_iron_buy_price: 78,
       local_tools_sell_price: 150,
       local_tools_buy_price: 180,
+      global_fee_percent: 5,
+      global_wood_min_price: 5,
+      global_wood_max_price: 80,
+      global_food_min_price: 5,
+      global_food_max_price: 40,
+      global_iron_min_price: 20,
+      global_iron_max_price: 250,
+      global_tools_min_price: 50,
+      global_tools_max_price: 500,
+      global_bows_min_price: 100,
+      global_bows_max_price: 3000,
+      global_swords_min_price: 100,
+      global_swords_max_price: 3000,
+      global_maces_min_price: 50,
+      global_maces_max_price: 1000,
+      global_horses_min_price: 100,
+      global_horses_max_price: 3000,
       people_eat_one_food: 50,
       extra_food_per_land: 800,
       people_burn_one_wood: 250,
@@ -40,6 +57,23 @@ games = [
       local_iron_buy_price: 78,
       local_tools_sell_price: 150,
       local_tools_buy_price: 180,
+      global_fee_percent: 5,
+      global_wood_min_price: 5,
+      global_wood_max_price: 80,
+      global_food_min_price: 5,
+      global_food_max_price: 40,
+      global_iron_min_price: 20,
+      global_iron_max_price: 250,
+      global_tools_min_price: 50,
+      global_tools_max_price: 500,
+      global_bows_min_price: 100,
+      global_bows_max_price: 3000,
+      global_swords_min_price: 100,
+      global_swords_max_price: 3000,
+      global_maces_min_price: 50,
+      global_maces_max_price: 1000,
+      global_horses_min_price: 100,
+      global_horses_max_price: 3000,
       people_eat_one_food: 50,
       extra_food_per_land: 800,
       people_burn_one_wood: 250,
@@ -55,12 +89,12 @@ games = [
 games.each do |game|
   next if Game.exists?(name: game[:name])
 
-  game = Game.create!(game)
+  game_entity = Game.create!(game)
   puts "Created game: #{game[:name]}"
 
-  Games::CreateBuildingsCommand.new(game: game).call
-  Games::CreateCivilizationsCommand.new(game: game).call
-  Games::CreateSoldiersCommand.new(game: game).call
+  Games::CreateBuildingsCommand.new(game: game_entity).call
+  Games::CreateCivilizationsCommand.new(game: game_entity).call
+  Games::CreateSoldiersCommand.new(game: game_entity).call
 end
 
 user = User.find_or_initialize_by(
