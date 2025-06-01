@@ -154,8 +154,8 @@
   // Run this script before the page renders
   (function() {
     // Get stored values
-    const storedHorseSetting = localStorage.getItem('exploreHorseSetting') || 'without_horses';
-    const storedLandSetting = localStorage.getItem('exploreLandSetting') || 'all_land';
+    const storedHorseSetting = localStorage.getItem('exploreHorseSetting_<%= @user_game.id %>') || 'without_horses';
+    const storedLandSetting = localStorage.getItem('exploreLandSetting_<%= @user_game.id %>') || 'all_land';
 
     // Function to initialize selects
     function initializeSelects() {
@@ -176,7 +176,7 @@
       document.querySelectorAll('[data-explore-setting]').forEach(select => {
         select.addEventListener('change', function() {
           const setting = this.dataset.exploreSetting;
-          localStorage.setItem(`explore${setting.charAt(0).toUpperCase() + setting.slice(1)}Setting`, this.value);
+          localStorage.setItem(`explore${setting.charAt(0).toUpperCase() + setting.slice(1)}Setting_<%= @user_game.id %>`, this.value);
         });
       });
     });

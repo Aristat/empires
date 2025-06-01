@@ -227,7 +227,7 @@
 <script>
 // Set initial active tab before Bootstrap initializes
 (function initializeActiveTab() {
-  const savedTab = localStorage.getItem('activeTab') || 'builders-tab';
+  const savedTab = localStorage.getItem('activeTab_<%= @user_game.id %>') || 'builders-tab';
   const tabToActivate = document.getElementById(savedTab);
   const paneToActivate = document.getElementById(savedTab.replace('-tab', ''));
 
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Listen for tab changes
   gameTabs.addEventListener('shown.bs.tab', function(event) {
-    localStorage.setItem('activeTab', event.target.id);
+    localStorage.setItem('activeTab_<%= @user_game.id %>', event.target.id);
   });
 });
 </script>
