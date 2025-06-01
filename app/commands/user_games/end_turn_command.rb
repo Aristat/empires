@@ -851,13 +851,10 @@ module UserGames
         user_game: @user_game,
         buildings: @data[:buildings]
       ).call
+      total_army = UserGames::TotalArmyCommand.new(user_game: @user_game).call
 
       @user_game.train_queues.update_all('turns_remaining = turns_remaining - 1') # rubocop:disable Rails/SkipsModelValidations
       @user_game.train_queues.where('turns_remaining <= 0').find_each do |queue|
-        total_army = @user_game.archer_soldiers + @user_game.swordsman_soldiers +
-                    @user_game.horseman_soldiers + @user_game.catapult_soldiers +
-                    @user_game.macemen_soldiers + @user_game.thieve_soldiers +
-                    @user_game.trained_peasant_soldiers
         done = true
         train_qty = queue.quantity
 
@@ -1145,8 +1142,134 @@ module UserGames
       end
     end
 
-    # TODO! implement maintenance of soldiers
     def update_maintenance_of_soldiers
+      total_soldiers_limit = TrainQueues::SoldiersLimitCommand.new(
+        user_game: @user_game,
+        buildings: @data[:buildings]
+      ).call
+      total_army = UserGames::TotalArmyCommand.new(user_game: @user_game).call
+
+      if total_army > total_soldiers_limit
+        too_much = ((total_army - total_soldiers_limit) * 0.25).round
+        run_swordsman = ((@user_game.swordsman_soldiers.to_f / total_army) * too_much).round
+        run_archers = ((@user_game.archer_soldiers.to_f / total_army) * too_much).round
+        run_horseman = ((@user_game.horseman_soldiers.to_f / total_army) * too_much).round
+        run_macemen = ((@user_game.macemen_soldiers.to_f / total_army) * too_much).round
+        run_trained_peasants = ((@user_game.trained_peasant_soldiers.to_f / total_army) * too_much).round
+        run_thieves = ((@user_game.thieve_soldiers.to_f / total_army) * too_much).round
+        run_catapults = ((@user_game.catapult_soldiers.to_f / total_army) * too_much).round
+        run_unique_unit = ((@user_game.unique_unit_soldiers.to_f / total_army) * too_much).round
+
+        @user_game.unique_unit_soldiers -= run_unique_unit
+        @user_game.swordsman_soldiers -= run_swordsman
+        @user_game.archer_soldiers -= run_archers
+        @user_game.horseman_soldiers -= run_horseman
+        @user_game.macemen_soldiers -= run_macemen
+        @user_game.trained_peasant_soldiers -= run_trained_peasants
+        @user_game.thieve_soldiers -= run_thieves
+        @user_game.catapult_soldiers -= run_catapults
+
+        add_message(
+          "Due to the lack of place to live some of your soldiers run away (#{run_unique_unit} #{@data[:soldiers][:unique_unit][:name]}, " \
+          "#{run_swordsman} #{@data[:soldiers][:swordsman][:name]}, #{run_archers} #{@data[:soldiers][:archer][:name]}, " \
+          "#{run_horseman} #{@data[:soldiers][:horseman][:name]}, #{run_macemen} #{@data[:soldiers][:macemen][:name]}, " \
+          "#{run_trained_peasants} #{@data[:soldiers][:trained_peasant][:name]}, " \
+          "#{run_catapults} #{@data[:soldiers][:catapult][:name]} and #{run_thieves} #{@data[:soldiers][:thieve][:name]})",
+          'error'
+        )
+      end
+
+      pay_gold = (
+        @user_game.unique_unit_soldiers * @data[:soldiers][:unique_unit][:settings][:gold_per_turn] +
+        @user_game.swordsman_soldiers * @data[:soldiers][:swordsman][:settings][:gold_per_turn] +
+        @user_game.archer_soldiers * @data[:soldiers][:archer][:settings][:gold_per_turn] +
+        @user_game.horseman_soldiers * @data[:soldiers][:horseman][:settings][:gold_per_turn] +
+        @user_game.macemen_soldiers * @data[:soldiers][:macemen][:settings][:gold_per_turn] +
+        @user_game.trained_peasant_soldiers * @data[:soldiers][:trained_peasant][:settings][:gold_per_turn] +
+        @user_game.thieve_soldiers * @data[:soldiers][:thieve][:settings][:gold_per_turn]
+      ).round
+
+      if pay_gold > @r_gold
+        temporary_gold_soldiers = @user_game.unique_unit_soldiers + @user_game.swordsman_soldiers +
+          @user_game.archer_soldiers + @user_game.horseman_soldiers + @user_game.macemen_soldiers +
+          @user_game.trained_peasant_soldiers + @user_game.thieve_soldiers
+        not_paid = ((pay_gold - @r_gold) * 0.1).round
+
+        run_unique_unit = ((@user_game.unique_unit_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
+        run_swordsman = ((@user_game.swordsman_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
+        run_archers = ((@user_game.archer_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
+        run_horseman = ((@user_game.horseman_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
+        run_macemen = ((@user_game.macemen_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
+        run_trained_peasants = ((@user_game.trained_peasant_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
+        run_thieves = ((@user_game.thieve_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
+
+        @user_game.unique_unit_soldiers -= run_unique_unit
+        @user_game.swordsman_soldiers -= run_swordsman
+        @user_game.archer_soldiers -= run_archers
+        @user_game.horseman_soldiers -= run_horseman
+        @user_game.macemen_soldiers -= run_macemen
+        @user_game.trained_peasant_soldiers -= run_trained_peasants
+        @user_game.thieve_soldiers -= run_thieves
+
+        add_message(
+          "Because you did not have enough gold to pay your soldiers some of them run away (#{run_unique_unit} #{@data[:soldiers][:unique_unit][:name]}, " \
+            "#{run_swordsman} #{@data[:soldiers][:swordsman][:name]}, #{run_archers} #{@data[:soldiers][:archer][:name]}, " \
+            "#{run_horseman} #{@data[:soldiers][:horseman][:name]}, #{run_macemen} #{@data[:soldiers][:macemen][:name]}, " \
+            "#{run_trained_peasants} #{@data[:soldiers][:trained_peasant][:name]} and #{run_thieves} #{@data[:soldiers][:thieve][:name]})",
+          'error'
+        )
+
+        pay_gold = @r_gold
+        @r_gold = 0
+        @c_gold += pay_gold
+      else
+        @r_gold -= pay_gold
+        @c_gold += pay_gold
+        add_message("Your soldiers have been paid #{number_with_delimiter(pay_gold)} gold", 'success')
+      end
+
+      # Check special unit requirements
+      if @user_game.thieve_soldiers > @user_game.town_center
+        too_much = @user_game.thieve_soldiers - @user_game.town_center
+        @user_game.thieve_soldiers -= too_much
+        add_message("You do not have enough town centers for your thieves. #{too_much} thieves run away", 'error')
+      end
+
+      if @user_game.unique_unit_soldiers > @user_game.town_center
+        too_much = @user_game.unique_unit_soldiers - @user_game.town_center
+        @user_game.unique_unit_soldiers -= too_much
+        add_message("You do not have enough town centers for your #{@data[:soldiers][:unique_unit][:name]}s. #{too_much} #{@data[:soldiers][:unique_unit][:name]}s run away", 'error')
+      end
+
+      if @user_game.catapult_soldiers > @user_game.town_center
+        too_much = @user_game.catapult_soldiers - @user_game.town_center
+        @user_game.catapult_soldiers -= too_much
+        add_message("You do not have enough town centers for your catapults. #{too_much} catapults run away", 'error')
+      end
+
+      need_wood = @user_game.catapult_soldiers * @data[:soldiers][:catapult][:settings][:wood_per_turn]
+      if @r_wood < need_wood && @user_game.catapult_soldiers > 0
+        run_catapults = ((need_wood - @r_wood) * 0.25).round
+        run_catapults = @user_game.catapult_soldiers if run_catapults > @user_game.catapult_soldiers
+        add_message("You did not have enough wood to upkeep your catapults. #{run_catapults} of them were destroyed", 'error')
+        @user_game.catapult_soldiers -= run_catapults
+      else
+        @r_wood -= need_wood
+      end
+
+      need_iron = (@user_game.catapult_soldiers * @data[:soldiers][:catapult][:settings][:iron_per_turn]).round
+      if @r_iron < need_iron && @user_game.catapult_soldiers > 0
+        run_catapults = ((need_iron - @r_iron) * 0.25).round
+        run_catapults = @user_game.catapult_soldiers if run_catapults > @user_game.catapult_soldiers
+        add_message("You did not have enough iron to upkeep your catapults. #{run_catapults} of them were destroyed", 'error')
+        @user_game.catapult_soldiers -= run_catapults
+      else
+        @r_iron -= need_iron
+      end
+
+      if need_wood > 0 && need_iron > 0
+        add_message("#{need_wood} wood and #{need_iron} iron was used to upkeep catapults", 'success')
+      end
     end
 
     def update_resources
