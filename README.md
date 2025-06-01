@@ -8,7 +8,7 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 
 - [x] Finish research mechanic
 - [ ] Implement scores tables
-- [ ] Implement train army logic
+- [x] Implement train army logic
 - [ ] Implement attack logic
 - [ ] Implement glob trade market
 - [ ] Refactoring magic constants in game, prepare documentation, formulas, etc

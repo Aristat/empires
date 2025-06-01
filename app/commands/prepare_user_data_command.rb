@@ -232,7 +232,7 @@ class PrepareUserDataCommand < BaseCommand
       maximum_training = total_soldiers_can_hold if maximum_training > total_soldiers_can_hold
       maximum_training = 0 if maximum_training < 0
 
-      if soldier_data[:key] == 'unique_unit'
+      if soldier_data[:key] == 'unique_unit' || soldier_data[:key] == 'catapult' || soldier_data[:key] == 'thieve'
         maximum_training = [maximum_training, user_game.town_center].min
       end
 

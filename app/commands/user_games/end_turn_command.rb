@@ -1228,17 +1228,17 @@ module UserGames
         add_message("Your soldiers have been paid #{number_with_delimiter(pay_gold)} gold", 'success')
       end
 
+      if @user_game.unique_unit_soldiers > @user_game.town_center
+        too_much = @user_game.unique_unit_soldiers - @user_game.town_center
+        @user_game.unique_unit_soldiers -= too_much
+        add_message("You do not have enough town centers for your #{@data[:soldiers][:unique_unit][:name]}s. #{too_much} #{@data[:soldiers][:unique_unit][:name]}s run away", 'error')
+      end
+
       # Check special unit requirements
       if @user_game.thieve_soldiers > @user_game.town_center
         too_much = @user_game.thieve_soldiers - @user_game.town_center
         @user_game.thieve_soldiers -= too_much
         add_message("You do not have enough town centers for your thieves. #{too_much} thieves run away", 'error')
-      end
-
-      if @user_game.unique_unit_soldiers > @user_game.town_center
-        too_much = @user_game.unique_unit_soldiers - @user_game.town_center
-        @user_game.unique_unit_soldiers -= too_much
-        add_message("You do not have enough town centers for your #{@data[:soldiers][:unique_unit][:name]}s. #{too_much} #{@data[:soldiers][:unique_unit][:name]}s run away", 'error')
       end
 
       if @user_game.catapult_soldiers > @user_game.town_center
