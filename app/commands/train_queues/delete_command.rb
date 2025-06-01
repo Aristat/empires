@@ -7,7 +7,7 @@ module TrainQueues
     def initialize(user_game:, train_queue:)
       @user_game = user_game
       @train_queue = train_queue
-      @soldiers = PrepareSoldiersDataCommand.new(civilization: user_game.civilization).call.with_indifferent_access
+      @soldiers = PrepareSoldiersDataCommand.new(game: user_game.game, civilization: user_game.civilization).call.with_indifferent_access
 
       super()
     end

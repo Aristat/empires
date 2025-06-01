@@ -1,13 +1,14 @@
 # Soldiers configurations based on civilization
 class PrepareSoldiersDataCommand < BaseCommand
-  attr_reader :civilization
+  attr_reader :game, :civilization
 
-  def initialize(civilization:)
+  def initialize(game:, civilization:)
+    @game = game
     @civilization = civilization
   end
 
   def call
-    Soldier.order(:position).each_with_object({}) do |soldier, result|
+    Soldier.where(game_id: game.id).order(:position).each_with_object({}) do |soldier, result|
       base_settings = soldier.settings
       civ_overrides = civilization.settings.dig('soldiers', soldier.key) || {}
       settings = base_settings.merge(civ_overrides)

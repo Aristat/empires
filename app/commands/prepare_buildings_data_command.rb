@@ -1,13 +1,14 @@
 # Buildings configurations based on civilization
 class PrepareBuildingsDataCommand < BaseCommand
-  attr_reader :civilization
+  attr_reader :game, :civilization
 
-  def initialize(civilization:)
+  def initialize(game:, civilization:)
+    @game = game
     @civilization = civilization
   end
 
   def call
-    Building.order(:position).each_with_object({}) do |building, result|
+    Building.where(game_id: game.id).order(:position).each_with_object({}) do |building, result|
       base_settings = building.settings
       civ_overrides = civilization.settings.dig('buildings', building.key) || {}
       settings = base_settings.merge(civ_overrides)

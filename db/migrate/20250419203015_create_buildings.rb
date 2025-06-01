@@ -1,6 +1,7 @@
 class CreateBuildings < ActiveRecord::Migration[7.1]
   def change
     create_table :buildings do |t|
+      t.references :game, null: false, foreign_key: true
       t.string :name, null: false
       t.string :key, null: false, index: { unique: true }
       t.jsonb :settings, null: false, default: {}
@@ -9,4 +10,4 @@ class CreateBuildings < ActiveRecord::Migration[7.1]
       t.timestamps
     end
   end
-end 
+end

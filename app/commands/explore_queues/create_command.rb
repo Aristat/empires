@@ -10,7 +10,7 @@ module ExploreQueues
       @game_data = PrepareGameDataCommand.new(
         game: user_game.game, civilization: user_game.civilization
       ).call.with_indifferent_access
-      @buildings = PrepareBuildingsDataCommand.new(civilization: user_game.civilization).call.with_indifferent_access
+      @buildings = PrepareBuildingsDataCommand.new(game: user_game.game, civilization: user_game.civilization).call.with_indifferent_access
 
       super()
     end

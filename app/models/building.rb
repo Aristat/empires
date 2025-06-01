@@ -10,14 +10,22 @@
 #  settings   :jsonb            not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  game_id    :bigint           not null
 #
 # Indexes
 #
-#  index_buildings_on_key  (key) UNIQUE
+#  index_buildings_on_game_id  (game_id)
+#  index_buildings_on_key      (key) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (game_id => games.id)
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class Building < ApplicationRecord
   DEFAULT_NUM_BUILDERS = 3
+
+  belongs_to :game
 
   validates :name, presence: true
   validates :key, presence: true, uniqueness: true

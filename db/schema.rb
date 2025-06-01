@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_28_091146) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_25_171700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -33,22 +33,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_091146) do
   end
 
   create_table "buildings", force: :cascade do |t|
+    t.bigint "game_id", null: false
     t.string "name", null: false
     t.string "key", null: false
     t.jsonb "settings", default: {}, null: false
     t.integer "position", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_buildings_on_game_id"
     t.index ["key"], name: "index_buildings_on_key", unique: true
   end
 
   create_table "civilizations", force: :cascade do |t|
+    t.bigint "game_id", null: false
     t.string "name"
     t.string "key", null: false
     t.text "description"
     t.jsonb "settings", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_civilizations_on_game_id"
     t.index ["key"], name: "index_civilizations_on_key", unique: true
   end
 
@@ -79,25 +83,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_091146) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "publishers", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_publishers_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_publishers_on_reset_password_token", unique: true
-  end
-
   create_table "soldiers", force: :cascade do |t|
+    t.bigint "game_id", null: false
     t.string "name", null: false
     t.string "key", null: false
     t.jsonb "settings", default: {}, null: false
     t.integer "position", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_soldiers_on_game_id"
     t.index ["key"], name: "index_soldiers_on_key", unique: true
   end
 
@@ -184,7 +178,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_091146) do
   end
 
   add_foreign_key "build_queues", "user_games"
+  add_foreign_key "buildings", "games"
+  add_foreign_key "civilizations", "games"
   add_foreign_key "explore_queues", "user_games"
+  add_foreign_key "soldiers", "games"
   add_foreign_key "train_queues", "user_games"
   add_foreign_key "user_games", "civilizations"
   add_foreign_key "user_games", "games"

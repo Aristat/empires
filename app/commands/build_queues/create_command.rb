@@ -7,7 +7,7 @@ module BuildQueues
     def initialize(user_game:, build_queue_params:)
       @user_game = user_game
       @params = build_queue_params
-      @buildings = PrepareBuildingsDataCommand.new(civilization: user_game.civilization).call.with_indifferent_access
+      @buildings = PrepareBuildingsDataCommand.new(game: user_game.game, civilization: user_game.civilization).call.with_indifferent_access
 
       super()
     end

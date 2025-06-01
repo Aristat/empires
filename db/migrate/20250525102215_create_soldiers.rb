@@ -1,6 +1,7 @@
 class CreateSoldiers < ActiveRecord::Migration[7.1]
   def change
     create_table :soldiers do |t|
+      t.references :game, null: false, foreign_key: true
       t.string :name, null: false
       t.string :key, null: false, index: { unique: true }
       t.jsonb :settings, null: false, default: {}

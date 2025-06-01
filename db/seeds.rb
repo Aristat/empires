@@ -1,10 +1,6 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-require_relative 'seeds/buildings'
-require_relative 'seeds/civilizations'
-require_relative 'seeds/soldiers'
-
 games = [
   {
     name: 'Standard',
@@ -59,8 +55,12 @@ games = [
 games.each do |game|
   next if Game.exists?(name: game[:name])
 
-  Game.create!(game)
+  game = Game.create!(game)
   puts "Created game: #{game[:name]}"
+
+  Games::CreateBuildingsCommand.new(game: game).call
+  Games::CreateCivilizationsCommand.new(game: game).call
+  Games::CreateSoldiersCommand.new(game: game).call
 end
 
 user = User.find_or_initialize_by(

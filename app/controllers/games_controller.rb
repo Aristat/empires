@@ -17,7 +17,7 @@ class GamesController < ApplicationController
   end
 
   def select_civilization
-    @civilizations = Civilization.all
+    @civilizations = Civilization.where(game_id: @game.id).all
     @user_game = current_user.user_games.find_by(game: @game)
 
     if @user_game.present?

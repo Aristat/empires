@@ -17,6 +17,10 @@ class Game < ApplicationRecord
   has_many :user_games, dependent: :destroy
   has_many :users, through: :user_games
 
+  has_many :civilizations, dependent: :destroy
+  has_many :buildings, dependent: :destroy
+  has_many :soldiers, dependent: :destroy
+
   store_accessor :settings,
                  :local_wood_sell_price, :local_wood_buy_price,
                  :local_food_sell_price, :local_food_buy_price,
