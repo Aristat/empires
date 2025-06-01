@@ -56,6 +56,27 @@ class TradesController < ApplicationController
     redirect_to game_path(@user_game.game)
   end
 
+  def global_change_prices
+    transfer_queue = @user_game.transfer_queues.find(params[:transfer_queue_id])
+
+    command = Trades::GlobalChangePricesCommand.new(
+      user_game: @user_game, transfer_queue: transfer_queue, global_change_prices_params: global_change_prices_params
+    )
+    command.call
+
+    if command.success?
+      flash[:notice] = command.messages.join("\n")
+    else
+      flash[:alert] = command.errors.join("\n")
+    end
+
+    redirect_to game_path(@user_game.game)
+  end
+
+  def global_withdraw
+    redirect_to game_path(@user_game.game)
+  end
+
   private
 
   def set_user_game
@@ -74,6 +95,13 @@ class TradesController < ApplicationController
     params.permit(
       :sell_wood, :price_wood, :sell_food, :price_food, :sell_iron, :price_iron, :sell_tools, :price_tools,
       :sell_swords, :price_swords, :sell_bows, :price_bows, :sell_maces, :price_maces, :sell_horses, :price_horses
+    )
+  end
+
+  def global_change_prices_params
+    params.permit(
+      :transfer_queue_id, :price_wood, :price_food, :price_iron, :price_tools, :price_swords, :price_bows, :price_maces,
+      :price_horses
     )
   end
 
