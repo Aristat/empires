@@ -31,32 +31,32 @@ module TrainQueues
 
         unless soldier[:settings][:train_wood].zero?
           update_params[:wood] ||= user_game.wood
-          update_params[:wood] += soldier[:settings][:train_wood] * train_queue.quantity
+          update_params[:wood] += soldier[:settings][:train_wood] * quantity
         end
 
         unless soldier[:settings][:train_iron].zero?
-          update_params[:wood] ||= user_game.iron
-          update_params[:iron] += soldier[:settings][:train_iron] * train_queue.quantity
+          update_params[:iron] ||= user_game.iron
+          update_params[:iron] += soldier[:settings][:train_iron] * quantity
         end
 
         unless soldier[:settings][:train_swords].zero?
-          update_params[:wood] ||= user_game.swords
-          update_params[:swords] += soldier[:settings][:train_swords] * train_queue.quantity
+          update_params[:swords] ||= user_game.swords
+          update_params[:swords] += soldier[:settings][:train_swords] * quantity
         end
 
         unless soldier[:settings][:train_bows].zero?
-          update_params[:wood] ||= user_game.bows
-          update_params[:bows] += soldier[:settings][:train_bows] * train_queue.quantity
+          update_params[:bows] ||= user_game.bows
+          update_params[:bows] += soldier[:settings][:train_bows] * quantity
         end
 
         unless soldier[:settings][:train_maces].zero?
-          update_params[:wood] ||= user_game.maces
-          update_params[:maces] += soldier[:settings][:train_maces] * train_queue.quantity
+          update_params[:maces] ||= user_game.maces
+          update_params[:maces] += soldier[:settings][:train_maces] * quantity
         end
 
         unless soldier[:settings][:train_horses].zero?
-          update_params[:wood] ||= user_game.horses
-          update_params[:horses] += soldier[:settings][:train_horses] * train_queue.quantity
+          update_params[:horses] ||= user_game.horses
+          update_params[:horses] += soldier[:settings][:train_horses] * quantity
         end
 
         # We get only 50% of resources back when disbanding soldiers

@@ -227,6 +227,7 @@
               })
               .then(response => {
                 if (response.ok) {
+                  localStorage.setItem('scrollToTop', 'true');
                   window.location.reload();
                 } else {
                   alert('Error disbanding army');

@@ -138,6 +138,7 @@ function withdrawFromMarket(transferId) {
       body: JSON.stringify({ transfer_queue_id: transferId })
     }).then(response => {
       if (response.ok) {
+        localStorage.setItem('scrollToTop', 'true');
         window.location.reload();
       } else {
         alert('Failed to withdraw from market. Please try again.');
