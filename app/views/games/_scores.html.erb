@@ -1,0 +1,164 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="mb-0">Scores</h5>
+  </div>
+  <div class="card-body">
+    <div class="row mb-4">
+      <div class="col-md-8">
+        <p>
+          There are <strong><%= @data[:user_data][:users].length %></strong> players in the game.
+          <%= @data[:user_data][:online_users] %> <%= @data[:user_data][:online_users] == 1 ? 'is' : 'are' %> online now.
+        </p>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">Legend</h6>
+          </div>
+          <div class="card-body">
+            <p class="mb-1"><span class="text-info">Your Empire</span></p>
+            <p class="mb-1"><span class="text-warning">Under Protection or vacation mode</span></p>
+            <p class="mb-1">R/L - total research levels</p>
+            <p class="mb-0">* - is online</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Player</th>
+            <th scope="col">Civilization</th>
+            <th scope="col">R/L</th>
+            <th scope="col">Land</th>
+            <th scope="col">Score</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @data[:user_data][:users].each do |user_data| %>
+            <% 
+              # Determine row styling based on relationship to current user
+              row_class = if user_data[:id] == @user_game.id
+                            "table-info"  # Your empire
+                          else
+                            ""  # Other players
+                          end
+            %>
+
+            <tr class="<%= row_class %>">
+              <td><%= user_data[:index] + 1 %></td>
+              <td>
+                <%= user_data[:email] %>
+                <%= "*" if user_data[:online] %>
+              </td>
+              <td><%= user_data[:civilization] %></td>
+              <td><%= user_data[:research_levels] %></td>
+              <td><%= number_with_delimiter(user_data[:total_land]) %></td>
+              <td><%= number_with_delimiter(user_data[:score]) %></td>
+              <td>
+                <% if user_data[:id] != @user_game.id %>
+                      <button type="button" class="btn btn-sm btn-outline-secondary action-btn"
+                              data-player-id="<%= user_data[:id] %>"
+                              data-player-name="<%= j user_data[:email] %>">
+                        Actions
+                      </button>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Player Actions Modal -->
+<div class="modal fade" id="playerActionsModal" tabindex="-1" aria-labelledby="playerActionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="playerActionsModalLabel">Player Actions</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-outline-primary action-message">Send Message</button>
+          <button type="button" class="btn btn-outline-primary action-aid">Send Aid</button>
+          <hr>
+          <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="0">Conquer Attack</button>
+          <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="10">Catapult Attack</button>
+          <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="20">Steal Information</button>
+          <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="23">Steal Goods</button>
+          <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="24">Poison Water</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Variables to store the current target player
+    let currentPlayerId = null;
+    let currentPlayerName = null;
+
+    // Initialize the modal
+    const playerActionsModal = new bootstrap.Modal(document.getElementById('playerActionsModal'));
+
+    // Add click event to all action buttons in the table
+    document.querySelectorAll('.action-btn').forEach(button => {
+      button.addEventListener('click', function(e) {
+        // Store player data
+        currentPlayerId = this.getAttribute('data-player-id');
+        currentPlayerName = this.getAttribute('data-player-name');
+
+        // Update modal title
+        document.getElementById('playerActionsModalLabel').textContent = 
+          `Actions for ${currentPlayerName} (${currentPlayerId})`;
+
+        // Show the modal
+        playerActionsModal.show();
+      });
+    });
+
+    // Helper function to make a POST request
+    function postAction(url) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = url;
+      form.style.display = 'none';
+
+      // Add CSRF token
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'authenticity_token';
+      csrfInput.value = csrfToken;
+      form.appendChild(csrfInput);
+
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+    // Add event handlers for each action type
+    document.querySelector('.action-message').addEventListener('click', function() {
+      postAction(`/user_games/${currentPlayerId}/messages/new`);
+    });
+
+    document.querySelector('.action-aid').addEventListener('click', function() {
+      postAction(`/user_games/${currentPlayerId}/aid/new`);
+    });
+
+    document.querySelectorAll('.action-attack').forEach(button => {
+      button.addEventListener('click', function() {
+        const attackType = this.getAttribute('data-attack-type');
+        postAction(`/user_games/${currentPlayerId}/attacks/new?attack_type=${attackType}`);
+      });
+    });
+  });
+</script>
+
