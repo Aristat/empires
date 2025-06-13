@@ -46,9 +46,11 @@ Rails.application.routes.draw do
         post :local_buy
         post :local_sell
         post :global_sell
+        post :global_buy
         post :global_change_prices
         post :global_withdraw
         post :update_auto_trade
+        get :global_market_data
       end
     end
   end

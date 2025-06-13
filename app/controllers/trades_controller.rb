@@ -88,6 +88,28 @@ class TradesController < ApplicationController
     render json: { success: true }
   end
 
+  def global_market_data
+    resource_column = params[:resource].to_s
+    resource_price_column = "#{resource_column}_price"
+
+    raise NotImplemented unless TransferQueue.column_names.include?(resource_column)
+
+    listings = TransferQueue
+      .select(
+        :id,
+        "#{resource_column} AS available",
+        "#{resource_price_column} AS price",
+        :user_game_id
+      )
+      .where(turns_remaining: 0)
+      .where("#{resource_price_column} > 0")
+      .where("#{resource_column} > 0")
+      .order("#{resource_price_column} ASC, #{resource_column} DESC")
+      .limit(10)
+
+    render json: { listings: listings }
+  end
+
   private
 
   def set_user_game
