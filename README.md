@@ -10,7 +10,7 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 - [ ] Implement scores tables
 - [x] Implement train army logic
 - [ ] Implement attack logic
-- [ ] Implement glob trade market
+- [x] Implement glob trade market
 - [ ] Implement aid
 - [ ] Refactoring magic constants in game, prepare documentation, formulas, etc
 - [ ] Right now I use `Cursor` to generate FE/UI, need to refactor and improve better visibility
