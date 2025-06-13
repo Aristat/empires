@@ -202,28 +202,35 @@
               // Get all training input fields
               const trainingInputs = document.querySelectorAll('input.train-queues-field');
               let hasValues = false;
-              const formData = new FormData();
+              const trainQueues = {};
 
-              // Check if any field has a value and collect form data
+              // Check if any field has a value and collect data as an object
               trainingInputs.forEach(input => {
-                if (parseInt(input.value) > 0) {
+                const value = parseInt(input.value);
+                if (value > 0) {
                   hasValues = true;
-                  formData.append(input.name, input.value);
+                  // Extract the key from the name format "train_queues[key]"
+                  const keyMatch = input.name.match(/train_queues\[(.*?)\]/);
+                  if (keyMatch && keyMatch[1]) {
+                    trainQueues[keyMatch[1]] = value;
+                  }
                 }
               });
 
               if (!hasValues) {
                 alert('Please enter quantities to disband');
-                return;
+                return false;
               }
 
-              // Submit using fetch
+              // Submit using fetch with JSON payload
               fetch('<%= disband_user_game_train_queues_path(@user_game) %>', {
                 method: 'POST',
                 headers: {
-                  'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+                  'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json'
                 },
-                body: formData
+                body: JSON.stringify({ train_queues: trainQueues })
               })
               .then(response => {
                 if (response.ok) {

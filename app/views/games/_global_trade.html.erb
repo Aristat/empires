@@ -178,15 +178,16 @@
 <script>
 function withdrawFromMarket(transferId) {
   if (confirm('Are you sure? There is a 10% withdrawal fee.')) {
-    const formData = new FormData();
-    formData.append('transfer_queue_id', transferId);
-
     fetch('<%= global_withdraw_user_game_trades_path(@user_game) %>', {
       method: 'POST',
       headers: {
         'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
-      body: formData
+      body: JSON.stringify({
+        transfer_queue_id: transferId
+      })
     }).then(response => {
       if (response.ok) {
         localStorage.setItem('scrollToTop', 'true');
