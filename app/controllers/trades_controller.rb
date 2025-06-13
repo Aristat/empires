@@ -121,6 +121,20 @@ class TradesController < ApplicationController
   end
 
   def global_buy
+    command = Trades::GlobalBuyCommand.new(
+      user_game: @user_game,
+      resource: params[:resource],
+      quantities: params[:quantities]
+    )
+    command.call
+
+    if command.success?
+      flash[:notice] = command.messages.join("\n") if command.messages.present?
+    else
+      flash[:alert] = command.errors.join("\n")
+    end
+
+    render json: { success: true }
   end
 
   private

@@ -203,38 +203,58 @@ function withdrawFromMarket(transferId) {
   return false;
 }
 
-// Global market resource selection and loading
-document.addEventListener('DOMContentLoaded', function() {
-  // Save the active tab to localStorage
-  document.querySelectorAll('#marketTabs button').forEach(button => {
-    button.addEventListener('shown.bs.tab', event => {
-      localStorage.setItem('activeMarketTab', event.target.id);
-    });
+function submitGlobalBuy(event, resource) {
+  event.preventDefault();
+
+  const form = document.getElementById(`global-buy-form-${resource}`);
+  const quantities = {};
+
+  // Gather all quantity inputs
+  form.querySelectorAll('.buy-quantity').forEach(input => {
+    const listingId = input.getAttribute('data-listing-id');
+    const quantity = parseInt(input.value, 10);
+
+    if (quantity > 0) {
+      quantities[listingId] = quantity;
+    }
   });
 
-  // Restore the active tab from localStorage
-  const activeTab = localStorage.getItem('activeMarketTab');
-  if (activeTab && document.getElementById(activeTab)) {
-    const tab = new bootstrap.Tab(document.getElementById(activeTab));
-    tab.show();
-
-    // If we're showing the buy tab, select the first resource
-    if (activeTab === 'buy-tab') {
-      setTimeout(() => {
-        if (!document.querySelector('.resource-btn.active')) {
-          document.querySelector('.resource-btn').click();
-        }
-      }, 100);
-    }
-  } else {
-    // If no stored tab, select the first resource when showing buy tab initially
-    if (document.getElementById('buy-tab').classList.contains('active')) {
-      setTimeout(() => {
-        document.querySelector('.resource-btn').click();
-      }, 100);
-    }
+  // Only proceed if at least one quantity is selected
+  if (Object.keys(quantities).length === 0) {
+    alert('Please enter a quantity to buy');
+    return;
   }
 
+  fetch('/user_games/<%= @user_game.id %>/trades/global_buy', {
+    method: 'POST',
+    headers: {
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      resource: resource,
+      quantities: quantities
+    })
+  })
+  .then(response => {
+    if (response.ok) {
+      localStorage.setItem('scrollToTop', 'true');
+      window.location.reload();
+    } else {
+      return response.json().then(data => {
+        throw new Error(data.error || 'Failed to buy resources');
+      });
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert(error.message || 'Failed to buy resources. Please try again.');
+  });
+}
+
+// Global market resource selection and loading
+document.addEventListener('DOMContentLoaded', function() {
   // Resource button click handlers
   document.querySelectorAll('.resource-btn').forEach(button => {
     button.addEventListener('click', function() {
@@ -294,9 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (data.listings && data.listings.length > 0) {
         // Render market listings
         listingsElement.innerHTML = `
-          <form action="/user_games/<%= @user_game.id %>/trades/global_buy" method="post">
-            <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
-            <input type="hidden" name="resource" value="${resource}">
+          <form id="global-buy-form-${resource}" onsubmit="submitGlobalBuy(event, '${resource}')">
             <table class="table table-sm table-bordered">
               <thead class="table-light">
                 <tr>
@@ -319,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>
                       ${listing.user_game_id == <%= @user_game.id %> ?
                         '<span class="badge bg-info">Your Listing</span>' :
-                        `<input type="number" name="qty[${listing.id}]" class="form-control form-control-sm" min="0" max="${listing.available}">`
+                        `<input type="number" data-listing-id="${listing.id}" class="form-control form-control-sm buy-quantity" min="0" max="${listing.available}">`
                       }
                     </td>
                   </tr>
