@@ -44,6 +44,8 @@ class TransferQueue < ApplicationRecord
   belongs_to :to_user_game, class_name: 'UserGame', optional: true
 
   enum :transfer_type, {
-    sell: 0
+    sell: 0,
+    aid: 1,
+    buy: 2
   }, prefix: true
 end

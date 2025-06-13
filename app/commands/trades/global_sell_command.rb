@@ -73,7 +73,7 @@ module Trades
       total_sell = 0
       total_price = 0
       UserGame::GLOBAL_TRADE_RESOURCES.each do |resource|
-        next if params["sell_#{resource}"].blank?
+        next if params["sell_#{resource}"].blank? || params["price_#{resource}"].blank?
 
         sell_resource = params["sell_#{resource}"].to_i
         price_resource = params["price_#{resource}"].to_i
@@ -84,7 +84,10 @@ module Trades
         total_price += sell_resource * price_resource
       end
 
-      return if params_for_user_game_update.blank?
+      if params_for_user_game_update.blank?
+        @errors << 'Cannot sell 0 goods.'
+        return
+      end
 
       params_for_user_game_update[:trades_this_turn] = user_game.trades_this_turn + total_sell
       user_game.update!(params_for_user_game_update)

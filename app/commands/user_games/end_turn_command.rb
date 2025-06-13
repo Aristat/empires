@@ -48,6 +48,7 @@ module UserGames
       return false if @user_game.current_turns <= 0
 
       @user_game.with_lock do
+        process_public_trade
         calculate_builders
         hunters_production
         farms_production
@@ -96,6 +97,13 @@ module UserGames
 
     def add_message(message, color = nil)
       @messages << { text: message, color: color }
+    end
+
+    def process_public_trade
+      @user_game.transfer_queues
+                .transfer_type_sell
+                .where('turns_remaining > 0')
+                .update_all('turns_remaining = turns_remaining - 1')
     end
 
     def calculate_builders
