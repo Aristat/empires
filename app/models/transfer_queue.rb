@@ -25,11 +25,13 @@
 #  wood_price      :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  game_id         :bigint           not null
 #  to_user_game_id :bigint
 #  user_game_id    :bigint           not null
 #
 # Indexes
 #
+#  index_transfer_queues_on_game_id          (game_id)
 #  index_transfer_queues_on_to_user_game_id  (to_user_game_id)
 #  index_transfer_queues_on_user_game_id     (user_game_id)
 #
@@ -40,6 +42,7 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class TransferQueue < ApplicationRecord
+  belongs_to :game
   belongs_to :user_game
   belongs_to :to_user_game, class_name: 'UserGame', optional: true
 

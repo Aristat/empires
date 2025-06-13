@@ -282,8 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fetch market data for the resource
     fetch(`/user_games/<%= @user_game.id %>/trades/global_market_data?resource=${resource}`, {
       headers: {
-        'Accept': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest'
+        'Accept': 'application/json'
       }
     })
     .then(response => response.json())
@@ -300,6 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <table class="table table-sm table-bordered">
               <thead class="table-light">
                 <tr>
+                  <th>User</th>
                   <th>Available</th>
                   <th>You Can Buy</th>
                   <th>Price (Per Unit)</th>
@@ -308,9 +308,10 @@ document.addEventListener('DOMContentLoaded', function() {
               </thead>
               <tbody>
                 ${data.listings.map(listing => {
-                  const playerGold = <%= @user_game.gold %>; // Get gold amount from ERB
+                  const playerGold = <%= @user_game.gold %>;
                   return `
                   <tr>
+                    <td>${listing.name}</td>
                     <td>${new Intl.NumberFormat().format(listing.available)}</td>
                     <td>${new Intl.NumberFormat().format(Math.min(listing.available, Math.floor(playerGold / listing.price)))}</td>
                     <td>${new Intl.NumberFormat().format(listing.price)}</td>

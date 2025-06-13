@@ -94,6 +94,7 @@ module Trades
 
       params_for_transfer_queue = params_for_transfer_queue.merge(
         {
+          game_id: user_game.game_id,
           user_game: user_game,
           turns_remaining: 3,
           transfer_type: :sell

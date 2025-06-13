@@ -3,6 +3,7 @@ class CreateTransferQueues < ActiveRecord::Migration[7.1]
     create_table :transfer_queues do |t|
       t.references :user_game, null: false, foreign_key: true
       t.references :to_user_game, null: true, foreign_key: { to_table: :user_games }
+      t.references :game, null: false, foreign_key: false
 
       t.integer :transfer_type, null: false
       t.integer :turns_remaining, null: false

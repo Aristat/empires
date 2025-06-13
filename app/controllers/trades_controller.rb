@@ -101,13 +101,26 @@ class TradesController < ApplicationController
         "#{resource_price_column} AS price",
         :user_game_id
       )
-      .where(turns_remaining: 0)
+      .preload(user_game: :user)
+      .where(game_id: @user_game.game_id, turns_remaining: 0)
       .where("#{resource_price_column} > 0")
       .where("#{resource_column} > 0")
       .order("#{resource_price_column} ASC, #{resource_column} DESC")
       .limit(10)
+      .map do |listing|
+        {
+          id: listing.id,
+          available: listing['available'],
+          price: listing['price'],
+          user_game_id: listing.user_game_id,
+          name: listing.user_game.user.name || listing.user_game.user.email
+        }
+      end
 
     render json: { listings: listings }
+  end
+
+  def global_buy
   end
 
   private

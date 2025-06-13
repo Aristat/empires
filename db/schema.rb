@@ -108,6 +108,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_01_195500) do
   create_table "transfer_queues", force: :cascade do |t|
     t.bigint "user_game_id", null: false
     t.bigint "to_user_game_id"
+    t.bigint "game_id", null: false
     t.integer "transfer_type", null: false
     t.integer "turns_remaining", null: false
     t.integer "gold"
@@ -129,6 +130,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_01_195500) do
     t.integer "horses_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_transfer_queues_on_game_id"
     t.index ["to_user_game_id"], name: "index_transfer_queues_on_to_user_game_id"
     t.index ["user_game_id"], name: "index_transfer_queues_on_user_game_id"
   end

@@ -95,6 +95,7 @@ games.each do |game|
   Games::CreateBuildingsCommand.new(game: game_entity).call
   Games::CreateCivilizationsCommand.new(game: game_entity).call
   Games::CreateSoldiersCommand.new(game: game_entity).call
+  Games::CreateFakeUsersCommand.new(game: game_entity).call
 end
 
 user = User.find_or_initialize_by(
