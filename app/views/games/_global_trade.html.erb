@@ -80,6 +80,66 @@
             </table>
           </div>
         <% end %>
+
+        <% if @user_game.transfer_queues.where(transfer_type: :sell).any? %>
+          <div class="card mt-4">
+            <div class="card-header bg-dark text-white">
+              <h5 class="card-title mb-0">Dispatched Caravans</h5>
+            </div>
+            <div class="card-body">
+              <% @user_game.transfer_queues.where(transfer_type: :sell).order(turns_remaining: :desc, id: :asc).each do |transfer| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <% if transfer.turns_remaining.positive? %>
+                      <h6 class="card-subtitle mb-2 text-muted">
+                        Caravans departed with:
+                      </h6>
+                      <div class="row">
+                        <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
+                          <% if transfer.send(resource).present? %>
+                            <div class="col-md-3 mb-2">
+                              <%= number_with_delimiter(transfer.send(resource)) %> <%= resource.titleize %>
+                            </div>
+                          <% end %>
+                        <% end %>
+                      </div>
+                      <p class="card-text mt-2">
+                        Will reach their destination in <%= transfer.turns_remaining %> turns.
+                      </p>
+                    <% else %>
+                      <h6 class="card-subtitle mb-2 text-muted">
+                        You have on the public market:
+                      </h6>
+                      <%= form_with url: global_change_prices_user_game_trades_path(@user_game, transfer_queue_id: transfer.id), method: :post, local: true do |f| %>
+                        <div class="row">
+                          <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
+                            <% if transfer.send(resource).present? %>
+                              <div class="col-md-3 mb-2">
+                                <div class="input-group input-group-sm">
+                                  <span class="input-group-text"><%= number_with_delimiter(transfer.send(resource)) %> <%= resource.titleize %></span>
+                                  <%= f.number_field "price_#{resource}",
+                                                     value: transfer.send("#{resource}_price"),
+                                                     class: 'form-control',
+                                                     min: @data[:game_data]["global_#{resource}_min_price"],
+                                                     max: @data[:game_data]["global_#{resource}_max_price"] %>
+                                  <span class="input-group-text">gold each</span>
+                                </div>
+                              </div>
+                            <% end %>
+                          <% end %>
+                        </div>
+                        <div class="mt-3">
+                          <%= f.submit 'Change Prices', class: 'btn btn-primary btn-sm' %>
+                          <button onclick="return withdrawFromMarket(<%= transfer.id %>)" class="btn btn-sm btn-danger">Withdraw from market</button>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
       </div>
 
       <!-- Buy Tab Content -->
@@ -114,66 +174,6 @@
     </div>
   </div>
 </div>
-
-<% if @user_game.transfer_queues.where(transfer_type: :sell).any? %>
-  <div class="card mt-4">
-    <div class="card-header bg-dark text-white">
-      <h5 class="card-title mb-0">Dispatched Caravans</h5>
-    </div>
-    <div class="card-body">
-      <% @user_game.transfer_queues.where(transfer_type: :sell).order(turns_remaining: :desc, id: :asc).each do |transfer| %>
-        <div class="card mb-3">
-          <div class="card-body">
-            <% if transfer.turns_remaining.positive? %>
-              <h6 class="card-subtitle mb-2 text-muted">
-                Caravans departed with:
-              </h6>
-              <div class="row">
-                <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
-                  <% if transfer.send(resource).present? %>
-                    <div class="col-md-3 mb-2">
-                      <%= number_with_delimiter(transfer.send(resource)) %> <%= resource.titleize %>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
-              <p class="card-text mt-2">
-                Will reach their destination in <%= transfer.turns_remaining %> turns.
-              </p>
-            <% else %>
-              <h6 class="card-subtitle mb-2 text-muted">
-                You have on the public market:
-              </h6>
-              <%= form_with url: global_change_prices_user_game_trades_path(@user_game, transfer_queue_id: transfer.id), method: :post, local: true do |f| %>
-                <div class="row">
-                  <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
-                    <% if transfer.send(resource).present? %>
-                      <div class="col-md-3 mb-2">
-                        <div class="input-group input-group-sm">
-                          <span class="input-group-text"><%= number_with_delimiter(transfer.send(resource)) %> <%= resource.titleize %></span>
-                          <%= f.number_field "price_#{resource}",
-                              value: transfer.send("#{resource}_price"),
-                              class: 'form-control',
-                              min: @data[:game_data]["global_#{resource}_min_price"],
-                              max: @data[:game_data]["global_#{resource}_max_price"] %>
-                          <span class="input-group-text">gold each</span>
-                        </div>
-                      </div>
-                    <% end %>
-                  <% end %>
-                </div>
-                <div class="mt-3">
-                  <%= f.submit 'Change Prices', class: 'btn btn-primary btn-sm' %>
-                  <button onclick="return withdrawFromMarket(<%= transfer.id %>)" class="btn btn-sm btn-danger">Withdraw from market</button>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
 
 <script>
 function withdrawFromMarket(transferId) {
@@ -216,6 +216,22 @@ document.addEventListener('DOMContentLoaded', function() {
   if (activeTab && document.getElementById(activeTab)) {
     const tab = new bootstrap.Tab(document.getElementById(activeTab));
     tab.show();
+
+    // If we're showing the buy tab, select the first resource
+    if (activeTab === 'buy-tab') {
+      setTimeout(() => {
+        if (!document.querySelector('.resource-btn.active')) {
+          document.querySelector('.resource-btn').click();
+        }
+      }, 100);
+    }
+  } else {
+    // If no stored tab, select the first resource when showing buy tab initially
+    if (document.getElementById('buy-tab').classList.contains('active')) {
+      setTimeout(() => {
+        document.querySelector('.resource-btn').click();
+      }, 100);
+    }
   }
 
   // Resource button click handlers
