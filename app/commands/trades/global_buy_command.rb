@@ -89,7 +89,8 @@ module Trades
           seller.update!(gold: seller.gold + seller_gold)
 
           TransferQueue.create!(
-            user_game_id: user_game.id,
+            user_game_id: seller.id,
+            to_user_game_id: user_game.id,
             game_id: user_game.game_id,
             transfer_type: :buy,
             turns_remaining: 3,

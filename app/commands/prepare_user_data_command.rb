@@ -285,6 +285,12 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:thieves_attack_power] = 0
     user_data[:thieves_defense_power] = 0
 
+    from_transfer_queues = user_game.transfer_queues
+    to_transfer_queues = TransferQueue.where(to_user_game_id: user_game.id)
+    user_data[:transfer_queues] = from_transfer_queues + to_transfer_queues
+    user_data[:sell_transfer_queues] = from_transfer_queues.select { _1.transfer_type_sell? }.sort_by { [_1.turns_remaining, _1.id] }
+    user_data[:buy_transfer_queues] = to_transfer_queues.select { _1.transfer_type_buy? }.sort_by { [_1.turns_remaining, _1.id] }
+
     users = []
     online_users = 0
     user_game.game.user_games.includes(:user, :civilization).order(score: :desc).each_with_index do |user_game, index|

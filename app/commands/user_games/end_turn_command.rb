@@ -100,10 +100,34 @@ module UserGames
     end
 
     def process_public_trade
-      @user_game.transfer_queues
-                .transfer_type_sell
-                .where('turns_remaining > 0')
-                .update_all('turns_remaining = turns_remaining - 1')
+      TransferQueue.where(
+        '(user_game_id = ? AND turns_remaining > 0 AND transfer_type = ?) OR ' \
+        '(to_user_game_id = ? AND turns_remaining > 0 AND transfer_type = ?)',
+        @user_game.id, TransferQueue.transfer_types['sell'], @user_game.id, TransferQueue.transfer_types['buy']
+      ).update_all('turns_remaining = turns_remaining - 1')
+
+      transfer_entries = TransferQueue.where(to_user_game_id: @user_game.id, turns_remaining: 0, transfer_type: :buy)
+      transfer_entries.each do |entry|
+        # Generating message for each transport
+        message = "A transport with #{entry.wood} wood, " \
+          "#{entry.food} food, #{entry.iron} iron, " \
+          "#{entry.tools} tools, #{entry.maces} maces, " \
+          "#{entry.swords} swords, #{entry.bows} bows, and " \
+          "#{entry.horses} horses arrived from public market."
+        add_message(message, 'warning')
+
+        @r_wood += entry.wood.to_i
+        @r_food += entry.food.to_i
+        @r_iron += entry.iron.to_i
+        @r_tools += entry.tools.to_i
+        @r_maces += entry.maces.to_i
+        @r_swords += entry.swords.to_i
+        @r_bows += entry.bows.to_i
+        @r_horses += entry.horses.to_i
+
+        # Delete the processed entry from the queue
+        entry.destroy!
+      end
     end
 
     def calculate_builders
@@ -541,7 +565,7 @@ module UserGames
         end
 
         research_name = @user_game.current_research.titleize.gsub('_', ' ')
-        add_message("Finished research of #{research_name}", 'yellow')
+        add_message("Finished research of #{research_name}", 'warning')
         need_research_points = Researches::NextResearchLevelPointsCommand.new(
           total_research_levels: total_research_levels
         ).call

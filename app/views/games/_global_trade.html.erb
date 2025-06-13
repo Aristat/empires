@@ -81,13 +81,13 @@
           </div>
         <% end %>
 
-        <% if @user_game.transfer_queues.where(transfer_type: :sell).any? %>
+        <% if @data[:user_data][:sell_transfer_queues].present? %>
           <div class="card mt-4">
             <div class="card-header bg-dark text-white">
               <h5 class="card-title mb-0">Dispatched Caravans</h5>
             </div>
             <div class="card-body">
-              <% @user_game.transfer_queues.where(transfer_type: :sell).order(turns_remaining: :desc, id: :asc).each do |transfer| %>
+              <% @data[:user_data][:sell_transfer_queues].each do |transfer| %>
                 <div class="card mb-3">
                   <div class="card-body">
                     <% if transfer.turns_remaining.positive? %>
@@ -170,6 +170,33 @@
             </div>
           <% end %>
         </div>
+
+        <% if @data[:user_data][:buy_transfer_queues].present? %>
+          <div class="card mt-4">
+            <div class="card-header bg-dark text-white">
+              <h5 class="card-title mb-0">Incoming Caravans</h5>
+            </div>
+            <div class="card-body">
+              <% @data[:user_data][:buy_transfer_queues].each do |caravan| %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <p class="card-text">
+                      Transport with
+                      <% resource_details = [] %>
+                      <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
+                        <% if caravan.send(resource).to_i > 0 %>
+                          <% resource_details << "#{number_with_delimiter(caravan.send(resource))} #{resource}" %>
+                        <% end %>
+                      <% end %>
+                      <%= resource_details.join(", ") %>
+                      will reach your empire in <%= caravan.turns_remaining %> turns.
+                    </p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
