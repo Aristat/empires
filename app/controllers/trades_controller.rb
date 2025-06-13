@@ -74,6 +74,17 @@ class TradesController < ApplicationController
   end
 
   def global_withdraw
+    transfer_queue = @user_game.transfer_queues.find(params[:transfer_queue_id])
+
+    command = Trades::GlobalWithdrawCommand.new(user_game: @user_game, transfer_queue: transfer_queue)
+    command.call
+
+    if command.success?
+      flash[:notice] = command.messages.join("\n") if command.messages.present?
+    else
+      flash[:alert] = command.errors.join("\n")
+    end
+
     render json: { success: true }
   end
 
