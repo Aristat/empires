@@ -18,6 +18,7 @@ class PrepareGameDataCommand < BaseCommand
       local_tools_sell_price: game.local_tools_sell_price,
       local_tools_buy_price: game.local_tools_buy_price,
       global_fee_percent: game.global_fee_percent,
+      global_withdraw_percent: game.global_withdraw_percent,
       global_wood_min_price: game.global_wood_min_price,
       global_wood_max_price: game.global_wood_max_price,
       global_food_min_price: game.global_food_min_price,

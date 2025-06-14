@@ -34,7 +34,7 @@ class Game < ApplicationRecord
                  :global_food_max_price, :global_iron_min_price, :global_iron_max_price, :global_tools_min_price,
                  :global_tools_max_price, :global_bows_min_price, :global_bows_max_price, :global_swords_min_price,
                  :global_swords_max_price, :global_maces_min_price, :global_maces_max_price, :global_horses_min_price,
-                 :global_horses_max_price
+                 :global_horses_max_price, :global_withdraw_percent
 
   validates :name, presence: true
 end

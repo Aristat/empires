@@ -4,11 +4,14 @@ module Trades
   class GlobalWithdrawCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
-    attr_reader :user_game, :transfer_queue, :messages
+    attr_reader :user_game, :transfer_queue, :game_data, :messages
 
     def initialize(user_game:, transfer_queue:)
       @user_game = user_game
       @transfer_queue = transfer_queue
+      @game_data = PrepareGameDataCommand.new(
+        game: user_game.game, civilization: user_game.civilization
+      ).call.with_indifferent_access
       @messages = []
 
       super()
@@ -18,15 +21,13 @@ module Trades
       return if failed?
 
       update_params = {}
+      withdraw_percentage = (100 - game_data[:global_withdraw_percent].to_f) / 100
+      TransferQueue::RESOURCES.each do |resource_column|
+        next if transfer_queue.send(resource_column).blank?
 
-      update_params[:wood] = user_game.wood + (transfer_queue.wood * 0.9).round if transfer_queue.wood.present?
-      update_params[:iron] = user_game.iron + (transfer_queue.iron * 0.9).round if transfer_queue.iron.present?
-      update_params[:food] = user_game.food + (transfer_queue.food * 0.9).round if transfer_queue.food.present?
-      update_params[:tools] = user_game.tools + (transfer_queue.tools * 0.9).round if transfer_queue.tools.present?
-      update_params[:swords] = user_game.swords + (transfer_queue.swords * 0.9).round if transfer_queue.swords.present?
-      update_params[:bows] = user_game.bows + (transfer_queue.bows * 0.9).round if transfer_queue.bows.present?
-      update_params[:horses] = user_game.horses + (transfer_queue.horses * 0.9).round if transfer_queue.horses.present?
-      update_params[:maces] = user_game.maces + (transfer_queue.maces * 0.9).round if transfer_queue.maces.present?
+        update_params[resource_column] = user_game.send(resource_column) +
+                                         (transfer_queue.send(resource_column) * withdraw_percentage).round
+      end
 
       ActiveRecord::Base.transaction do
         user_game.update!(update_params) if update_params.present?

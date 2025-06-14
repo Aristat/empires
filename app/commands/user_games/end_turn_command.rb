@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UserGames
   class EndTurnCommand
     include ActionView::Helpers::NumberHelper
@@ -109,11 +111,21 @@ module UserGames
       transfer_entries = TransferQueue.where(to_user_game_id: @user_game.id, turns_remaining: 0, transfer_type: :buy)
       transfer_entries.each do |entry|
         # Generating message for each transport
-        message = "A transport with #{entry.wood} wood, " \
-          "#{entry.food} food, #{entry.iron} iron, " \
-          "#{entry.tools} tools, #{entry.maces} maces, " \
-          "#{entry.swords} swords, #{entry.bows} bows, and " \
-          "#{entry.horses} horses arrived from public market."
+        resources = []
+        TransferQueue::RESOURCES.each do |resource_column|
+          next if entry.send(resource_column).blank?
+
+          resources << "#{entry.send(resource_column)} #{resource_column.to_s.humanize}"
+        end
+
+        if resources.blank?
+          entry.destroy!
+          next
+        end
+
+        message = +'A transport with '
+        message += resources.join(', ')
+        message += ' arrived from public market.'
         add_message(message, 'warning')
 
         @r_wood += entry.wood.to_i

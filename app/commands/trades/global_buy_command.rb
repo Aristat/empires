@@ -4,11 +4,14 @@ module Trades
   class GlobalBuyCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
-    attr_reader :user_game, :resource, :quantities, :messages
+    attr_reader :user_game, :resource, :game_data, :quantities, :messages
 
     def initialize(user_game:, resource:, quantities:)
       @user_game = user_game
       @resource = resource
+      @game_data = PrepareGameDataCommand.new(
+        game: user_game.game, civilization: user_game.civilization
+      ).call.with_indifferent_access
       @quantities = quantities
       @messages = []
 
@@ -66,16 +69,13 @@ module Trades
 
           @messages << "#{number_with_delimiter(quantity)} #{resource} bought for #{number_with_delimiter(cost)}. The caravans with #{resource} will reach your empire in 3 months."
 
-          # Update or delete the transfer queue based on remaining resources
-          remaining_resources = transfer_queue.wood.to_i + 
-                               transfer_queue.iron.to_i + 
-                               transfer_queue.food.to_i + 
-                               transfer_queue.tools.to_i + 
-                               transfer_queue.maces.to_i + 
-                               transfer_queue.swords.to_i + 
-                               transfer_queue.bows.to_i + 
-                               transfer_queue.horses.to_i - 
-                               quantity
+          remaining_resources = 0
+          TransferQueue::RESOURCES.each do |resource_column|
+            next if transfer_queue.send(resource_column).blank?
+
+            remaining_resources += user_game.send(resource_column)
+          end
+          remaining_resources -= quantity
 
           if remaining_resources > 0
             transfer_queue.update!("#{resource}" => transfer_queue.public_send(resource) - quantity)
@@ -83,8 +83,7 @@ module Trades
             transfer_queue.destroy!
           end
 
-          # Give gold to the seller (5% market fee)
-          seller_gold = (cost * 0.95).round
+          seller_gold = (cost * (1 - game_data[:global_fee_percent].to_f / 100)).round
           seller = transfer_queue.user_game
           seller.update!(gold: seller.gold + seller_gold)
 

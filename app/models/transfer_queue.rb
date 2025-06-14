@@ -42,6 +42,17 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class TransferQueue < ApplicationRecord
+  RESOURCES = [
+    :wood,
+    :food,
+    :iron,
+    :swords,
+    :maces,
+    :bows,
+    :tools,
+    :horses
+  ].freeze
+
   belongs_to :game
   belongs_to :user_game
   belongs_to :to_user_game, class_name: 'UserGame', optional: true
