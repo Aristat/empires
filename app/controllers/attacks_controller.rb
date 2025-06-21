@@ -10,7 +10,7 @@ class AttacksController < ApplicationController
     redirect_to game_path(@user_game.game)
   end
 
-  def thief_attack
+  def thieve_attack
     redirect_to game_path(@user_game.game)
   end
 

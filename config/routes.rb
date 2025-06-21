@@ -58,7 +58,7 @@ Rails.application.routes.draw do
       collection do
         post :army_attack
         post :catapult_attack
-        post :thief_attack
+        post :thieve_attack
       end
 
       member do

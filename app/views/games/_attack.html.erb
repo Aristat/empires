@@ -69,14 +69,12 @@
               <div class="card-header bg-dark text-white">Army Attack</div>
               <div class="card-body">
                 <%= form_with url: army_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
-                  <%= form.hidden_field :attack_section, value: "army" %>
-
                   <div class="mb-3">
                     <%= form.select :attack_type, [
-                      ["Conquer (take land)", 'conquer'],
-                      ["Raid (destroy)", 'raid'],
-                      ["Rob (steal resources)", 'rob'],
-                      ["Slaughter (kill population)", 'slaughter']
+                      ["Conquer (take land)", 'army_conquer'],
+                      ["Raid (destroy)", 'army_raid'],
+                      ["Rob (steal resources)", 'army_rob'],
+                      ["Slaughter (kill population)", 'army_slaughter']
                     ], {}, { class: "form-select" } %>
                   </div>
 
@@ -153,6 +151,93 @@
                   <div class="mb-3 form-check">
                     <%= form.check_box :maximum_wine, class: "form-check-input" %>
                     <%= form.label :maximum_wine, 'Send max wine?', class: "form-check-label" %>
+                  </div>
+
+                  <div class="text-center">
+                    <%= form.submit "Attack", class: "btn btn-danger" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Catapult Attack Form Section -->
+        <div class="row mt-4">
+          <div class="col-md-6 mx-auto">
+            <div class="card border-dark mb-4">
+              <div class="card-header bg-dark text-white">Catapult Attack</div>
+              <div class="card-body">
+                <%= form_with url: catapult_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
+                  <div class="mb-3">
+                    <%= form.select :attack_type, [
+                      ["Catapult Army and Towers", 'catapult_army_and_towers'],
+                      ["Catapult Population", 'catapult_population'],
+                      ["Catapult Buildings", 'catapult_buildings']
+                    ], {}, { class: "form-select" } %>
+                  </div>
+
+                  <div class="mb-3">
+                    <%= form.label :to_user_game_id, "Empire #", class: "form-label" %>
+                    <%= form.text_field :to_user_game_id, value: params[:to_user_game_id], class: "form-control", maxlength: 5, size: 3 %>
+                  </div>
+
+                  <div class="mb-3">
+                    <%= form.label :catapult_soldiers, @data[:soldiers][:catapult][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :catapult_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:catapult][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-3 form-check">
+                    <%= form.check_box :send_all, class: "form-check-input" %>
+                    <%= form.label :send_all, "Send All Catapults", class: "form-check-label" %>
+                  </div>
+
+                  <div class="text-center">
+                    <%= form.submit "Attack", class: "btn btn-danger" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thief Attack Form Section -->
+        <div class="row mt-4">
+          <div class="col-md-6 mx-auto">
+            <div class="card border-dark mb-4">
+              <div class="card-header bg-dark text-white">Thief Attack</div>
+              <div class="card-body">
+                <%= form_with url: thieve_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
+                  <div class="mb-3">
+                    <%= form.select :attack_type, [
+                      ["Steal Army Information", 'thief_steal_army_information'],
+                      ["Steal Building Information", 'thief_steal_building_information'],
+                      ["Steal Research Information", 'thief_steal_research_information'],
+                      ["Steal Goods", 'thief_steal_goods'],
+                      ["Poison Water", 'thief_poison_water'],
+                      ["Set Fire", 'thief_set_fire']
+                    ], {}, { class: "form-select" } %>
+                  </div>
+
+                  <div class="mb-3">
+                    <%= form.label :to_user_game_id, "Empire #", class: "form-label" %>
+                    <%= form.text_field :to_user_game_id, value: params[:to_user_game_id], class: "form-control", maxlength: 5, size: 3 %>
+                  </div>
+
+                  <div class="mb-3">
+                    <%= form.label :thieve_soldiers, @data[:soldiers][:thieve][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :thieve_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:thieve][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-3 form-check">
+                    <%= form.check_box :send_all, class: "form-check-input" %>
+                    <%= form.label :send_all, "Send All Thieves", class: "form-check-label" %>
                   </div>
 
                   <div class="text-center">

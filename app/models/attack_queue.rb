@@ -44,18 +44,19 @@ class AttackQueue < ApplicationRecord
     almost_home: 5
   }, prefix: true
   enum :attack_type, {
-    conquer: 0,
-    raid: 1,
-    rob: 2,
-    slaughter: 3,
+    army_conquer: 0,
+    army_raid: 1,
+    army_rob: 2,
+    army_slaughter: 3,
     catapult_army_and_towers: 4,
-    catapult_buildings: 5,
-    steal_army_information: 6,
-    steal_building_information: 7,
-    steal_research_information: 8,
-    steal_goods: 9,
-    poison_water: 10,
-    set_fire: 11
+    catapult_population: 5,
+    catapult_buildings: 6,
+    thief_steal_army_information: 7,
+    thief_steal_building_information: 8,
+    thief_steal_research_information: 9,
+    thief_steal_goods: 10,
+    thief_poison_water: 11,
+    thief_set_fire: 12
   }, prefix: true
 
   store_accessor :soldiers, *UserGame::SOLDIERS.keys, suffix: true
