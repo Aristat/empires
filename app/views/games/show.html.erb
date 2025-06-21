@@ -177,6 +177,11 @@
       </button>
     </li>
     <li class="nav-item" role="presentation">
+      <button class="nav-link" id="attack-tab" data-bs-toggle="tab" data-bs-target="#attack" type="button" role="tab" aria-controls="attack" aria-selected="false">
+        Attack
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
       <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
         Management
       </button>
@@ -228,6 +233,11 @@
     <!-- Army Tab -->
     <div class="tab-pane fade" id="army" role="tabpanel" aria-labelledby="army-tab">
       <%= render 'army', user_game: @user_game %>
+    </div>
+
+    <!-- Attack Tab -->
+    <div class="tab-pane fade" id="attack" role="tabpanel" aria-labelledby="attack-tab">
+      <%= render 'attack', user_game: @user_game %>
     </div>
 
     <!-- Management Tab -->

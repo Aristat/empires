@@ -133,8 +133,9 @@ class UserGame < ApplicationRecord
   has_many :explore_queues, dependent: :destroy
   has_many :train_queues, dependent: :destroy
   has_many :transfer_queues, dependent: :destroy
+  has_many :attack_queues, dependent: :destroy
 
-  # TODO!: Add more researches like
+  # TODO! Add more researches like
   # Conquered land
   # Army Upkeep cost
   # Army Training cost

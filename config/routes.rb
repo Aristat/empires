@@ -53,5 +53,17 @@ Rails.application.routes.draw do
         get :global_market_data
       end
     end
+
+    resources :attacks, only: [] do
+      collection do
+        post :attack_empire
+        post :catapult_attack
+        post :thief_attack
+      end
+
+      member do
+        get :cancel_attack
+      end
+    end
   end
 end

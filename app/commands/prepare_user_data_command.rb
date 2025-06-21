@@ -291,6 +291,8 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:sell_transfer_queues] = from_transfer_queues.select { _1.transfer_type_sell? }.sort_by { [_1.turns_remaining, _1.id] }
     user_data[:buy_transfer_queues] = to_transfer_queues.select { _1.transfer_type_buy? }.sort_by { [_1.turns_remaining, _1.id] }
 
+    user_data[:attack_queues] = user_game.attack_queues.includes(to_user_game: :user).order(created_at: :desc)
+
     users = []
     online_users = 0
     user_game.game.user_games.includes(:user, :civilization).order(score: :desc).each_with_index do |user_game, index|

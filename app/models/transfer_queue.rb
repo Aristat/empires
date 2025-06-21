@@ -42,6 +42,7 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class TransferQueue < ApplicationRecord
+  # TODO! add sell wine
   RESOURCES = [
     :wood,
     :food,

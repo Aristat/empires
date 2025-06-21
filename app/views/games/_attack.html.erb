@@ -1,0 +1,67 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h3 class="mb-4">Attack</h3>
+
+      <% if @user_game.turn <= @data[:game_data][:turns_under_protection] %>
+        <div class="alert alert-warning">
+          Cannot attack under protection.
+          <br>
+          (You are under protection for the first <%= (@data[:game_data][:turns_under_protection].to_f / 12).round(2) %> years of game)
+        </div>
+      <% else %>
+        <!-- Attack Queue Section -->
+        <% if @data[:user_data][:attack_queues].blank? %>
+          <div class="alert alert-info">Your armies are not attacking anyone.</div>
+        <% else %>
+          <h4>Active Armies</h4>
+          <table class="table table-bordered">
+            <thead>
+              <tr class="table-dark">
+                <th>Empire Attacked</th>
+                <th>Attack Type</th>
+                <th>Your Army</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @data[:user_data][:attack_queues].each do |attack_queue| %>
+                <tr>
+                  <td>
+                    <%= attack_queue.to_user_game.user.email %>
+                    <% if attack_queue.to_user_game.score < @user_game.score / 2 %>
+                      <div class="text-danger small">
+                        Warning! Attacking empires smaller than 1/2 of your size will result in revolt.
+                      </div>
+                    <% end %>
+                  </td>
+                  <td>
+                    <%= attack_queue.attack_type %>
+                  </td>
+                  <td class="small">
+                    <% @data[:soldiers].each do |key, soldier| %>
+                      <% next unless attack_queue.respond_to?("#{key}_soldiers") %>
+
+                      <% if attack_queue.send("#{key}_soldiers") > 0 %><div><%= number_with_delimiter(attack_queue.send("#{key}_soldiers")) %> <%= soldier[:name] %></div><% end %>
+                    <% end %>
+
+                    <% if attack_queue.cost_wine.to_i > 0 %><div><%= number_with_delimiter(attack_queue.cost_wine) %> units of wine</div><% end %>
+
+                    <div class="mt-2"><strong>Attack Strength: <%= number_with_delimiter(100) %>%</strong></div>
+                  </td>
+                  <td><%= attack_queue.attack_status %></td>
+                  <td>
+                    <% if attack_queue.can_cancel? %>
+                      <%= link_to "Cancel", cancel_attack_user_game_attack_path(@user_game, attack_queue), class: "btn btn-sm btn-danger" %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -10,9 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_01_195500) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_122710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "attack_queues", force: :cascade do |t|
+    t.bigint "user_game_id", null: false
+    t.bigint "to_user_game_id"
+    t.bigint "game_id", null: false
+    t.jsonb "soldiers", default: {}, null: false
+    t.integer "attack_status", null: false
+    t.integer "attack_type", null: false
+    t.integer "cost_gold"
+    t.integer "cost_food"
+    t.integer "cost_wood"
+    t.integer "cost_iron"
+    t.integer "cost_wine"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_attack_queues_on_game_id"
+    t.index ["to_user_game_id"], name: "index_attack_queues_on_to_user_game_id"
+    t.index ["user_game_id"], name: "index_attack_queues_on_user_game_id"
+  end
 
   create_table "build_queues", force: :cascade do |t|
     t.bigint "user_game_id", null: false
@@ -207,6 +226,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_01_195500) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "attack_queues", "user_games"
+  add_foreign_key "attack_queues", "user_games", column: "to_user_game_id"
   add_foreign_key "build_queues", "user_games"
   add_foreign_key "buildings", "games"
   add_foreign_key "civilizations", "games"

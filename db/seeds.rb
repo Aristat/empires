@@ -83,7 +83,8 @@ games = [
       wall_use_gold: 150,
       wall_use_iron: 2,
       wall_use_wood: 15,
-      wall_use_wine: 5
+      wall_use_wine: 5,
+      turns_under_protection: 1
     }
   }
 ]
