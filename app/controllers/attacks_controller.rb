@@ -2,7 +2,7 @@ class AttacksController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_game
 
-  def attack_empire
+  def army_attack
     redirect_to game_path(@user_game.game)
   end
 

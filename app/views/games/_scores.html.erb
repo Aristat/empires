@@ -52,7 +52,7 @@
             <tr class="<%= row_class %>">
               <td><%= user_data[:index] + 1 %></td>
               <td>
-                <%= user_data[:email] %>
+                <%= "#{user_data[:email]} (#{user_data[:id]})" %>
                 <%= "*" if user_data[:online] %>
               </td>
               <td><%= user_data[:civilization] %></td>

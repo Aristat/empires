@@ -61,6 +61,108 @@
             </tbody>
           </table>
         <% end %>
+
+        <!-- Army Attack Form Section -->
+        <div class="row mt-4">
+          <div class="col-md-6 mx-auto">
+            <div class="card border-dark mb-4">
+              <div class="card-header bg-dark text-white">Army Attack</div>
+              <div class="card-body">
+                <%= form_with url: army_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
+                  <%= form.hidden_field :attack_section, value: "army" %>
+
+                  <div class="mb-3">
+                    <%= form.select :attack_type, [
+                      ["Conquer (take land)", 'conquer'],
+                      ["Raid (destroy)", 'raid'],
+                      ["Rob (steal resources)", 'rob'],
+                      ["Slaughter (kill population)", 'slaughter']
+                    ], {}, { class: "form-select" } %>
+                  </div>
+
+                  <div class="mb-3">
+                    <%= form.label :to_user_game_id, "Empire #", class: "form-label" %>
+                    <%= form.text_field :to_user_game_id, value: params[:to_user_game_id], class: "form-control", maxlength: 5, size: 3 %>
+                  </div>
+
+                  <h5 class="mb-3">Army Units</h5>
+
+                  <div class="mb-2">
+                    <%= form.label :unique_unit_soldiers, @data[:soldiers][:unique_unit][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :unique_unit_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:unique_unit][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-2">
+                    <%= form.label :swordsman_soldiers, @data[:soldiers][:swordsman][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :swordsman_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:swordsman][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-2">
+                    <%= form.label :archer_soldiers, @data[:soldiers][:archer][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :archer_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:archer][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-2">
+                    <%= form.label :horseman_soldiers, @data[:soldiers][:horseman][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :horseman_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:horseman][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-2">
+                    <%= form.label :macemen_soldiers, @data[:soldiers][:macemen][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :macemen_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:macemen][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-2">
+                    <%= form.label :trained_peasant_soldiers, @data[:soldiers][:trained_peasant][:name], class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :trained_peasant_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:trained_peasant][:count]) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-3 form-check">
+                    <%= form.check_box :send_all, class: "form-check-input" %>
+                    <%= form.label :send_all, "Send All Army", class: "form-check-label" %>
+                  </div>
+
+                  <h5 class="mb-3 mt-4">Resources</h5>
+
+                  <div class="mb-2">
+                    <%= form.label :cost_wine, "Wine", class: "form-label" %>
+                    <div class="input-group">
+                      <%= form.text_field :cost_wine, value: 0, class: "form-control", maxlength: 10 %>
+                      <span class="input-group-text">You have <%= number_with_delimiter(@user_game.wine) %></span>
+                    </div>
+                  </div>
+
+                  <div class="mb-3 form-check">
+                    <%= form.check_box :maximum_wine, class: "form-check-input" %>
+                    <%= form.label :maximum_wine, 'Send max wine?', class: "form-check-label" %>
+                  </div>
+
+                  <div class="text-center">
+                    <%= form.submit "Attack", class: "btn btn-danger" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
       <% end %>
     </div>
   </div>

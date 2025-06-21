@@ -56,7 +56,7 @@ Rails.application.routes.draw do
 
     resources :attacks, only: [] do
       collection do
-        post :attack_empire
+        post :army_attack
         post :catapult_attack
         post :thief_attack
       end

@@ -15,7 +15,7 @@ class PrepareSoldiersDataCommand < BaseCommand
 
       result[soldier.key] = {
         id: soldier.id,
-        name: soldier.name,
+        name: settings['name'] || soldier.name,
         key: soldier.key,
         position: soldier.position,
         settings: settings
