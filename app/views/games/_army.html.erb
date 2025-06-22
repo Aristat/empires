@@ -107,7 +107,7 @@
 
                 <tr>
                   <td><%= soldier[:name] %></td>
-                  <td><%= number_with_delimiter( @data[:user_data][key][:count]) %></td>
+                  <td><%= number_with_delimiter(@data[:user_data][key][:count]) %></td>
                   <td>
                     <% if @data[:user_data][key][:gold_per_turn] > 0 %>
                       G: <%= @data[:user_data][key][:gold_per_turn] %><br>

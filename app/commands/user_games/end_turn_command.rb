@@ -1025,7 +1025,7 @@ module UserGames
         forest_land = rand(forest_min..forest_land)
         plain_land = rand(plains_min..plain_land)
 
-        if user_game.explorers_researches > 0
+        if @user_game.explorers_researches > 0
           mountain_land = mountain_land + (mountain_land * (@user_game.explorers_researches / 100.0)).round
           forest_land = forest_land + (forest_land * (@user_game.explorers_researches / 100.0)).round
           plain_land = plain_land + (plain_land * (@user_game.explorers_researches / 100.0)).round
