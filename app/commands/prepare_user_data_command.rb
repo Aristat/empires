@@ -183,8 +183,7 @@ class PrepareUserDataCommand < BaseCommand
     total_soldiers_training = 0
 
     soldiers.each do |soldier_key, soldier_data|
-      # Special for tower to skip
-      next unless user_game.respond_to?("#{soldier_key}_soldiers")
+      next if soldier_data[:soldier_type] == 'tower'
 
       count = user_game.send("#{soldier_key}_soldiers")
       gold_per_turn = count * soldier_data[:settings][:gold_per_turn]
@@ -239,11 +238,8 @@ class PrepareUserDataCommand < BaseCommand
     total_soldiers_can_train = total_soldiers_limit_for_train - total_soldiers_in_train
     total_soldiers_can_hold = total_soldiers_limit - total_soldiers_count - total_soldiers_in_train
 
-    attack_power = 0
-    defense_power = 0
     soldiers.each do |soldier_key, soldier_data|
-      # Special for tower to skip
-      next unless user_game.respond_to?("#{soldier_key}_soldiers")
+      next if soldier_data[:soldier_type] == 'tower'
 
       maximum_training = total_soldiers_can_train
       maximum_training = total_soldiers_can_hold if maximum_training > total_soldiers_can_hold
@@ -280,6 +276,34 @@ class PrepareUserDataCommand < BaseCommand
       user_data[soldier_key][:maximum_training] = maximum_training
     end
 
+    attack_power = 0
+    defense_power = 0
+    catapult_attack_power = 0
+    catapult_defense_power = 0
+    thieves_attack_power = 0
+    thieves_defense_power = 0
+    soldiers.each do |soldier_key, soldier_data|
+      case soldier_data[:soldier_type]
+      when 'unit'
+        attack_power += (user_data[soldier_key][:count] + user_data[soldier_key][:attacking]) *
+                        soldier_data[:settings][:attack_points]
+        defense_power += (user_data[soldier_key][:count] + user_data[soldier_key][:attacking]) *
+                         soldier_data[:settings][:defense_points]
+      when 'tower'
+        defense_power += user_game.tower * soldier_data[:settings][:defense_points]
+      when 'catapult'
+        catapult_attack_power += (user_data[soldier_key][:count] + user_data[soldier_key][:attacking]) *
+                                 soldier_data[:settings][:attack_points]
+        catapult_defense_power += (user_data[soldier_key][:count] + user_data[soldier_key][:attacking]) *
+                         soldier_data[:settings][:defense_points]
+      when 'thieve'
+        thieves_attack_power += (user_data[soldier_key][:count] + user_data[soldier_key][:attacking]) *
+                                 soldier_data[:settings][:attack_points]
+        thieves_defense_power += (user_data[soldier_key][:count] + user_data[soldier_key][:attacking]) *
+                                  soldier_data[:settings][:defense_points]
+      end
+    end
+
     user_data[:training_queues] = training_queues
     user_data[:total_soldiers_limit_for_train] = total_soldiers_limit_for_train
     user_data[:total_soldiers_can_train] = total_soldiers_can_train
@@ -293,12 +317,12 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:total_soldiers_food_per_turn] = total_soldiers_food_per_turn
     user_data[:total_soldiers_attacking] = total_soldiers_attacking
     user_data[:total_soldiers_training] = total_soldiers_training
-    user_data[:attack_power] = attack_power
-    user_data[:defense_power] = defense_power
-    user_data[:catapult_attack_power] = 0
-    user_data[:catapult_defense_power] = 0
-    user_data[:thieves_attack_power] = 0
-    user_data[:thieves_defense_power] = 0
+    user_data[:attack_power] = attack_power + (attack_power * (@user_game.attack_points_researches / 100.0)).round
+    user_data[:defense_power] = defense_power + (defense_power * (@user_game.defense_points_researches / 100.0)).round
+    user_data[:catapult_attack_power] = catapult_attack_power + (catapult_attack_power * (@user_game.catapults_strength_researches / 100.0)).round
+    user_data[:catapult_defense_power] = catapult_defense_power + (catapult_defense_power * (@user_game.catapults_strength_researches / 100.0)).round
+    user_data[:thieves_attack_power] = thieves_attack_power + (thieves_attack_power * (@user_game.thieves_strength_researches / 100.0)).round
+    user_data[:thieves_defense_power] = thieves_defense_power + (thieves_defense_power * (@user_game.thieves_strength_researches / 100.0)).round
 
     from_transfer_queues = user_game.transfer_queues
     to_transfer_queues = TransferQueue.where(to_user_game_id: user_game.id)

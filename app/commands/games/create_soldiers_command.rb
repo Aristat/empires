@@ -12,6 +12,7 @@ module Games
           name: 'Unique Unit',
           key: 'unique_unit',
           position: 0,
+          soldier_type: :unit,
           settings: {
             turns: 12,
             attack_points: 1,
@@ -26,6 +27,7 @@ module Games
           name: 'Archer',
           key: 'archer',
           position: 1,
+          soldier_type: :unit,
           settings: {
             turns: 6,
             attack_points: 4,
@@ -40,6 +42,7 @@ module Games
           name: 'Swordsman',
           key: 'swordsman',
           position: 2,
+          soldier_type: :unit,
           settings: {
             turns: 4,
             attack_points: 8,
@@ -54,6 +57,7 @@ module Games
           name: 'Horseman',
           key: 'horseman',
           position: 3,
+          soldier_type: :unit,
           settings: {
             turns: 8,
             attack_points: 10,
@@ -69,6 +73,7 @@ module Games
           name: 'Tower',
           key: 'tower',
           position: 4,
+          soldier_type: :tower,
           settings: {
             turns: -1,
             attack_points: 0,
@@ -82,6 +87,7 @@ module Games
           name: 'Catapult',
           key: 'catapult',
           position: 5,
+          soldier_type: :catapult,
           settings: {
             turns: 8,
             attack_points: 25,
@@ -99,6 +105,7 @@ module Games
           name: 'Macemen',
           key: 'macemen',
           position: 6,
+          soldier_type: :unit,
           settings: {
             turns: 3,
             attack_points: 6,
@@ -113,6 +120,7 @@ module Games
           name: 'Trained Peasant',
           key: 'trained_peasant',
           position: 7,
+          soldier_type: :unit,
           settings: {
             turns: 1,
             attack_points: 1,
@@ -126,6 +134,7 @@ module Games
           name: 'Thieves',
           key: 'thieve',
           position: 8,
+          soldier_type: :thieve,
           settings: {
             turns: 10,
             attack_points: 50,
@@ -154,6 +163,7 @@ module Games
       soldiers_data.each do |soldier_data|
         Soldier.find_or_create_by!(game_id: game.id, key: soldier_data[:key]) do |soldier|
           soldier.name = soldier_data[:name]
+          soldier.soldier_type = soldier_data[:soldier_type]
           soldier.settings = default_train_settings.merge(soldier_data[:settings])
           soldier.position = soldier_data[:position]
         end

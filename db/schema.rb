@@ -104,6 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_122710) do
 
   create_table "soldiers", force: :cascade do |t|
     t.bigint "game_id", null: false
+    t.integer "soldier_type", null: false
     t.string "name", null: false
     t.string "key", null: false
     t.jsonb "settings", default: {}, null: false

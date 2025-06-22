@@ -3,14 +3,15 @@
 #
 # Table name: soldiers
 #
-#  id         :bigint           not null, primary key
-#  key        :string           not null
-#  name       :string           not null
-#  position   :integer          default(0), not null
-#  settings   :jsonb            not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  game_id    :bigint           not null
+#  id           :bigint           not null, primary key
+#  key          :string           not null
+#  name         :string           not null
+#  position     :integer          default(0), not null
+#  settings     :jsonb            not null
+#  soldier_type :integer          not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  game_id      :bigint           not null
 #
 # Indexes
 #
@@ -24,6 +25,8 @@
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class Soldier < ApplicationRecord
   belongs_to :game
+
+  enum :soldier_type, { unit: 0, tower: 1, catapult: 2, thieve: 3 }, prefix: true
 
   validates :name, presence: true
   validates :key, presence: true

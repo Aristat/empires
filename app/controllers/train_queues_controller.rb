@@ -54,7 +54,7 @@ class TrainQueuesController < ApplicationController
 
   def train_queue_params
     params.permit(
-      train_queues: [:unique_unit, :archer, :swordsman, :horseman, :catapult, :maceman, :trained_peasant, :thief]
+      train_queues: [:unique_unit, :archer, :swordsman, :horseman, :catapult, :maceman, :trained_peasant, :thieve]
     )[:train_queues]
   end
 end
