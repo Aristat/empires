@@ -210,7 +210,7 @@
             <div class="card border-dark mb-4">
               <div class="card-header bg-dark text-white">Thief Attack</div>
               <div class="card-body">
-                <%= form_with url: thieve_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
+                <%= form_with url: thief_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
                   <div class="mb-3">
                     <%= form.select :attack_type, [
                       ["Steal Army Information", 'thief_steal_army_information'],

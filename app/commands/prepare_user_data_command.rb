@@ -208,10 +208,25 @@ class PrepareUserDataCommand < BaseCommand
       total_soldiers_food_per_turn += food_eaten
     end
 
-    # TODO! total_soldiers_count from attacking queue
+    user_game.attack_queues.each do |attack_queue|
+      attack_queue.soldiers.each do |soldier_key, count|
+        next if user_data[soldier_key].blank?
 
-    training_queues = user_game.train_queues
-    total_soldiers_in_train = training_queues.sum { _1.quantity }
+        user_data[soldier_key][:attacking] += count
+        total_soldiers_count += count
+      end
+    end
+
+    training_queues = []
+    total_soldiers_in_train = 0
+    user_game.train_queues.each do |training_queue|
+      next if user_data[training_queue.soldier_key].blank?
+
+      user_data[training_queue.soldier_key][:training] += training_queue.quantity
+      total_soldiers_in_train += training_queue.quantity
+      training_queues << training_queue
+    end
+
     total_soldiers_limit_for_train = TrainQueues::LimitForTrainCommand.new(
       user_game: user_game,
       buildings: buildings
@@ -224,6 +239,8 @@ class PrepareUserDataCommand < BaseCommand
     total_soldiers_can_train = total_soldiers_limit_for_train - total_soldiers_in_train
     total_soldiers_can_hold = total_soldiers_limit - total_soldiers_count - total_soldiers_in_train
 
+    attack_power = 0
+    defense_power = 0
     soldiers.each do |soldier_key, soldier_data|
       # Special for tower to skip
       next unless user_game.respond_to?("#{soldier_key}_soldiers")
@@ -276,10 +293,8 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:total_soldiers_food_per_turn] = total_soldiers_food_per_turn
     user_data[:total_soldiers_attacking] = total_soldiers_attacking
     user_data[:total_soldiers_training] = total_soldiers_training
-
-    # TODO! Implement later
-    user_data[:attack_power] = 0
-    user_data[:defense_power] = 0
+    user_data[:attack_power] = attack_power
+    user_data[:defense_power] = defense_power
     user_data[:catapult_attack_power] = 0
     user_data[:catapult_defense_power] = 0
     user_data[:thieves_attack_power] = 0
