@@ -35,6 +35,8 @@ class PrepareGameDataCommand < BaseCommand
       global_maces_max_price: game.global_maces_max_price,
       global_horses_min_price: game.global_horses_min_price,
       global_horses_max_price: game.global_horses_max_price,
+      global_wine_min_price: game.global_wine_min_price,
+      global_wine_max_price: game.global_wine_max_price,
       people_eat_one_food: game.people_eat_one_food,
       extra_food_per_land: game.extra_food_per_land,
       people_burn_one_wood: game.people_burn_one_wood,

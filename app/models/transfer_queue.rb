@@ -21,6 +21,8 @@
 #  tools_price     :integer
 #  transfer_type   :integer          not null
 #  turns_remaining :integer          not null
+#  wine            :integer
+#  wine_price      :integer
 #  wood            :integer
 #  wood_price      :integer
 #  created_at      :datetime         not null
@@ -42,7 +44,6 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class TransferQueue < ApplicationRecord
-  # TODO! add sell wine
   RESOURCES = [
     :wood,
     :food,
@@ -51,7 +52,8 @@ class TransferQueue < ApplicationRecord
     :maces,
     :bows,
     :tools,
-    :horses
+    :horses,
+    :wine
   ].freeze
 
   belongs_to :game

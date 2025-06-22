@@ -25,6 +25,8 @@ class CreateTransferQueues < ActiveRecord::Migration[7.1]
       t.integer :maces_price, null: true
       t.integer :horses, null: true
       t.integer :horses_price, null: true
+      t.integer :wine, null: true
+      t.integer :wine_price, null: true
 
       t.timestamps
     end

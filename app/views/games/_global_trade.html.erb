@@ -54,7 +54,8 @@
                   { name: 'Swords', field: 'swords', value: @user_game.swords, min_price: @data[:game_data][:global_swords_min_price], max_price: @data[:game_data][:global_swords_max_price] },
                   { name: 'Bows', field: 'bows', value: @user_game.bows, min_price: @data[:game_data][:global_bows_min_price], max_price: @data[:game_data][:global_bows_max_price] },
                   { name: 'Maces', field: 'maces', value: @user_game.maces, min_price: @data[:game_data][:global_maces_min_price], max_price: @data[:game_data][:global_maces_max_price] },
-                  { name: 'Horses', field: 'horses', value: @user_game.horses, min_price: @data[:game_data][:global_horses_min_price], max_price: @data[:game_data][:global_horses_max_price] }
+                  { name: 'Horses', field: 'horses', value: @user_game.horses, min_price: @data[:game_data][:global_horses_min_price], max_price: @data[:game_data][:global_horses_max_price] },
+                  { name: 'Wine', field: 'wine', value: @user_game.wine, min_price: @data[:game_data][:global_wine_min_price], max_price: @data[:game_data][:global_wine_max_price] }
                 ].each do |resource| %>
                   <tr>
                     <td><%= resource[:name] %></td>

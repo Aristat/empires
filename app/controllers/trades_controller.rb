@@ -127,14 +127,15 @@ class TradesController < ApplicationController
   def global_sell_params
     params.permit(
       :sell_wood, :price_wood, :sell_food, :price_food, :sell_iron, :price_iron, :sell_tools, :price_tools,
-      :sell_swords, :price_swords, :sell_bows, :price_bows, :sell_maces, :price_maces, :sell_horses, :price_horses
+      :sell_swords, :price_swords, :sell_bows, :price_bows, :sell_maces, :price_maces, :sell_horses, :price_horses,
+      :sell_wine, :price_wine
     )
   end
 
   def global_change_prices_params
     params.permit(
       :transfer_queue_id, :price_wood, :price_food, :price_iron, :price_tools, :price_swords, :price_bows, :price_maces,
-      :price_horses
+      :price_horses, :price_wine
     )
   end
 

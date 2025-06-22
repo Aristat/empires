@@ -148,6 +148,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_122710) do
     t.integer "maces_price"
     t.integer "horses"
     t.integer "horses_price"
+    t.integer "wine"
+    t.integer "wine_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_id"], name: "index_transfer_queues_on_game_id"
