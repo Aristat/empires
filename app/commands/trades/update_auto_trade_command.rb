@@ -4,7 +4,7 @@ module Trades
   class UpdateAutoTradeCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
-    attr_reader :user_game, :params, :game_data, :buildings, :messages
+    attr_reader :user_game, :params, :game_data, :buildings
 
     def initialize(user_game:, update_auto_trade_params:)
       @user_game = user_game
@@ -13,7 +13,6 @@ module Trades
         game: user_game.game, civilization: user_game.civilization
       ).call.with_indifferent_access
       @buildings = PrepareBuildingsDataCommand.new(game: user_game.game, civilization: user_game.civilization).call.with_indifferent_access
-      @messages = []
 
       super()
     end

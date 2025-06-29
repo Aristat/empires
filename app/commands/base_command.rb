@@ -1,7 +1,8 @@
 class BaseCommand
-  attr_reader :errors
+  attr_reader :messages, :errors
 
   def initialize
+    @messages = []
     @errors = []
   end
 

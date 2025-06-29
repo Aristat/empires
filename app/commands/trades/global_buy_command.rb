@@ -4,7 +4,7 @@ module Trades
   class GlobalBuyCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
-    attr_reader :user_game, :resource, :game_data, :quantities, :messages
+    attr_reader :user_game, :resource, :game_data, :quantities
 
     def initialize(user_game:, resource:, quantities:)
       @user_game = user_game
@@ -13,7 +13,6 @@ module Trades
         game: user_game.game, civilization: user_game.civilization
       ).call.with_indifferent_access
       @quantities = quantities
-      @messages = []
 
       super()
     end

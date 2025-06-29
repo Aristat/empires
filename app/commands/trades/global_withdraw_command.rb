@@ -4,7 +4,7 @@ module Trades
   class GlobalWithdrawCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
-    attr_reader :user_game, :transfer_queue, :game_data, :messages
+    attr_reader :user_game, :transfer_queue, :game_data
 
     def initialize(user_game:, transfer_queue:)
       @user_game = user_game
@@ -12,7 +12,6 @@ module Trades
       @game_data = PrepareGameDataCommand.new(
         game: user_game.game, civilization: user_game.civilization
       ).call.with_indifferent_access
-      @messages = []
 
       super()
     end

@@ -4,7 +4,7 @@ module Trades
   class GlobalSellCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
-    attr_reader :user_game, :params, :game_data, :buildings, :messages
+    attr_reader :user_game, :params, :game_data, :buildings
 
     def initialize(user_game:, global_sell_params:)
       @user_game = user_game
@@ -15,7 +15,6 @@ module Trades
       @buildings = PrepareBuildingsDataCommand.new(
         game: user_game.game, civilization: user_game.civilization
       ).call.with_indifferent_access
-      @messages = []
 
       super()
     end

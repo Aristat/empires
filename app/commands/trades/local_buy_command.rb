@@ -4,7 +4,7 @@ module Trades
   class LocalBuyCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
-    attr_reader :user_game, :params, :calculate_local_trade_multiplier, :game_data, :buildings, :messages
+    attr_reader :user_game, :params, :calculate_local_trade_multiplier, :game_data, :buildings
 
     def initialize(user_game:, local_buy_params:)
       @user_game = user_game
@@ -14,7 +14,6 @@ module Trades
         game: user_game.game, civilization: user_game.civilization
       ).call.with_indifferent_access
       @buildings = PrepareBuildingsDataCommand.new(game: user_game.game, civilization: user_game.civilization).call.with_indifferent_access
-      @messages = []
 
       super()
     end

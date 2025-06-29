@@ -85,56 +85,21 @@
 
                   <h5 class="mb-3">Army Units</h5>
 
-                  <div class="mb-2">
-                    <%= form.label :unique_unit_soldiers, @data[:soldiers][:unique_unit][:name], class: "form-label" %>
-                    <div class="input-group">
-                      <%= form.text_field :unique_unit_soldiers, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:unique_unit][:count]) %></span>
-                    </div>
-                  </div>
+                  <% @data[:soldiers].each do |key, soldier| %>
+                    <% next if soldier[:settings][:turns].negative? %>
+                    <% next if soldier[:soldier_type] != 'unit' %>
 
-                  <div class="mb-2">
-                    <%= form.label :swordsman_soldiers, @data[:soldiers][:swordsman][:name], class: "form-label" %>
-                    <div class="input-group">
-                      <%= form.text_field :swordsman_soldiers, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:swordsman][:count]) %></span>
+                    <div class="mb-2">
+                      <%= form.label key, soldier[:name], class: "form-label" %>
+                      <div class="input-group">
+                        <%= form.text_field key, value: 0, class: "form-control", maxlength: 10 %>
+                        <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][key][:count]) %></span>
+                      </div>
                     </div>
-                  </div>
-
-                  <div class="mb-2">
-                    <%= form.label :archer_soldiers, @data[:soldiers][:archer][:name], class: "form-label" %>
-                    <div class="input-group">
-                      <%= form.text_field :archer_soldiers, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:archer][:count]) %></span>
-                    </div>
-                  </div>
-
-                  <div class="mb-2">
-                    <%= form.label :horseman_soldiers, @data[:soldiers][:horseman][:name], class: "form-label" %>
-                    <div class="input-group">
-                      <%= form.text_field :horseman_soldiers, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:horseman][:count]) %></span>
-                    </div>
-                  </div>
-
-                  <div class="mb-2">
-                    <%= form.label :macemen_soldiers, @data[:soldiers][:macemen][:name], class: "form-label" %>
-                    <div class="input-group">
-                      <%= form.text_field :macemen_soldiers, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:macemen][:count]) %></span>
-                    </div>
-                  </div>
-
-                  <div class="mb-2">
-                    <%= form.label :trained_peasant_soldiers, @data[:soldiers][:trained_peasant][:name], class: "form-label" %>
-                    <div class="input-group">
-                      <%= form.text_field :trained_peasant_soldiers, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:trained_peasant][:count]) %></span>
-                    </div>
-                  </div>
+                  <% end %>
 
                   <div class="mb-3 form-check">
-                    <%= form.check_box :send_all, class: "form-check-input" %>
+                    <%= form.check_box :send_all, class: "form-check-input", value: '0' %>
                     <%= form.label :send_all, "Send All Army", class: "form-check-label" %>
                   </div>
 
@@ -183,9 +148,9 @@
                   </div>
 
                   <div class="mb-3">
-                    <%= form.label :catapult_soldiers, @data[:soldiers][:catapult][:name], class: "form-label" %>
+                    <%= form.label :catapult, @data[:soldiers][:catapult][:name], class: "form-label" %>
                     <div class="input-group">
-                      <%= form.text_field :catapult_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <%= form.text_field :catapult, value: 0, class: "form-control", maxlength: 10 %>
                       <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:catapult][:count]) %></span>
                     </div>
                   </div>
@@ -228,9 +193,9 @@
                   </div>
 
                   <div class="mb-3">
-                    <%= form.label :thieve_soldiers, @data[:soldiers][:thieve][:name], class: "form-label" %>
+                    <%= form.label :thieve, @data[:soldiers][:thieve][:name], class: "form-label" %>
                     <div class="input-group">
-                      <%= form.text_field :thieve_soldiers, value: 0, class: "form-control", maxlength: 10 %>
+                      <%= form.text_field :thieve, value: 0, class: "form-control", maxlength: 10 %>
                       <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:thieve][:count]) %></span>
                     </div>
                   </div>
