@@ -16,6 +16,17 @@ class AttacksController < ApplicationController
   end
 
   def catapult_attack
+    command = AttackQueues::CreateCatapultAttackCommand.new(
+      user_game: @user_game, catapult_attack_params: catapult_attack_params
+    )
+    command.call
+
+    if command.success?
+      flash[:notice] = command.messages.join("\n")
+    else
+      flash[:alert] = command.errors.join("\n")
+    end
+
     redirect_to game_path(@user_game.game)
   end
 
@@ -36,7 +47,13 @@ class AttacksController < ApplicationController
   def army_attack_params
     params.permit(
       :attack_type, :to_user_game_id, :send_all, :cost_wine, :maximum_wine, :unique_unit, :archer, :swordsman,
-      :horseman, :catapult, :maceman, :trained_peasant
+      :horseman, :maceman, :trained_peasant
+    )
+  end
+
+  def catapult_attack_params
+    params.permit(
+      :attack_type, :to_user_game_id, :send_all, :catapult
     )
   end
 end

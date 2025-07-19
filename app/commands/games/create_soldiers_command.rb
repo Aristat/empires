@@ -98,7 +98,9 @@ module Games
             train_wood: 250,
             train_iron: 250,
             take_land: 0,
-            food_eaten: 0
+            food_eaten: 0,
+            wood_eaten: 1,
+            iron_eaten: 0.2
           }
         },
         {
@@ -148,6 +150,8 @@ module Games
 
       default_train_settings = {
         food_eaten: 0,
+        wood_eaten: 0,
+        iron_eaten: 0,
         gold_per_turn: 0,
         wood_per_turn: 0,
         iron_per_turn: 0,
