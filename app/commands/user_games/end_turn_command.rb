@@ -77,6 +77,7 @@ module UserGames
         update_tools_for_builders
         process_explorers
         process_auto_trade
+        process_attack_queues
         update_maintenance_of_soldiers
         update_resources
 
@@ -1184,6 +1185,26 @@ module UserGames
           )
         end
       end
+    end
+
+    def process_attack_queues
+      @user_game.attack_queues.where.not(attack_status: :in_home).update_all('attack_status = attack_status + 1')
+
+      in_home_attack_queues = @user_game.attack_queues.where(attack_status: :in_home)
+      return if in_home_attack_queues.blank?
+
+      in_home_attack_queues.each do |attack_queue|
+        UserGame::SOLDIERS.keys.each do |soldier_key|
+          soldiers_count = attack_queue.send("#{soldier_key}_soldiers").to_i
+          next if soldiers_count <= 0
+
+          @user_game.send("#{soldier_key}_soldiers=", @user_game.send("#{soldier_key}_soldiers") + soldiers_count)
+        end
+
+        attack_queue.destroy!
+      end
+
+      add_message('Your army has returned to the empire', 'warning')
     end
 
     def update_maintenance_of_soldiers

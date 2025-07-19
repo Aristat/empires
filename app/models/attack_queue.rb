@@ -41,7 +41,8 @@ class AttackQueue < ApplicationRecord
     almost_there: 2,
     done_fighting: 3,
     returning: 4,
-    almost_home: 5
+    almost_home: 5,
+    in_home: 6
   }, prefix: true
   enum :attack_type, {
     army_conquer: 0,
