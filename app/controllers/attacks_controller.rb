@@ -32,6 +32,17 @@ class AttacksController < ApplicationController
   end
 
   def thief_attack
+    command = AttackQueues::CreateThiefAttackCommand.new(
+      user_game: @user_game, thief_attack_params: thief_attack_params
+    )
+    command.call
+
+    if command.success?
+      flash[:notice] = command.messages.join("\n")
+    else
+      flash[:alert] = command.errors.join("\n")
+    end
+
     redirect_to game_path(@user_game.game)
   end
 
@@ -70,6 +81,12 @@ class AttacksController < ApplicationController
   def catapult_attack_params
     params.permit(
       :attack_type, :to_user_game_id, :send_all, :catapult
+    )
+  end
+
+  def thief_attack_params
+    params.permit(
+      :attack_type, :to_user_game_id, :send_all, :thieve
     )
   end
 end

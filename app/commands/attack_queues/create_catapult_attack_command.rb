@@ -25,8 +25,10 @@ module AttackQueues
       validate_attack
       return if failed?
 
-      create_attack_queue
-      update_user_game_resources
+      ActiveRecord::Base.transaction do
+        create_attack_queue
+        update_user_game_resources
+      end
     end
 
     private

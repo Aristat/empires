@@ -156,8 +156,8 @@
                   </div>
 
                   <div class="mb-3 form-check">
-                    <%= form.check_box :send_all, class: "form-check-input" %>
-                    <%= form.label :send_all, "Send All Catapults", class: "form-check-label" %>
+                    <%= form.check_box :send_all, class: "form-check-input", id: "catapult_send_all" %>
+                    <%= form.label :send_all, "Send All Catapults", class: "form-check-label", for: "catapult_send_all" %>
                   </div>
 
                   <div class="text-center">
@@ -201,8 +201,8 @@
                   </div>
 
                   <div class="mb-3 form-check">
-                    <%= form.check_box :send_all, class: "form-check-input" %>
-                    <%= form.label :send_all, "Send All Thieves", class: "form-check-label" %>
+                    <%= form.check_box :send_all, class: "form-check-input", id: "thief_send_all" %>
+                    <%= form.label :send_all, "Send All Thieves", class: "form-check-label", for: "thief_send_all" %>
                   </div>
 
                   <div class="text-center">
