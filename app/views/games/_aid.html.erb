@@ -1,0 +1,129 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Aid</h5>
+  </div>
+  <div class="card-body">
+    <div class="mb-3">
+      <p class="text-muted">
+        You can send aid to your friends. You need market places to send goods.  There is 5% fee for sending goods.
+      </p>
+
+      <p>
+        Your markets allow you to send <strong><%= number_with_delimiter(@data[:user_data][:max_trades]) %></strong> goods each month,
+        out of which <span class="<%= @data[:user_data][:trades_remaining] == 0 ? 'text-danger' : 'text-success' %>">
+            <strong><%= number_with_delimiter(@data[:user_data][:trades_remaining]) %></strong>
+          </span> are still available.
+      </p>
+    </div>
+
+    <%= form_with url: user_game_aids_path(@user_game), method: :post, local: true, class: "mb-4" do |form| %>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-dark">
+          <tr>
+            <th></th>
+            <th class="text-end">You Have</th>
+            <th>Send</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><strong>Wood</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.wood) %></td>
+            <td><%= form.number_field :send_wood, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Food</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.food) %></td>
+            <td><%= form.number_field :send_food, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Iron</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.iron) %></td>
+            <td><%= form.number_field :send_iron, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Gold</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.gold) %></td>
+            <td><%= form.number_field :send_gold, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Tools</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.tools) %></td>
+            <td><%= form.number_field :send_tools, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Maces</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.maces) %></td>
+            <td><%= form.number_field :send_maces, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Swords</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.swords) %></td>
+            <td><%= form.number_field :send_swords, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Bows</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.bows) %></td>
+            <td><%= form.number_field :send_bows, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Horses</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.horses) %></td>
+            <td><%= form.number_field :send_horses, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr>
+            <td><strong>Horses</strong></td>
+            <td class="text-end"><%= number_with_delimiter(@user_game.wine) %></td>
+            <td><%= form.number_field :send_wine, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+          </tr>
+          <tr class="table-dark">
+            <td colspan="2">
+              <strong>Send to empire #</strong>
+              <%= form.number_field :to_user_game_id, min: 1, class: "form-control form-control-sm d-inline-block ms-2", style: "width: 80px;" %>
+            </td>
+            <td>
+              <%= form.submit "Send", class: "btn btn-primary" %>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <!-- Dispatched Caravans -->
+    <% aid_transfer_queues = @user_game.transfer_queues.transfer_type_aid.includes(:to_user_game) %>
+    <% if aid_transfer_queues.present? %>
+      <div class="mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">Dispatched Caravans</h6>
+          </div>
+          <div class="card-body">
+            <% cancel_time = 15.minutes.ago %>
+            <% aid_transfer_queues.each_with_index do |transfer, index| %>
+              <div class="mb-3 <% unless index == aid_transfer_queues.count - 1 %>border-bottom pb-3<% end %>">
+                <p class="mb-1">
+                  <strong>Sent to <%= transfer.to_user_game.user.email %> (#<%= transfer.to_user_game.id %>)</strong> with
+                  <%= transfer.wood %> wood, <%= transfer.food %> food, <%= transfer.iron %> iron,
+                  <%= transfer.gold %> gold, <%= transfer.tools %> tools,
+                  <%= transfer.maces %> maces, <%= transfer.swords %> swords, <%= transfer.bows %> bows,
+                  and <%= transfer.horses %> horses and will reach their destination in
+                  <strong><%= transfer.turns_remaining %> turns</strong>.
+                </p>
+
+                <% if transfer.turns_remaining == 3 && transfer.created_at > cancel_time %>
+                  <%= link_to "Cancel this aid",
+                              user_game_aid_path(@user_game, transfer),
+                              method: :delete,
+                              class: "btn btn-sm btn-outline-danger",
+                              confirm: "Are you sure you want to cancel this aid?" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

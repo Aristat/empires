@@ -44,3 +44,6 @@ en:
       created: "Training queue created successfully"
       destroyed: "Training queue item removed"
       disband: "Soldiers are disbanded"
+  transfer_queues:
+    messages:
+      destroyed: "Transfer queue item removed"
