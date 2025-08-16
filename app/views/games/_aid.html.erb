@@ -27,56 +27,13 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td><strong>Wood</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.wood) %></td>
-            <td><%= form.number_field :send_wood, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Food</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.food) %></td>
-            <td><%= form.number_field :send_food, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Iron</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.iron) %></td>
-            <td><%= form.number_field :send_iron, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Gold</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.gold) %></td>
-            <td><%= form.number_field :send_gold, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Tools</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.tools) %></td>
-            <td><%= form.number_field :send_tools, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Maces</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.maces) %></td>
-            <td><%= form.number_field :send_maces, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Swords</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.swords) %></td>
-            <td><%= form.number_field :send_swords, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Bows</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.bows) %></td>
-            <td><%= form.number_field :send_bows, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Horses</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.horses) %></td>
-            <td><%= form.number_field :send_horses, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
-          <tr>
-            <td><strong>Wine</strong></td>
-            <td class="text-end"><%= number_with_delimiter(@user_game.wine) %></td>
-            <td><%= form.number_field :send_wine, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
-          </tr>
+          <% UserGame::AID_RESOURCES.each do |resource| %>
+            <tr>
+              <td><strong><%= resource.humanize %></strong></td>
+              <td class="text-end"><%= number_with_delimiter(@user_game.send(resource)) %></td>
+              <td><%= form.number_field "send_#{resource}".to_sym, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
+            </tr>
+          <% end %>
           <tr class="table-dark">
             <td colspan="2">
               <strong>Send to empire #</strong>
@@ -91,9 +48,7 @@
       </div>
     <% end %>
 
-    <!-- Dispatched Caravans -->
-    <% aid_transfer_queues = @user_game.transfer_queues.transfer_type_aid.includes(:to_user_game) %>
-    <% if aid_transfer_queues.present? %>
+    <% if @data[:user_data][:aid_transfer_queues].present? %>
       <div class="mt-4">
         <div class="card">
           <div class="card-header">
@@ -101,14 +56,16 @@
           </div>
           <div class="card-body">
             <% cancel_time = 15.minutes.ago %>
-            <% aid_transfer_queues.each_with_index do |transfer, index| %>
-              <div class="mb-3 <% unless index == aid_transfer_queues.count - 1 %>border-bottom pb-3<% end %>">
+            <% @data[:user_data][:aid_transfer_queues].each_with_index do |transfer, index| %>
+              <div class="mb-3 <% unless index == @data[:user_data][:aid_transfer_queues].length - 1 %>border-bottom pb-3<% end %>">
                 <p class="mb-1">
                   <strong>Sent to <%= transfer.to_user_game.user.email %> (#<%= transfer.to_user_game.id %>)</strong> with
-                  <%= transfer.wood %> wood, <%= transfer.food %> food, <%= transfer.iron %> iron,
-                  <%= transfer.gold %> gold, <%= transfer.tools %> tools,
-                  <%= transfer.maces %> maces, <%= transfer.swords %> swords, <%= transfer.bows %> bows,
-                  <%= transfer.horses %> horses, and <%= transfer.wine %> wine and will reach their destination in
+                  <% resource_items = UserGame::AID_RESOURCES.filter_map do |resource|
+                       amount = transfer.send(resource)
+                       amount && amount > 0 ? "#{amount} #{resource}" : nil
+                     end %>
+                  <%= resource_items.to_sentence %>
+                  and will reach their destination in
                   <strong><%= transfer.turns_remaining %> turns</strong>.
                 </p>
 

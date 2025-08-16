@@ -51,11 +51,12 @@ class PrepareUserDataCommand < BaseCommand
     )
     prepare_soldier_power_data
 
-    from_transfer_queues = user_game.transfer_queues
+    from_transfer_queues = user_game.transfer_queues.includes(:to_user_game)
     to_transfer_queues = TransferQueue.where(to_user_game_id: user_game.id)
     user_data[:transfer_queues] = from_transfer_queues + to_transfer_queues
     user_data[:sell_transfer_queues] = from_transfer_queues.select { _1.transfer_type_sell? }.sort_by { [_1.turns_remaining, _1.id] }
     user_data[:buy_transfer_queues] = to_transfer_queues.select { _1.transfer_type_buy? }.sort_by { [_1.turns_remaining, _1.id] }
+    user_data[:aid_transfer_queues] = from_transfer_queues.select { _1.transfer_type_aid? }.sort_by { [_1.turns_remaining, _1.id] }
 
     user_data[:attack_queues] = user_game.attack_queues.includes(to_user_game: :user).order(created_at: :desc)
 
