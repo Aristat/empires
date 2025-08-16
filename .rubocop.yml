@@ -9,7 +9,6 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
 plugins:
   - rubocop-rails
-  - rubocop-rspec
   - rubocop-performance
 
 AllCops:

@@ -55,8 +55,12 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem 'rubocop-rails-omakase', require: false
   gem 'rubocop', require: false
-  gem 'rubocop-rspec', require: false
   gem 'rubocop-performance', require: false
+
+  gem 'rspec-rails'
+  gem 'dotenv-rails'
+  gem 'factory_bot'
+  gem 'database_cleaner'
 end
 
 group :development do
@@ -69,4 +73,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'selenium-webdriver'
+
+  gem 'faker'
+  gem 'webmock'
 end
