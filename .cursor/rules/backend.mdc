@@ -1,6 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: true
----
-For new backend bussness logic we should you commands, example command is ExampleCommmand

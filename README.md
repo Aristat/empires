@@ -11,9 +11,8 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 - [x] Implement train army logic
 - [ ] Implement attack logic
 - [x] Implement glob trade market
-- [ ] Implement aid
+- [x] Implement aid
 - [ ] Refactoring magic constants in game, prepare documentation, formulas, etc
-- [ ] Right now I use `Cursor` to generate FE/UI, need to refactor and improve better visibility
 - [x] Improve buildings and other tables to related per Game to be able run multiple different games with different settings
 - [ ] Cover by specs and tests BE logic
 - [ ] Cover by E2E tests FE logic
