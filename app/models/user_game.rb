@@ -124,6 +124,7 @@ class UserGame < ApplicationRecord
   }.freeze
 
   GLOBAL_TRADE_RESOURCES = %w[wood food iron tools swords bows maces horses wine].freeze
+  AID_RESOURCES = %w[wood food iron gold tools maces swords bows horses wine]
 
   belongs_to :user
   belongs_to :game

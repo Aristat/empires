@@ -7,7 +7,9 @@ class AidsController < ApplicationController
     command = Aids::CreateCommand.new(user_game: @user_game, aid_params: aid_params)
     command.call
 
-    if command.failed?
+    if command.success?
+      flash[:notice] = command.messages.join("\n")
+    else
       flash[:alert] = command.errors.join("\n")
     end
 
@@ -31,6 +33,10 @@ class AidsController < ApplicationController
   end
 
   def aid_params
-    params.permit(:quantity, :horse_setting, :seek_land)
+    params.permit(
+      :send_wood, :send_food, :send_iron, :send_gold, :send_tools,
+      :send_maces, :send_swords, :send_bows, :send_horses, :send_wine,
+      :to_user_game_id
+    )
   end
 end

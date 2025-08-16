@@ -73,7 +73,7 @@
             <td><%= form.number_field :send_horses, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
           </tr>
           <tr>
-            <td><strong>Horses</strong></td>
+            <td><strong>Wine</strong></td>
             <td class="text-end"><%= number_with_delimiter(@user_game.wine) %></td>
             <td><%= form.number_field :send_wine, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
           </tr>
@@ -108,16 +108,16 @@
                   <%= transfer.wood %> wood, <%= transfer.food %> food, <%= transfer.iron %> iron,
                   <%= transfer.gold %> gold, <%= transfer.tools %> tools,
                   <%= transfer.maces %> maces, <%= transfer.swords %> swords, <%= transfer.bows %> bows,
-                  and <%= transfer.horses %> horses and will reach their destination in
+                  <%= transfer.horses %> horses, and <%= transfer.wine %> wine and will reach their destination in
                   <strong><%= transfer.turns_remaining %> turns</strong>.
                 </p>
 
                 <% if transfer.turns_remaining == 3 && transfer.created_at > cancel_time %>
-                  <%= link_to "Cancel this aid",
-                              user_game_aid_path(@user_game, transfer),
-                              method: :delete,
-                              class: "btn btn-sm btn-outline-danger",
-                              confirm: "Are you sure you want to cancel this aid?" %>
+                  <%= button_to "Cancel this aid",
+                                user_game_aid_path(@user_game, transfer),
+                                method: :delete,
+                                data: { confirm: "Are you sure you want to cancel this aid?" },
+                                class: "btn btn-sm btn-outline-danger" %>
                 <% end %>
               </div>
             <% end %>
