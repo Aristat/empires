@@ -80,6 +80,7 @@ module UserGames
         process_attack_queues
         update_maintenance_of_soldiers
         update_resources
+        process_aids
 
         if @user_game.people <= 100
           @user_game.people = 100
@@ -1379,6 +1380,35 @@ module UserGames
           "Due to lack of storage space, you lost #{steal_wood} wood, #{steal_food} food, #{steal_iron} iron," \
             "#{steal_tools} tools, #{steal_wine} wine and #{steal_horses} horses", 'danger'
         )
+      end
+    end
+
+    def process_aids
+      TransferQueue.where(user_game_id: @user_game.id, transfer_type: :aid)
+                   .where('turns_remaining > 0')
+                   .update_all('turns_remaining = turns_remaining - 1')
+
+      completed_aids = TransferQueue.where(user_game_id: @user_game.id, transfer_type: :aid, turns_remaining: 0)
+                                   .includes(to_user_game: :user)
+
+      completed_aids.each do |aid_transfer|
+        recipient = aid_transfer.to_user_game
+        next unless recipient
+
+        update_params = {}
+        UserGame::AID_RESOURCES.each do |resource|
+          amount = aid_transfer.send(resource).to_i
+          next if amount <= 0
+
+          current_amount = recipient.send(resource)
+          update_params[resource] = current_amount + amount
+        end
+
+        recipient.update!(update_params) if update_params.present?
+
+        aid_transfer.destroy!
+
+        add_message("Aid for player #{recipient.user.email} sent", 'warning')
       end
     end
   end
