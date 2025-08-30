@@ -1,0 +1,47 @@
+name: Testing
+on: [push]
+jobs:
+  rspec_tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: empires_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      BUNDLE_JOBS: 3
+      BUNDLE_RETRY: 3
+      BUNDLE_PATH: vendor/bundle
+      RAILS_ENV: test
+      DATABASE_NAME: empires_test
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get -yqq install libpq-dev build-essential libcurl4-openssl-dev
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler: 2.4.13
+          ruby-version: 3.2.1
+          bundler-cache: true
+      - name: Rubocop
+        run: bundle exec rubocop --parallel
+      - name: Zeitwerk
+        run: bundle exec rake zeitwerk:check
+      - name: Set up database schema
+        run: bundle exec rake db:create db:schema:load --trace
+      - name: Run tests
+        run: |
+          bundle exec rspec
