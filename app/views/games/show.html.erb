@@ -59,70 +59,100 @@
           <!-- End Summary Row -->
           <div class="row">
             <div class="col-md-6">
-              <h6>Land</h6>
-              <div class="mb-3">
-                <small class="text-muted">Total:</small>
-                <ul class="list-group list-group-horizontal">
-                  <li class="list-group-item d-flex flex-column align-items-center">
-                    <img src="<%= asset_path('mland.gif') %>" alt="Total Mountain Land" class="mb-2">
-                    <span><%= number_with_delimiter(@user_game.m_land) %></span>
-                  </li>
-                  <li class="list-group-item d-flex flex-column align-items-center">
-                    <img src="<%= asset_path('fland.gif') %>" alt="Total Forest Land" class="mb-2">
-                    <span><%= number_with_delimiter(@user_game.f_land) %></span>
-                  </li>
-                  <li class="list-group-item d-flex flex-column align-items-center">
-                    <img src="<%= asset_path('pland.gif') %>" alt="Total Plains Land" class="mb-2">
-                    <span><%= number_with_delimiter(@user_game.p_land) %></span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <small class="text-muted">Free:</small>
-                <ul class="list-group list-group-horizontal">
-                  <li class="list-group-item d-flex flex-column align-items-center">
-                    <img src="<%= asset_path('mland_free.gif') %>" alt="Free Mountain Land" class="mb-2">
-                    <span><%= number_with_delimiter(@data[:user_data][:free_mountains]) %></span>
-                  </li>
-                  <li class="list-group-item d-flex flex-column align-items-center">
-                    <img src="<%= asset_path('fland_free.gif') %>" alt="Free Forest Land" class="mb-2">
-                    <span><%= number_with_delimiter(@data[:user_data][:free_forest]) %></span>
-                  </li>
-                  <li class="list-group-item d-flex flex-column align-items-center">
-                    <img src="<%= asset_path('pland_free.gif') %>" alt="Free Plains Land" class="mb-2">
-                    <span><%= number_with_delimiter(@data[:user_data][:free_plains]) %></span>
-                  </li>
-                </ul>
-              </div>
+              <h6 class="text-center fw-bold mb-2">Land</h6>
+              <table class="table table-sm table-borderless">
+                <tbody>
+                  <tr>
+                    <td class="align-middle text-center"><strong>Total</strong></td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('mland.gif') %>" alt="Total Mountain Land" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.m_land) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('fland.gif') %>" alt="Total Forest Land" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.f_land) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('pland.gif') %>" alt="Total Plains Land" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.p_land) %></span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="align-middle text-center"><strong>Free</strong></td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('mland_free.gif') %>" alt="Free Mountain Land" class="mb-1">
+                        <span><%= number_with_delimiter(@data[:user_data][:free_mountains]) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('fland_free.gif') %>" alt="Free Forest Land" class="mb-1">
+                        <span><%= number_with_delimiter(@data[:user_data][:free_forest]) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('pland_free.gif') %>" alt="Free Plains Land" class="mb-1">
+                        <span><%= number_with_delimiter(@data[:user_data][:free_plains]) %></span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div class="col-md-6">
-              <h6>Resources</h6>
-              <ul class="list-group list-group-horizontal">
-                <li class="list-group-item d-flex flex-column align-items-center">
-                  <img src="<%= asset_path('wood.gif') %>" alt="Wood" class="mb-2">
-                  <span><%= @user_game.wood %></span>
-                </li>
-                <li class="list-group-item d-flex flex-column align-items-center">
-                  <img src="<%= asset_path('food.gif') %>" alt="Food" class="mb-2">
-                  <span><%= @user_game.food %></span>
-                </li>
-                <li class="list-group-item d-flex flex-column align-items-center">
-                  <img src="<%= asset_path('iron.gif') %>" alt="Iron" class="mb-2">
-                  <span><%= @user_game.iron %></span>
-                </li>
-                <li class="list-group-item d-flex flex-column align-items-center">
-                  <img src="<%= asset_path('tools.gif') %>" alt="Tools" class="mb-2">
-                  <span><%= @user_game.tools %></span>
-                </li>
-                <li class="list-group-item d-flex flex-column align-items-center">
-                  <img src="<%= asset_path('wine.gif') %>" alt="Wine" class="mb-2">
-                  <span><%= @user_game.wine %></span>
-                </li>
-                <li class="list-group-item d-flex flex-column align-items-center">
-                  <img src="<%= asset_path('horses.gif') %>" alt="Horses" class="mb-2">
-                  <span><%= @user_game.horses %></span>
-                </li>
-              </ul>
+              <h6 class="text-center fw-bold mb-2">Resources</h6>
+              <table class="table table-sm table-borderless">
+                <tbody>
+                  <tr>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('wood.gif') %>" alt="Wood" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.wood) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('food.gif') %>" alt="Food" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.food) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('iron.gif') %>" alt="Iron" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.iron) %></span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('tools.gif') %>" alt="Tools" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.tools) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('wine.gif') %>" alt="Wine" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.wine) %></span>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <div class="d-flex flex-column align-items-center">
+                        <img src="<%= asset_path('horses.gif') %>" alt="Horses" class="mb-1">
+                        <span><%= number_with_delimiter(@user_game.horses) %></span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
