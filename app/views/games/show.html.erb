@@ -39,12 +39,73 @@
 
   <div class="col-md-12">
     <div class="row">
+      <!-- Left menu -->
       <div class="col-md-2">
-        <div class="card-body">
-          <h5 class="mb-0">Turns</h5>
-          <button onclick="endTurn()" class="btn btn-primary mt-2">End Turn</button>
+        <div class="card-body mb-4">
+          <h5>Turns</h5>
+          <button onclick="endTurn()" class="btn btn-outline-primary mt-2">End Turn</button>
         </div>
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-pills flex-column mb-4" id="gameTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="builders-tab" data-bs-toggle="tab" data-bs-target="#builders" type="button" role="tab" aria-controls="builders" aria-selected="false">
+              Builders
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="wall-tab" data-bs-toggle="tab" data-bs-target="#wall" type="button" role="tab" aria-controls="wall" aria-selected="false">
+              Wall (<%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%)
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="explore-tab" data-bs-toggle="tab" data-bs-target="#explore" type="button" role="tab" aria-controls="explore" aria-selected="false">
+              Explore
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="local-trade-tab" data-bs-toggle="tab" data-bs-target="#local-trade" type="button" role="tab" aria-controls="local-trade" aria-selected="false">
+              Local Trade
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="global-trade-tab" data-bs-toggle="tab" data-bs-target="#global-trade" type="button" role="tab" aria-controls="global-trade" aria-selected="false">
+              Global Trade
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="research-tab" data-bs-toggle="tab" data-bs-target="#research" type="button" role="tab" aria-controls="research" aria-selected="false">
+              Research
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="army-tab" data-bs-toggle="tab" data-bs-target="#army" type="button" role="tab" aria-controls="army" aria-selected="false">
+              Army
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="attack-tab" data-bs-toggle="tab" data-bs-target="#attack" type="button" role="tab" aria-controls="attack" aria-selected="false">
+              Attack
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
+              Management
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="aid-tab" data-bs-toggle="tab" data-bs-target="#aid" type="button" role="tab" aria-controls="aid" aria-selected="false">
+              Aid
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="scores-tab" data-bs-toggle="tab" data-bs-target="#scores" type="button" role="tab" aria-controls="scores" aria-selected="false">
+              Scores
+            </button>
+          </li>
+        </ul>
       </div>
+      <!-- Content -->
       <div class="col-md-10">
         <div class="card mb-4">
           <div class="card-body">
@@ -170,80 +231,11 @@
           </div>
         </div>
 
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs mb-4" id="gameTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="builders-tab" data-bs-toggle="tab" data-bs-target="#builders" type="button" role="tab" aria-controls="builders" aria-selected="false">
-              Builders
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="units-tab" data-bs-toggle="tab" data-bs-target="#units" type="button" role="tab" aria-controls="units" aria-selected="false">
-              Units
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="wall-tab" data-bs-toggle="tab" data-bs-target="#wall" type="button" role="tab" aria-controls="wall" aria-selected="false">
-              Wall (<%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%)
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="explore-tab" data-bs-toggle="tab" data-bs-target="#explore" type="button" role="tab" aria-controls="explore" aria-selected="false">
-              Explore
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="local-trade-tab" data-bs-toggle="tab" data-bs-target="#local-trade" type="button" role="tab" aria-controls="local-trade" aria-selected="false">
-              Local Trade
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="global-trade-tab" data-bs-toggle="tab" data-bs-target="#global-trade" type="button" role="tab" aria-controls="global-trade" aria-selected="false">
-              Global Trade
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="research-tab" data-bs-toggle="tab" data-bs-target="#research" type="button" role="tab" aria-controls="research" aria-selected="false">
-              Research
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="army-tab" data-bs-toggle="tab" data-bs-target="#army" type="button" role="tab" aria-controls="army" aria-selected="false">
-              Army
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="attack-tab" data-bs-toggle="tab" data-bs-target="#attack" type="button" role="tab" aria-controls="attack" aria-selected="false">
-              Attack
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
-              Management
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="aid-tab" data-bs-toggle="tab" data-bs-target="#aid" type="button" role="tab" aria-controls="aid" aria-selected="false">
-              Aid
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="scores-tab" data-bs-toggle="tab" data-bs-target="#scores" type="button" role="tab" aria-controls="scores" aria-selected="false">
-              Scores
-            </button>
-          </li>
-        </ul>
-
         <!-- Tab Content -->
         <div class="tab-content" id="gameTabsContent">
           <!-- Builders Tab -->
           <div class="tab-pane fade" id="builders" role="tabpanel" aria-labelledby="builders-tab">
             <%= render 'builders', user_game: @user_game %>
-          </div>
-
-          <!-- Units Tab -->
-          <div class="tab-pane fade" id="units" role="tabpanel" aria-labelledby="units-tab">
-            <%= render 'units', user_game: @user_game %>
           </div>
 
           <!-- Wall Tab -->
