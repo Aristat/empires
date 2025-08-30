@@ -35,7 +35,7 @@
         <%= form_with url: global_sell_user_game_trades_path(@user_game), method: :post, local: true do |f| %>
           <div class="table-responsive">
             <table class="table table-bordered">
-              <thead class="table-dark">
+              <thead class="table-light">
                 <tr>
                   <th>Resource</th>
                   <th class="text-end">You Have</th>
@@ -84,7 +84,7 @@
 
         <% if @data[:user_data][:sell_transfer_queues].present? %>
           <div class="card mt-4">
-            <div class="card-header bg-dark text-white">
+            <div class="card-header bg-light text-dark">
               <h5 class="card-title mb-0">Dispatched Caravans</h5>
             </div>
             <div class="card-body">
@@ -174,7 +174,7 @@
 
         <% if @data[:user_data][:buy_transfer_queues].present? %>
           <div class="card mt-4">
-            <div class="card-header bg-dark text-white">
+            <div class="card-header bg-light text-dark">
               <h5 class="card-title mb-0">Incoming Caravans</h5>
             </div>
             <div class="card-body">

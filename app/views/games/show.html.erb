@@ -27,7 +27,7 @@
           <h5 class="card-title">Last Turn Events</h5>
           <div class="card-text">
             <% @user_game.last_message.each do |message| %>
-              <p class="mb-1 text-<%= message['color'] || 'dark' %>">
+              <p class="mb-1 <%= bootstrap_text_class(message['color']) %>">
                 <%= message['text'] %>
               </p>
             <% end %>
