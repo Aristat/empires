@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe PrepareDataCommand do
+RSpec.describe UserGames::EndTurnCommand do
   subject { command.call }
 
   let(:user) { create(:user) }
@@ -10,10 +10,10 @@ RSpec.describe PrepareDataCommand do
   let(:command) { described_class.new(user_game: user_game) }
 
   describe '#execute' do
-    it 'prepares user game data' do
+    it 'ends turn data' do
       result = subject
 
-      expect(result.key?(:game_data)).to be_present
+      expect(result).to be_truthy
       expect(command.errors).to be_blank
     end
   end

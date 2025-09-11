@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module UserGames
-  class EndTurnCommand
+  class EndTurnCommand < BaseCommand
     include ActionView::Helpers::NumberHelper
 
     WINTER_MONTHS = [11, 12, 1, 2].freeze
