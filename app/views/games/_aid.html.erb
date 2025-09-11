@@ -19,7 +19,7 @@
     <%= form_with url: user_game_aids_path(@user_game), method: :post, local: true, class: "mb-4" do |form| %>
       <div class="table-responsive">
         <table class="table table-bordered">
-          <thead class="table-dark">
+          <thead class="table-light">
           <tr>
             <th></th>
             <th class="text-end">You Have</th>
@@ -34,7 +34,7 @@
               <td><%= form.number_field "send_#{resource}".to_sym, min: 0, class: "form-control form-control-sm", style: "width: 120px;" %></td>
             </tr>
           <% end %>
-          <tr class="table-dark">
+          <tr class="table-light">
             <td colspan="2">
               <strong>Send to empire #</strong>
               <%= form.number_field :to_user_game_id, min: 1, class: "form-control form-control-sm d-inline-block ms-2", style: "width: 80px;" %>

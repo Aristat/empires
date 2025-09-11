@@ -21,7 +21,7 @@
     <% if @data[:user_data][:trades_remaining] > 0 %>
       <div class="table-responsive">
         <table class="table table-bordered">
-          <thead class="table-dark">
+          <thead class="table-light">
             <tr>
               <th></th>
               <th class="text-center">
@@ -63,7 +63,7 @@
                   <%= f.number_field :buy_tools, value: 0, class: "form-control", min: 0 %>
                   <small><%= number_with_delimiter(@data[:user_data][:tools_buy_price]) %> gold each</small>
                 </td>
-                <td><%= f.submit 'Buy', class: 'btn btn-dark' %></td>
+                <td><%= f.submit 'Buy', class: 'btn btn-primary' %></td>
               </tr>
             <% end %>
 
@@ -86,7 +86,7 @@
                   <%= f.number_field :sell_tools, value: 0, class: "form-control", min: 0 %>
                   <small><%= number_with_delimiter(@data[:user_data][:tools_sell_price]) %> gold each</small>
                 </td>
-                <td><%= f.submit 'Sell', class: 'btn btn-dark' %></td>
+                <td><%= f.submit 'Sell', class: 'btn btn-primary' %></td>
               </tr>
             <% end %>
           </tbody>
@@ -107,7 +107,7 @@
 
       <div class="table-responsive">
         <table class="table table-bordered">
-          <thead class="table-dark">
+          <thead class="table-light">
             <tr>
               <th>Type</th>
               <th class="text-center">Wood</th>
@@ -147,8 +147,8 @@
                   <%= number_with_delimiter(get_gold) %>
                 </td>
               </tr>
-              <tr class="table-dark">
-                <td><%= f.submit 'Update', class: 'btn btn-light btn-sm' %></td>
+              <tr class="table-light">
+                <td><%= f.submit 'Update', class: 'btn btn-primary btn-sm' %></td>
                 <td colspan="4" class="text-end">Total:</td>
                 <td class="text-end"><%= number_with_delimiter(get_gold - use_gold) %></td>
               </tr>
