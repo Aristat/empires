@@ -44,6 +44,7 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class TransferQueue < ApplicationRecord
+  DEFAULT_TURNS_REMAINING = 3
   RESOURCES = [
     :wood,
     :food,

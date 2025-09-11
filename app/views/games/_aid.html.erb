@@ -69,7 +69,7 @@
                   <strong><%= transfer.turns_remaining %> turns</strong>.
                 </p>
 
-                <% if transfer.turns_remaining == 3 && transfer.created_at > cancel_time %>
+                <% if transfer.turns_remaining == TransferQueue::DEFAULT_TURNS_REMAINING && transfer.created_at > cancel_time %>
                   <%= button_to "Cancel this aid",
                                 user_game_aid_path(@user_game, transfer),
                                 method: :delete,

@@ -91,7 +91,7 @@ module Trades
             to_user_game_id: user_game.id,
             game_id: user_game.game_id,
             transfer_type: :buy,
-            turns_remaining: 3,
+            turns_remaining: TransferQueue::DEFAULT_TURNS_REMAINING,
             "#{resource}" => quantity
           )
         end

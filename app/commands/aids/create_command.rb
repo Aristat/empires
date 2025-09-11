@@ -35,7 +35,7 @@ module Aids
     private
 
     def validate_aid
-      # Check if recipient exists
+      # Check if the recipient exists
       to_user_game_id = params[:to_user_game_id].to_i
       @to_user_game = UserGame.find_by(id: to_user_game_id)
 
@@ -111,7 +111,7 @@ module Aids
       params_for_transfer_queue = params_for_transfer_queue.merge(
         game_id: user_game.game_id,
         user_game: user_game,
-        turns_remaining: 3,
+        turns_remaining: TransferQueue::DEFAULT_TURNS_REMAINING,
         transfer_type: :aid
       )
 

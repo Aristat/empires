@@ -26,7 +26,8 @@ module Aids
     private
 
     def cancel_aid(transfer_queue)
-      unless transfer_queue.turns_remaining == 3 && transfer_queue.created_at > CANCEL_TIME_LIMIT.ago
+      if transfer_queue.turns_remaining != TransferQueue::DEFAULT_TURNS_REMAINING ||
+         transfer_queue.created_at > CANCEL_TIME_LIMIT.ago
         @errors << 'This aid cannot be cancelled anymore.'
         return
       end

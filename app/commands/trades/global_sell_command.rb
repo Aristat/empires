@@ -95,7 +95,7 @@ module Trades
         {
           game_id: user_game.game_id,
           user_game: user_game,
-          turns_remaining: 3,
+          turns_remaining: TransferQueue::DEFAULT_TURNS_REMAINING,
           transfer_type: :sell
         }
       )
