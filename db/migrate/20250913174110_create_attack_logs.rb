@@ -7,8 +7,7 @@ class CreateAttackLogs < ActiveRecord::Migration[7.1]
       t.integer :attack_type, null: false
       t.boolean :attacker_wins, null: false
 
-      t.string :message, null: true
-      t.string :battle_details, null: false
+      t.string :attack_message, null: false
 
       t.jsonb :casualties, null: false, default: {}
 

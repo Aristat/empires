@@ -8,7 +8,9 @@ module UserGames
       @data = data
       @attack_queue = attack_queue
       @defender = attack_queue.to_user_game
-      @defender_soldiers = PrepareSoldiersDataCommand.new(game: defender.game, civilization: defender.civilization).call.with_indifferent_access
+      @defender_soldiers = PrepareSoldiersDataCommand.new(
+        game: defender.game, civilization: defender.civilization
+      ).call.with_indifferent_access
       @game = user_game.game
 
       setup_battle_parameters
@@ -29,9 +31,15 @@ module UserGames
       determine_winner
       execute_attack_effects if @attacker_wins
       update_databases
-      record_battle_news
+      attack_log = record_battle_news
 
-      { success: true, message: @attack_message, attacker_wins: @attacker_wins, stolen_resources: @stolen_resources }
+      {
+        success: true,
+        attack_message: @attack_message,
+        attacker_wins: @attacker_wins,
+        stolen_resources: @stolen_resources,
+        attack_log: attack_log
+      }
     end
 
     def calculate_attack_history
@@ -62,7 +70,10 @@ module UserGames
       @stolen_resources = {}
       @attack_thieves = attack_queue.thieve_soldiers
       @defense_thieves = defender.thieve_soldiers
-      @attack_message = "--------- Thieves Battle #{user_game.user.name} (#{user_game.id}) vs. #{defender.user.name} (#{defender.id}) #{Time.current.strftime('%Y-%m-%d %H:%M')} ---------"
+      @attack_message = [
+        "--------- Thieves Battle #{user_game.user.name} (#{user_game.id}) vs. #{defender.user.name} " \
+          "(#{defender.id}) #{Time.current.strftime('%Y-%m-%d %H:%M')} ---------"
+      ]
       @victory_points = 1.0
     end
 
@@ -98,7 +109,7 @@ module UserGames
       when 15..Float::INFINITY
         @victory_points *= 0.01
         @attack_points = (attack_points * 0.25).round
-        @attack_message += "#{defender.user.name} was attacked too many times in the past 24 hours. #{user_game.user.name} army is weakened!!!!"
+        @attack_message << "#{defender.user.name} was attacked too many times in the past 24 hours. #{user_game.user.name} army is weakened!!!!"
       end
     end
 
@@ -107,7 +118,7 @@ module UserGames
       defense_variance = (defense_points * 0.1).round
 
       @attack_points = rand((attack_points - attack_variance)..(attack_points + attack_variance))
-      @defense_points = rand((defense_variance - defense_variance)..(defense_variance + defense_variance))
+      @defense_points = rand((defense_points - defense_variance)..(defense_points + defense_variance))
     end
 
     def determine_casualties
@@ -122,23 +133,21 @@ module UserGames
       @defender_casualties = [defender_casualties, defense_thieves].min
       @attacker_casualties = [attacker_casualties, attack_thieves].min
 
-      @attack_message += "#{user_game.user.name} thieves kill #{@defender_casualties} thieves. "
-      @attack_message += "#{defender.user.name} thieves kill #{@attacker_casualties} thieves. "
+      @attack_message << "#{user_game.user.name} thieves kill #{@defender_casualties} thieves. "
+      @attack_message << "#{defender.user.name} thieves kill #{@attacker_casualties} thieves. "
     end
 
     def determine_winner
       @attacker_wins = @attack_points > @defense_points
 
       if @attacker_wins
-        @attack_message += "#{user_game.user.name} won the war!"
+        @attack_message << "#{user_game.user.name} won the war!"
       else
-        @attack_message += "#{defender.user.name} won the war!"
+        @attack_message << "#{defender.user.name} won the war!"
       end
     end
 
     def execute_attack_effects
-      @news_message = ''
-
       case attack_queue.attack_type
       when 'thief_steal_army_information'
         steal_army_information
@@ -156,19 +165,18 @@ module UserGames
     end
 
     def steal_army_information
-      @attack_message += "#{user_game.user.name} learns the following information: "
-      @attack_message += "People: #{defender.people}, "
+      @attack_message << "#{user_game.user.name} learns the following information: "
+      @attack_message << "People: #{defender.people}, "
 
       UserGame::SOLDIERS.keys.each do |soldier_key|
-        @attack_message += "#{defender_soldiers[soldier_key][:name]}: #{defender.send("#{soldier_key}_soldiers").to_i }, "
+        @attack_message << "#{defender_soldiers[soldier_key][:name]}: #{defender.send("#{soldier_key}_soldiers").to_i }, "
       end
 
-      @attack_message += "Towers: #{defender.tower}"
-      @news_message = 'Stole Army Information'
+      @attack_message << "Towers: #{defender.tower}"
     end
 
     def steal_building_information
-      @attack_message += "#{user_game.user.name} learns building information: "
+      @attack_message << "#{user_game.user.name} learns building information: "
       building_info = []
       building_info << "Houses: #{defender.house}"
       building_info << "Farms: #{defender.farm}"
@@ -181,12 +189,11 @@ module UserGames
       building_info << "Warehouses: #{defender.warehouse}"
       building_info << "Stables: #{defender.stable}"
       building_info << "Wineries: #{defender.winery}"
-      @attack_message += building_info.join(', ')
-      @news_message = 'Stole Buildings Information'
+      @attack_message << building_info.join(', ')
     end
 
     def steal_research_information
-      @attack_message += "#{user_game.user.name} learns research information: "
+      @attack_message << "#{user_game.user.name} learns research information: "
       research_info = []
       research_info << "Attack Points: #{defender.attack_points_researches}"
       research_info << "Defense Points: #{defender.defense_points_researches}"
@@ -194,8 +201,7 @@ module UserGames
       research_info << "Military Losses: #{defender.military_losses_researches}"
       research_info << "Food Production: #{defender.food_production_researches}"
       research_info << "Mine Production: #{defender.mine_production_researches}"
-      @attack_message += research_info.join(', ')
-      @news_message = 'Stole Research Information'
+      @attack_message << research_info.join(', ')
     end
 
     def steal_goods
@@ -203,15 +209,16 @@ module UserGames
       percentage = rand(250..500) / 10000.0
       percentage = percentage * victory_points
 
-      %w[gold iron wood food tools maces swords bows horses wine].each do |resource|
+      %i[gold iron wood food tools maces swords bows horses wine].each do |resource|
         stolen_amount = (defender.send(resource) * percentage).round
+        next if stolen_amount.zero?
+
         @stolen_resources[resource] = stolen_amount
       end
 
       UpdateCountersCommand.new(object: defender, changes: @stolen_resources.transform_values { |v| -v }).execute
 
-      @attack_message += "#{user_game.user.name} steals #{@stolen_resources.map { |k, v| "#{v} #{k}" }.join(', ')}"
-      @news_message = 'Stole Goods'
+      @attack_message << "#{user_game.user.name} steals #{@stolen_resources.map { |k, v| "#{v} #{k}" }.join(', ')}"
     end
 
     def poison_water
@@ -219,20 +226,19 @@ module UserGames
       percentage = rand(200..400) / 10000.0
       percentage = percentage * victory_points
 
-      casualties = {}
+      casualties = 0
       UserGame::SOLDIERS.keys.each do |soldier_key|
-        killed = (defender.send(soldier_key) * percentage).round
-        casualties[soldier_key] = killed
+        killed = (defender.send("#{soldier_key}_soldiers") * percentage).round
+        next if killed.zero?
+
+        casualties += killed
+        defender.send("#{soldier_key}_soldiers=", defender.send("#{soldier_key}_soldiers") - killed)
       end
 
       killed_people = (defender.people * percentage).round
-      casualties['people'] = killed_people
-
-      UpdateCountersCommand.new(object: defender, changes: casualties.transform_values { |v| -v }).execute
-
-      total_army = casualties.except('people').values.sum
-      @attack_message += "#{user_game.user.name} poisoned #{total_army} army units and #{killed_people} people"
-      @news_message = "#{total_army} army and #{killed_people} people"
+      defender.send('people=', [defender.people - killed_people, UserGame::MIN_PEOPLE].max)
+      defender.save!
+      @attack_message << "#{user_game.user.name} poisoned #{casualties} army units and #{killed_people} people"
     end
 
     def burn_buildings
@@ -249,8 +255,7 @@ module UserGames
       UpdateCountersCommand.new(object: defender, changes: destroyed.transform_values { |v| -v }).execute
 
       total_destroyed = destroyed.values.sum
-      @attack_message += "Fire destroyed #{total_destroyed} buildings: #{destroyed.select { |_, v| v > 0 }.map { |k, v| "#{v} #{k.humanize}" }.join(', ')}"
-      @news_message = "#{total_destroyed} Buildings"
+      @attack_message << "Fire destroyed #{total_destroyed} buildings: #{destroyed.select { |_, v| v > 0 }.map { |k, v| "#{v} #{k.humanize}" }.join(', ')}"
     end
 
     def update_databases
@@ -259,6 +264,8 @@ module UserGames
 
       remaining_defense_thieves = defense_thieves - @defender_casualties
       defender.update!(thieve_soldiers: remaining_defense_thieves, people: [defender.people, 100].max)
+
+      @attack_message = @attack_message.join("\n")
     end
 
     def record_battle_news
@@ -268,8 +275,7 @@ module UserGames
         attack_type: attack_queue.attack_type,
         attacker_wins: @attacker_wins,
         casualties: { thieve: { attacker: @attacker_casualties, defender: @defender_casualties } },
-        message: @news_message,
-        battle_details: @attack_message,
+        attack_message: @attack_message,
       )
     end
   end

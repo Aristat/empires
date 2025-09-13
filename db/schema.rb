@@ -19,8 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_13_174110) do
     t.bigint "defender_id"
     t.integer "attack_type", null: false
     t.boolean "attacker_wins", null: false
-    t.string "message"
-    t.string "battle_details", null: false
+    t.string "attack_message", null: false
     t.jsonb "casualties", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

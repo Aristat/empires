@@ -4,11 +4,10 @@
 # Table name: attack_logs
 #
 #  id             :bigint           not null, primary key
+#  attack_message :string           not null
 #  attack_type    :integer          not null
 #  attacker_wins  :boolean          not null
-#  battle_details :string           not null
 #  casualties     :jsonb            not null
-#  message        :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  attacker_id    :bigint

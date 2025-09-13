@@ -82,8 +82,8 @@ module UserGames
         update_resources
         process_aids
 
-        if @user_game.people <= 100
-          @user_game.people = 100
+        if @user_game.people <= UserGame::MIN_PEOPLE
+          @user_game.people = UserGame::MIN_PEOPLE
         end
 
         @user_game.turn += 1
@@ -1198,11 +1198,24 @@ module UserGames
     def process_fighting_attack_queues
       done_fighting_attack_queues = @user_game.attack_queues.preload(:to_user_game).where(attack_status: :done_fighting)
       done_fighting_attack_queues.each do |attack_queue|
-        if attack_queue.attack_type.in?(AttackQueue::ARMY_TYPES)
-        elsif attack_queue.attack_type.in?(AttackQueue::CATAPULT_TYPES)
-        elsif attack_queue.attack_type.in?(AttackQueue::THIEF_TYPES)
-          UserGames::ProcessThiefAttackCommand.new(user_game: @user_game, data: @data, attack_queue: attack_queue).call
+        result =
+          if attack_queue.attack_type.in?(AttackQueue::ARMY_TYPES)
+          elsif attack_queue.attack_type.in?(AttackQueue::CATAPULT_TYPES)
+          elsif attack_queue.attack_type.in?(AttackQueue::THIEF_TYPES)
+            UserGames::ProcessThiefAttackCommand.new(
+              user_game: @user_game, data: @data, attack_queue: attack_queue
+            ).call
+          end
+
+        if result[:stolen_resources].present?
+          result[:stolen_resources].each do |key, value|
+            next if value.blank? || value.zero?
+
+            instance_variable_set("@r_#{key}", instance_variable_get("@r_#{key}") + value)
+          end
         end
+
+        add_message(result[:attack_message], 'warning') if result[:attack_message].present?
       end
     end
 
