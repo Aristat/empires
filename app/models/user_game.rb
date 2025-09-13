@@ -123,8 +123,10 @@ class UserGame < ApplicationRecord
     thieve: 0
   }.freeze
 
+  BUILDINGS = %w[wood_cutter hunter farm gold_mine iron_mine tool_maker winery mage_tower weaponsmith fort tower
+    town_center market warehouse stable house].freeze
   GLOBAL_TRADE_RESOURCES = %w[wood food iron tools swords bows maces horses wine].freeze
-  AID_RESOURCES = %w[wood food iron gold tools maces swords bows horses wine]
+  AID_RESOURCES = %w[wood food iron gold tools maces swords bows horses wine].freeze
 
   belongs_to :user
   belongs_to :game

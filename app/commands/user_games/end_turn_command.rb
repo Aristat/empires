@@ -1191,6 +1191,22 @@ module UserGames
     def process_attack_queues
       @user_game.attack_queues.where.not(attack_status: :in_home).update_all('attack_status = attack_status + 1')
 
+      process_fighting_attack_queues
+      in_home_attack_attack_queues
+    end
+
+    def process_fighting_attack_queues
+      done_fighting_attack_queues = @user_game.attack_queues.preload(:to_user_game).where(attack_status: :done_fighting)
+      done_fighting_attack_queues.each do |attack_queue|
+        if attack_queue.attack_type.in?(AttackQueue::ARMY_TYPES)
+        elsif attack_queue.attack_type.in?(AttackQueue::CATAPULT_TYPES)
+        elsif attack_queue.attack_type.in?(AttackQueue::THIEF_TYPES)
+          UserGames::ProcessThiefAttackCommand.new(user_game: @user_game, data: @data, attack_queue: attack_queue).call
+        end
+      end
+    end
+
+    def in_home_attack_attack_queues
       in_home_attack_queues = @user_game.attack_queues.where(attack_status: :in_home)
       return if in_home_attack_queues.blank?
 

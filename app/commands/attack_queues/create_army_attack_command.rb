@@ -50,7 +50,7 @@ module AttackQueues
       @soldiers_to_attack = {}
 
       UserGame::SOLDIERS.keys.each do |soldier_key|
-        next if soldiers_data[soldier_key][:settings][:soldier_type] != 'unit'
+        next if soldiers_data[soldier_key][:soldier_type] != 'unit'
 
         soldiers_variants = [user_game.send("#{soldier_key}_soldiers").to_i]
         soldiers_variants << params[soldier_key].to_i unless send_all

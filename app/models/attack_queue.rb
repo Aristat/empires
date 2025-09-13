@@ -31,6 +31,11 @@
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 class AttackQueue < ApplicationRecord
+  ARMY_TYPES = %w[army_conquer army_raid army_rob army_slaughter].freeze
+  CATAPULT_TYPES = %w[catapult_army_and_towers catapult_population catapult_buildings].freeze
+  THIEF_TYPES = %w[thief_steal_army_information thief_steal_building_information thief_steal_research_information
+    thief_steal_goods thief_poison_water thief_set_fire].freeze
+
   belongs_to :game
   belongs_to :user_game
   belongs_to :to_user_game, class_name: 'UserGame', optional: true

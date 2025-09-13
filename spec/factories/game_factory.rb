@@ -1,5 +1,20 @@
 # frozen_string_literal: true
 
+# rubocop:disable Lint/RedundantCopDisableDirective, Layout/LineLength
+# == Schema Information
+#
+# Table name: games
+#
+#  id               :bigint           not null, primary key
+#  max_turns        :integer
+#  name             :string
+#  seconds_per_turn :integer
+#  settings         :jsonb            not null
+#  start_turns      :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+# rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 FactoryBot.define do
   factory :game do
     name { 'Test Game' }
