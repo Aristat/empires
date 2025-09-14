@@ -70,7 +70,8 @@ module Games
               tower: {
                 squares: 3,
                 cost_wood: 10,
-                cost_iron: 10
+                cost_iron: 10,
+                defense_points: 65
               },
               fort: {
                 max_units: 12

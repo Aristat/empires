@@ -1,7 +1,7 @@
 module UserGames
   class ProcessThiefAttackCommand < BaseCommand
-    attr_reader :user_game, :data, :attack_queue, :defender, :defender_soldiers, :game, :has_attacks, :attack_thieves, :defense_thieves,
-      :attack_message, :victory_points, :attack_points, :defense_points
+    attr_reader :user_game, :data, :attack_queue, :defender, :defender_soldiers, :game, :has_attacks, :attack_thieves,
+      :defense_thieves, :attack_message, :victory_points, :attack_points, :defense_points
 
     def initialize(user_game:, data:, attack_queue:)
       @user_game = user_game
@@ -35,7 +35,7 @@ module UserGames
 
       {
         success: true,
-        attack_message: @attack_message,
+        message: @attack_message,
         attacker_wins: @attacker_wins,
         stolen_resources: @stolen_resources,
         attack_log: attack_log
@@ -122,7 +122,6 @@ module UserGames
     end
 
     def determine_casualties
-      # Calculate defender casualties
       if defender.score < user_game.score
         defender_casualties = ((attack_points / 800.0) * victory_points).round
         attacker_casualties = (defense_points / 500.0).round
@@ -138,7 +137,7 @@ module UserGames
     end
 
     def determine_winner
-      @attacker_wins = @attack_points > @defense_points
+      @attacker_wins = attack_points > defense_points
 
       if @attacker_wins
         @attack_message << "#{user_game.user.name} won the war!"
@@ -263,7 +262,7 @@ module UserGames
       attack_queue.update!(thieve_soldiers: remaining_attack_thieves)
 
       remaining_defense_thieves = defense_thieves - @defender_casualties
-      defender.update!(thieve_soldiers: remaining_defense_thieves, people: [defender.people, 100].max)
+      defender.update!(thieve_soldiers: remaining_defense_thieves)
 
       @attack_message = @attack_message.join("\n")
     end

@@ -180,7 +180,8 @@ module Games
             cost_wood: 20,
             cost_iron: 20,
             cost_gold: 400,
-            allow_off: false
+            allow_off: false,
+            defense_points: 50
           }
         },
         {

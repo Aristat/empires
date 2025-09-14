@@ -1201,6 +1201,9 @@ module UserGames
         result =
           if attack_queue.attack_type.in?(AttackQueue::ARMY_TYPES)
           elsif attack_queue.attack_type.in?(AttackQueue::CATAPULT_TYPES)
+            UserGames::ProcessCatapultAttackCommand.new(
+              user_game: @user_game, data: @data, attack_queue: attack_queue
+            ).call
           elsif attack_queue.attack_type.in?(AttackQueue::THIEF_TYPES)
             UserGames::ProcessThiefAttackCommand.new(
               user_game: @user_game, data: @data, attack_queue: attack_queue
@@ -1215,7 +1218,7 @@ module UserGames
           end
         end
 
-        add_message(result[:attack_message], 'warning') if result[:attack_message].present?
+        add_message(result[:message], 'warning') if result[:message].present?
       end
     end
 
