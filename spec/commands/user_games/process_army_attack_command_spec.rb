@@ -35,5 +35,17 @@ RSpec.describe UserGames::ProcessArmyAttackCommand do
       expect(result[:attack_log]).to be_present
       expect(command.errors).to be_blank
     end
+
+    context 'when attack_type is army_raid' do
+      let(:attack_type) { :army_raid }
+
+      it 'returns attack log' do
+        result = subject
+
+        expect(result[:attacker_wins]).to be_truthy
+        expect(result[:attack_log]).to be_present
+        expect(command.errors).to be_blank
+      end
+    end
   end
 end

@@ -124,6 +124,7 @@ class UserGame < ApplicationRecord
   }.freeze
 
   MIN_PEOPLE = 100
+  WALL_MULTIPLIER = 0.05
 
   BUILDINGS = %w[wood_cutter hunter farm gold_mine iron_mine tool_maker winery mage_tower weaponsmith fort tower
     town_center market warehouse stable house].freeze

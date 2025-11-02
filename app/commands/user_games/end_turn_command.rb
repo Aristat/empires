@@ -588,7 +588,7 @@ module UserGames
 
     def update_wall
       total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
-      total_wall = (total_land * 0.05).round
+      total_wall = (total_land * UserGame::WALL_MULTIPLIER).round
 
       # Handle wall decay (25% chance)
       if rand(1..100) <= 25 && @user_game.wall > 10

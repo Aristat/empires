@@ -143,7 +143,7 @@ class PrepareUserDataCommand < BaseCommand
   end
 
   def prepare_wall_data(total_land:, num_builders:)
-    total_wall = (total_land * 0.05).round
+    total_wall = (total_land * UserGame::WALL_MULTIPLIER).round
     wall_protection = total_wall > 0 && total_land > 0 ? ((user_game.wall.to_f / total_wall) * 100).round : 0
     wall_build_per_turn = user_game.wall_build_per_turn / 100.0
     wall_builders = (num_builders * wall_build_per_turn).round

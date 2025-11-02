@@ -200,7 +200,7 @@ module UserGames
 
     def add_wall_defense
       total_land = defender.m_land + defender.f_land + defender.p_land
-      total_wall = (total_land * 0.05).round
+      total_wall = (total_land * UserGame::WALL_MULTIPLIER).round
 
       if total_wall > 0 && defender.wall > 0
         protection = defender.wall.to_f / total_wall
@@ -359,148 +359,163 @@ module UserGames
     end
 
     def execute_attack_effects
-      # case attack_queue.attack_type
-      # when 'army_conquer'
-      #   process_conquer_attack
-      # when 1
-      #   process_raid_attack
-      # when 2
-      #   process_rob_attack
-      # when 3
-      #   process_slaughter_attack
-      # end
+      case attack_queue.attack_type
+      when 'army_conquer'
+        process_conquer_attack
+      when 'army_raid'
+        process_raid_attack
+        # when 2
+        #   process_rob_attack
+        # when 3
+        #   process_slaughter_attack
+      end
     end
 
     def process_conquer_attack
       # Calculate land that can be taken
       attack_points = (
-        @attack_swordsman * @data[:soldiers][:swordsman][:settings][:take_land] +
-        @attack_archers * @data[:soldiers][:archer][:settings][:take_land] +
-        @attack_horseman * @data[:soldiers][:horseman][:settings][:take_land] +
-        @attack_macemen * @data[:soldiers][:macemen][:settings][:take_land] +
-        @attack_peasants * @data[:soldiers][:trained_peasant][:settings][:take_land] +
-        @attack_unique_unit * @data[:soldiers][:unique_unit][:settings][:take_land]
+        @attack_swordsman * data[:soldiers][:swordsman][:settings][:take_land] +
+        @attack_archer * data[:soldiers][:archer][:settings][:take_land] +
+        @attack_horseman * data[:soldiers][:horseman][:settings][:take_land] +
+        @attack_macemen * data[:soldiers][:macemen][:settings][:take_land] +
+        @attack_trained_peasant * data[:soldiers][:trained_peasant][:settings][:take_land] +
+        @attack_unique_unit * data[:soldiers][:unique_unit][:settings][:take_land]
       ) * @victory_points
 
-      if attack_points > 0
-        take_land = rand((attack_points / 2).round..attack_points) + 1
+      return if attack_points <= 0
 
-        d_total_land = @defense_player.m_land + @defense_player.p_land + @defense_player.f_land
+      take_land = rand((attack_points / 2).round..attack_points) + 1
 
-        # Calculate land percentages
-        m_percent = d_total_land > 0 ? @defense_player.m_land.to_f / d_total_land : 0
-        f_percent = d_total_land > 0 ? @defense_player.f_land.to_f / d_total_land : 0
-        p_percent = d_total_land > 0 ? @defense_player.p_land.to_f / d_total_land : 0
+      d_total_land = defender.m_land + defender.p_land + defender.f_land
 
-        take_m = (take_land * m_percent).round
-        take_f = (take_land * f_percent).round
-        take_p = (take_land * p_percent).round
+      # Calculate land percentages
+      m_percent = d_total_land > 0 ? defender.m_land.to_f / d_total_land : 0
+      f_percent = d_total_land > 0 ? defender.f_land.to_f / d_total_land : 0
+      p_percent = d_total_land > 0 ? defender.p_land.to_f / d_total_land : 0
 
-        # Ensure we don't take more than available
-        take_m = [@defense_player.m_land, take_m].min
-        take_f = [@defense_player.f_land, take_f].min
-        take_p = [@defense_player.p_land, take_p].min
+      take_m = (take_land * m_percent).round
+      take_f = (take_land * f_percent).round
+      take_p = (take_land * p_percent).round
 
-        # Transfer land
-        @defense_player.m_land -= take_m
-        @defense_player.f_land -= take_f
-        @defense_player.p_land -= take_p
+      # Ensure we don't take more than available
+      take_m = [defender.m_land, take_m].min
+      take_f = [defender.f_land, take_f].min
+      take_p = [defender.p_land, take_p].min
 
-        @stolen_resources[:m_land] = take_m
-        @stolen_resources[:f_land] = take_f
-        @stolen_resources[:p_land] = take_p
+      # Transfer land
+      defender.m_land -= take_m
+      defender.f_land -= take_f
+      defender.p_land -= take_p
 
-        @news_message = "#{take_m + take_f + take_p} land"
-        @attack_message += "#{user_game.user.name} conquered #{take_m} mountains, #{take_f} forest and #{take_p} plain land<br>"
+      # @stolen_resources[:m_land] = take_m
+      # @stolen_resources[:f_land] = take_f
+      # @stolen_resources[:p_land] = take_p
 
-        # Handle building destruction due to insufficient land
-        handle_building_destruction_from_land_loss
-      else
-        @news_message = '0 Land'
-        @attack_message += 'But failed to take any land<br>'
-      end
+      @attack_message << "#{user_game.user.name} conquered #{take_m} mountains, #{take_f} forest and #{take_p} plain land"
+
+      # Handle building destruction due to insufficient land
+      handle_building_destruction_from_land_loss
     end
 
     def handle_building_destruction_from_land_loss
-      # Get building space requirements based on civilization
-      building_squares = get_building_squares_for_civilization(@defense_player.civilization_id)
+      buildings = PrepareBuildingsDataCommand.new(
+        game: defender.game, civilization: defender.civilization
+      ).call.with_indifferent_access
 
       # Check mountain buildings
-      need_m_land = @defense_player.iron_mine * building_squares[:iron_mine] + 
-                    @defense_player.gold_mine * building_squares[:gold_mine]
+      need_m_land = defender.iron_mine * buildings[:iron_mine][:settings][:squares] +
+                    defender.gold_mine * buildings[:gold_mine][:settings][:squares]
 
-      if @defense_player.m_land <= 0
-        @defense_player.iron_mine = 0
-        @defense_player.gold_mine = 0
-      elsif need_m_land > @defense_player.m_land
-        @defense_player.iron_mine = ((((@defense_player.iron_mine * building_squares[:iron_mine]).to_f / need_m_land) * @defense_player.m_land) / building_squares[:iron_mine]).floor
-        @defense_player.gold_mine = ((((@defense_player.gold_mine * building_squares[:gold_mine]).to_f / need_m_land) * @defense_player.m_land) / building_squares[:gold_mine]).floor
+      if defender.m_land <= 0
+        defender.iron_mine = 0
+        defender.gold_mine = 0
+      elsif need_m_land > defender.m_land
+        defender.iron_mine = (
+          (
+            ((defender.iron_mine * buildings[:iron_mine][:settings][:squares]).to_f / need_m_land) * defender.m_land
+          ) / buildings[:iron_mine][:settings][:squares]
+        ).floor
+        defender.gold_mine = (
+          (
+            ((defender.gold_mine * buildings[:gold_mine][:settings][:squares]).to_f / need_m_land) * defender.m_land
+          ) / buildings[:gold_mine][:settings][:squares]
+        ).floor
       end
 
       # Check forest buildings
-      need_f_land = @defense_player.wood_cutter * building_squares[:wood_cutter] + 
-                    @defense_player.hunter * building_squares[:hunter]
+      need_f_land = defender.wood_cutter * buildings[:wood_cutter][:settings][:squares] +
+                    defender.hunter * buildings[:hunter][:settings][:squares]
 
-      if @defense_player.f_land <= 0
-        @defense_player.wood_cutter = 0
-        @defense_player.hunter = 0
-      elsif need_f_land > @defense_player.f_land
-        @defense_player.wood_cutter = ((((@defense_player.wood_cutter * building_squares[:wood_cutter]).to_f / need_f_land) * @defense_player.f_land) / building_squares[:wood_cutter]).floor
-        @defense_player.hunter = ((((@defense_player.hunter * building_squares[:hunter]).to_f / need_f_land) * @defense_player.f_land) / building_squares[:hunter]).floor
+      if defender.f_land <= 0
+        defender.wood_cutter = 0
+        defender.hunter = 0
+      elsif need_f_land > defender.f_land
+        defender.wood_cutter = (
+          (
+            ((defender.wood_cutter * buildings[:wood_cutter][:settings][:squares]).to_f / need_f_land) * defender.f_land
+          ) / buildings[:wood_cutter][:settings][:squares]
+        ).floor
+        defender.hunter = (
+          (
+            ((defender.hunter * buildings[:hunter][:settings][:squares]).to_f / need_f_land) * defender.f_land
+          ) / buildings[:hunter][:settings][:squares]
+        ).floor
       end
 
-      # Check plain buildings
-      plain_buildings = [:farm, :house, :tool_maker, :weaponsmith, :fort, :tower, :town_center, :market, :warehouse, :stable, :mage_tower, :winery]
-      need_p_land = plain_buildings.sum { |building| @defense_player.send(building) * building_squares[building] }
+      plain_buildings = [
+        :farm, :house, :tool_maker, :weaponsmith, :fort, :tower, :town_center, :market, :warehouse, :stable,
+        :mage_tower, :winery
+      ]
+      need_p_land = plain_buildings.sum { |key| defender.send(key) * buildings[key][:settings][:squares] }
 
-      if @defense_player.p_land <= 0
-        plain_buildings.each { |building| @defense_player.send("#{building}=", 0) }
-      elsif need_p_land > @defense_player.p_land
-        plain_buildings.each do |building|
-          current_count = @defense_player.send(building)
-          new_count = (((current_count * building_squares[building]).to_f / need_p_land) * @defense_player.p_land / building_squares[building]).floor
-          @defense_player.send("#{building}=", new_count)
+      if defender.p_land <= 0
+        plain_buildings.each { |building| defender.send("#{building}=", 0) }
+      elsif need_p_land > defender.p_land
+        plain_buildings.each do |key|
+          current_count = defender.send(key)
+          new_count = (
+            (
+              (current_count * buildings[key][:settings][:squares]).to_f / need_p_land
+            ) * defender.p_land / buildings[key][:settings][:squares]
+          ).floor
+          defender.send("#{key}=", new_count)
         end
       end
 
       # Adjust wall based on remaining land
-      total_land = @defense_player.m_land + @defense_player.f_land + @defense_player.p_land
-      total_wall = (total_land * 0.05).round
-      @defense_player.wall = [@defense_player.wall, total_wall].min
+      total_land = defender.m_land + defender.f_land + defender.p_land
+      total_wall = (total_land * UserGame::WALL_MULTIPLIER).round
+      defender.wall = [defender.wall, total_wall].min
     end
 
     def process_raid_attack
       attack_points = (
         @attack_swordsman * 0.05 +
-        @attack_archers * 0.04 +
+        @attack_archer * 0.04 +
         @attack_horseman * 0.1 +
         @attack_macemen * 0.03 +
-        @attack_peasants * 0.01
+        @attack_trained_peasant * 0.01
       ) * @victory_points * 0.1
 
       attack_points = attack_points.round
 
-      building_fields = %w[wood_cutter hunter farm house iron_mine gold_mine tool_maker 
-                          weaponsmith tower winery town_center fort stable warehouse market mage_tower]
-
-      d_total_buildings = building_fields.sum { |field| @defense_player.send(field) }
+      building_fields = data[:buildings].keys
+      d_total_buildings = building_fields.sum { |field| defender.send(field) }
 
       if attack_points > 0 && d_total_buildings > 0
         casualties = {}
         building_fields.each do |field|
-          field_value = @defense_player.send(field)
+          field_value = defender.send(field)
           casualty = ((field_value.to_f / d_total_buildings) * attack_points).round
           casualty = [casualty, field_value].min
           casualties[field] = casualty
-          @defense_player.send("#{field}=", field_value - casualty)
+          defender.send("#{field}=", field_value - casualty)
         end
 
-        total_destroyed = casualties.values.sum
-        @news_message = "#{total_destroyed} Buildings"
-        @attack_message += build_raid_casualties_message(casualties)
+        parts = casualties.map { |field, count| "#{count} #{data[:buildings][field][:name]}" }
+        @attack_message << "#{user_game.user.name} destroyed #{parts.join(', ')}<br>"
       else
-        @news_message = '0 Buildings'
-        @attack_message += 'But failed to destroy any building.<br>'
+        @attack_message << 'But failed to destroy any building'
       end
     end
 
@@ -622,30 +637,6 @@ module UserGames
         },
         attack_message: @attack_message,
       )
-    end
-
-    def build_raid_casualties_message(casualties)
-      building_names = {
-        'wood_cutter' => 'woodcutters',
-        'hunter' => 'hunters',
-        'farm' => 'farmers',
-        'house' => 'houses',
-        'iron_mine' => 'iron mines',
-        'gold_mine' => 'gold mines',
-        'tool_maker' => 'tool makers',
-        'weaponsmith' => 'weaponsmiths',
-        'tower' => 'towers',
-        'town_center' => 'towncenters',
-        'fort' => 'forts',
-        'stable' => 'stables',
-        'warehouse' => 'warehouses',
-        'market' => 'markets',
-        'mage_tower' => 'mage towers',
-        'winery' => 'winery'
-      }
-
-      parts = casualties.map { |field, count| "#{count} #{building_names[field]}" }
-      "#{user_game.user.name} destroyed #{parts.join(', ')}<br>"
     end
 
     def get_building_squares_for_civilization(civilization_id)
