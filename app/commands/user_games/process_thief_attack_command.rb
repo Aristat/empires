@@ -14,6 +14,8 @@ module UserGames
       @game = user_game.game
 
       setup_battle_parameters
+
+      super()
     end
 
     def call
@@ -49,7 +51,7 @@ module UserGames
         attacker_id: user_game.id,
         defender_id: defender.id,
         created_at: since_date..,
-        attack_type: attack_queue.attack_type,
+        attack_type: AttackQueue::THIEF_TYPES,
       )
 
       my_won_attacks = my_attacks.select { _1.attacker_wins }.length
@@ -59,7 +61,7 @@ module UserGames
                                    .where(
                                      defender_id: defender.id,
                                      created_at: since_date..,
-                                     attack_type: attack_queue.attack_type,
+                                     attack_type: AttackQueue::THIEF_TYPES,
                                      attacker_wins: true
                                    ).count
 

@@ -1200,6 +1200,9 @@ module UserGames
       done_fighting_attack_queues.each do |attack_queue|
         result =
           if attack_queue.attack_type.in?(AttackQueue::ARMY_TYPES)
+            UserGames::ProcessArmyAttackCommand.new(
+              user_game: @user_game, data: @data, attack_queue: attack_queue
+            ).call
           elsif attack_queue.attack_type.in?(AttackQueue::CATAPULT_TYPES)
             UserGames::ProcessCatapultAttackCommand.new(
               user_game: @user_game, data: @data, attack_queue: attack_queue

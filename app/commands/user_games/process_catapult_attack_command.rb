@@ -14,6 +14,8 @@ module UserGames
       @game = user_game.game
 
       setup_battle_parameters
+
+      super()
     end
 
     def call
@@ -50,7 +52,7 @@ module UserGames
         attacker_id: user_game.id,
         defender_id: defender.id,
         created_at: since_date..,
-        attack_type: attack_queue.attack_type,
+        attack_type: AttackQueue::CATAPULT_TYPES,
       )
 
       my_won_attacks = my_attacks.select { _1.attacker_wins }.length
@@ -60,7 +62,7 @@ module UserGames
                                    .where(
                                      defender_id: defender.id,
                                      created_at: since_date..,
-                                     attack_type: attack_queue.attack_type,
+                                     attack_type: AttackQueue::CATAPULT_TYPES,
                                      attacker_wins: true
                                    ).count
 
@@ -70,6 +72,8 @@ module UserGames
     def setup_battle_parameters
       @run_percent = 0
       @victory_points = 1
+
+      return if defender.blank?
 
       if user_game.score > defender.score * 16
         @run_percent = 0.4
@@ -134,7 +138,7 @@ module UserGames
       when 15..Float::INFINITY
         @victory_points *= 0.01
         @attack_points = (attack_points * 0.25).round
-        @attack_message += "#{defender.user.name} was attacked too many times in the past 24 hours. <br>#{user_game.user.name} army is weakened!!!!"
+        @attack_message << "#{defender.user.name} was attacked too many times in the past 24 hours. <br>#{user_game.user.name} army is weakened!!!!"
       end
     end
 
