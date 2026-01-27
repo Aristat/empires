@@ -1221,6 +1221,14 @@ module UserGames
           end
         end
 
+        if result[:stolen_lands].present?
+          result[:stolen_lands].each do |key, value|
+            next if value.blank? || value.zero?
+
+            @user_game.public_send("#{key}=", @user_game.public_send(key) + value)
+          end
+        end
+
         add_message(result[:message], 'warning') if result[:message].present?
       end
     end

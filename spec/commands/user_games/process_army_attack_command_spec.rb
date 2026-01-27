@@ -47,5 +47,31 @@ RSpec.describe UserGames::ProcessArmyAttackCommand do
         expect(command.errors).to be_blank
       end
     end
+
+    context 'when attack_type is army_rob' do
+      let(:attack_type) { :army_rob }
+
+      it 'returns attack log' do
+        result = subject
+
+        expect(result[:attacker_wins]).to be_truthy
+        expect(result[:attack_log]).to be_present
+        expect(result[:stolen_resources]).to be_present
+        expect(command.errors).to be_blank
+      end
+    end
+
+    context 'when attack_type is army_slaughter' do
+      let(:attack_type) { :army_slaughter }
+
+      it 'returns attack log' do
+        result = subject
+
+        expect(result[:attacker_wins]).to be_truthy
+        expect(result[:attack_log]).to be_present
+        expect(result[:stolen_resources]).to be_blank
+        expect(command.errors).to be_blank
+      end
+    end
   end
 end

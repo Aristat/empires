@@ -40,6 +40,8 @@ module UserGames
         success: true,
         message: @attack_message,
         attacker_wins: @attacker_wins,
+        stolen_resources: @stolen_resources,
+        stolen_lands: @stolen_lands,
         attack_log: attack_log
       }
     end
@@ -69,6 +71,8 @@ module UserGames
     end
 
     def setup_battle_parameters
+      @stolen_resources = {}
+      @stolen_lands = {}
       @run_percent = 0
       @victory_points = 1
 
@@ -364,10 +368,10 @@ module UserGames
         process_conquer_attack
       when 'army_raid'
         process_raid_attack
-        # when 2
-        #   process_rob_attack
-        # when 3
-        #   process_slaughter_attack
+      when 'army_rob'
+        process_rob_attack
+      when 'army_slaughter'
+        process_slaughter_attack
       end
     end
 
@@ -407,9 +411,9 @@ module UserGames
       defender.f_land -= take_f
       defender.p_land -= take_p
 
-      # @stolen_resources[:m_land] = take_m
-      # @stolen_resources[:f_land] = take_f
-      # @stolen_resources[:p_land] = take_p
+      @stolen_lands[:m_land] = take_m
+      @stolen_lands[:f_land] = take_f
+      @stolen_lands[:p_land] = take_p
 
       @attack_message << "#{user_game.user.name} conquered #{take_m} mountains, #{take_f} forest and #{take_p} plain land"
 
@@ -522,20 +526,20 @@ module UserGames
     def process_rob_attack
       attack_points = (
         @attack_swordsman * 1.0 +
-        @attack_archers * 0.9 +
+        @attack_archer * 0.9 +
         @attack_horseman * 1.5 +
         @attack_macemen * 0.5 +
-        @attack_peasants * 0.1
+        @attack_trained_peasant * 0.1
       ) * @victory_points * 0.5
 
       attack_points = attack_points.floor
-      d_total_goods = @defense_player.wood + @defense_player.food + @defense_player.iron + (@defense_player.gold / 100).floor
+      d_total_goods = defender.wood + defender.food + defender.iron + (defender.gold / 100).floor
 
       if attack_points > 0 && d_total_goods > 0
-        p_wood = @defense_player.wood.to_f / d_total_goods
-        p_iron = @defense_player.iron.to_f / d_total_goods
-        p_food = @defense_player.food.to_f / d_total_goods
-        p_gold = (@defense_player.gold / 100.0) / d_total_goods
+        p_wood = defender.wood.to_f / d_total_goods
+        p_iron = defender.iron.to_f / d_total_goods
+        p_food = defender.food.to_f / d_total_goods
+        p_gold = (defender.gold / 100.0) / d_total_goods
 
         take_wood = (attack_points * p_wood).round
         take_iron = (attack_points * p_iron).round
@@ -543,16 +547,16 @@ module UserGames
         take_gold = (attack_points * p_gold).round * 25
 
         # Ensure we don't take more than available
-        take_wood = [@defense_player.wood, take_wood].min
-        take_iron = [@defense_player.iron, take_iron].min
-        take_food = [@defense_player.food, take_food].min
-        take_gold = [@defense_player.gold, take_gold].min
+        take_wood = [defender.wood, take_wood].min
+        take_iron = [defender.iron, take_iron].min
+        take_food = [defender.food, take_food].min
+        take_gold = [defender.gold, take_gold].min
 
         # Remove from defender
-        @defense_player.wood -= take_wood
-        @defense_player.iron -= take_iron
-        @defense_player.food -= take_food
-        @defense_player.gold -= take_gold
+        defender.wood -= take_wood
+        defender.iron -= take_iron
+        defender.food -= take_food
+        defender.gold -= take_gold
 
         # Add to stolen resources
         @stolen_resources[:wood] = take_wood
@@ -560,34 +564,28 @@ module UserGames
         @stolen_resources[:iron] = take_iron
         @stolen_resources[:gold] = take_gold
 
-        @news_message = "#{take_wood + take_food + take_iron} goods <br>and #{take_gold} gold"
-        @attack_message += "#{user_game.user.name} robbed #{take_wood} wood, #{take_iron} iron, #{take_food} food and #{take_gold} gold<br>"
-      else
-        @news_message = '0 Goods'
-        @attack_message += 'But failed to take any goods<br>'
+        @attack_message << "#{user_game.user.name} robbed #{take_wood} wood, #{take_iron} iron, #{take_food} food and #{take_gold} gold"
       end
     end
 
     def process_slaughter_attack
       attack_points = (
         @attack_swordsman * 1.0 +
-        @attack_archers * 0.9 +
+        @attack_archer * 0.9 +
         @attack_horseman * 1.5 +
         @attack_macemen * 0.5 +
-        @attack_peasants * 0.1
+        @attack_trained_peasant * 0.1
       ) * @victory_points * 0.5
 
       attack_points = attack_points.round
 
-      if attack_points > 0 && @defense_player.people > 0
-        kill_people = [attack_points, @defense_player.people].min
-        @defense_player.people = [@defense_player.people - kill_people, UserGame::MIN_PEOPLE].max
+      if attack_points > 0 && defender.people > 0
+        kill_people = [attack_points, defender.people].min
+        defender.people = [defender.people - kill_people, UserGame::MIN_PEOPLE].max
 
-        @news_message = "#{kill_people} people"
-        @attack_message += "#{user_game.user.name} slaughtered #{kill_people} people<br>"
+        @attack_message << "#{user_game.user.name} slaughtered #{kill_people} people<br>"
       else
-        @news_message = 'No kills'
-        @attack_message += 'But failed to kill any people<br>'
+        @attack_message << 'But failed to kill any people<br>'
       end
     end
 
@@ -603,8 +601,6 @@ module UserGames
 
       # TODO: Add logic to kill the user if land is 0
 
-      # Ensure minimum people count
-      defender.people = [defender.people, UserGame::MIN_PEOPLE].max
       defender.assign_attributes(
         tower: @defense_tower,
         swordsman_soldiers: @defense_swordsman,
@@ -637,47 +633,6 @@ module UserGames
         },
         attack_message: @attack_message,
       )
-    end
-
-    def get_building_squares_for_civilization(civilization_id)
-      base_squares = {
-        iron_mine: 2, gold_mine: 6, wood_cutter: 4, hunter: 2, farm: 4,
-        house: 2, tool_maker: 2, weaponsmith: 4, fort: 12, tower: 4,
-        town_center: 25, market: 4, warehouse: 2, stable: 4,
-        mage_tower: 10, winery: 6
-      }
-
-      case civilization_id
-      when 1 # viking
-        base_squares[:stable] = 6
-        base_squares[:wood_cutter] = 3
-      when 2 # franks
-        base_squares[:town_center] = 35
-        base_squares[:mage_tower] = 12
-        base_squares[:farm] = 2
-        base_squares[:tower] = 3
-      when 3 # japanese
-        base_squares[:wood_cutter] = 5
-        base_squares[:stable] = 8
-        base_squares[:town_center] = 20
-      when 4 # byzantines
-        base_squares[:iron_mine] = 3
-        base_squares[:gold_mine] = 2
-        base_squares[:town_center] = 22
-        base_squares[:mage_tower] = 8
-      when 5 # mongols
-        base_squares[:fort] = 8
-      when 6 # incas
-        base_squares[:iron_mine] = 3
-        base_squares[:town_center] = 30
-      when 7 # chinese
-        base_squares[:tower] = 3
-        base_squares[:winery] = 8
-        base_squares[:house] = 4
-        base_squares[:farm] = 5
-      end
-
-      base_squares
     end
   end
 end
