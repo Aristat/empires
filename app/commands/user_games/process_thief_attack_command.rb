@@ -266,6 +266,8 @@ module UserGames
       remaining_defense_thieves = defense_thieves - @defender_casualties
       defender.update!(thieve_soldiers: remaining_defense_thieves)
 
+      UserGames::UpdateScoreCommand.new(user_game: defender).call
+
       @attack_message = @attack_message.join("\n")
     end
 

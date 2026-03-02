@@ -613,6 +613,8 @@ module UserGames
       )
       defender.save!
 
+      UserGames::UpdateScoreCommand.new(user_game: defender).call
+
       @attack_message = @attack_message.join("\n")
     end
 

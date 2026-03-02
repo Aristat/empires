@@ -286,6 +286,8 @@ module UserGames
       remaining_defense_catapults = defense_catapults - @defender_casualties
       defender.update!(catapult_soldiers: remaining_defense_catapults)
 
+      UserGames::UpdateScoreCommand.new(user_game: defender).call
+
       @attack_message = @attack_message.join("\n")
     end
 
