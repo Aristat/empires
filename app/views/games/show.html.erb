@@ -285,7 +285,15 @@
 
           <!-- Scores Tab -->
           <div class="tab-pane fade" id="scores" role="tabpanel" aria-labelledby="scores-tab">
-            <%= render 'scores', user_game: @user_game %>
+            <%
+              show_scores_data = {
+                total_players: @data[:user_data][:users].length,
+                online_players: @data[:user_data][:online_users],
+                current_user_game_id: @user_game.id,
+                players: @data[:user_data][:users].map { |u| u.merge(rank: u[:index] + 1) }
+              }
+            %>
+            <%= render 'scores', scores_data: show_scores_data, show_actions: true %>
           </div>
         </div>
       </div>

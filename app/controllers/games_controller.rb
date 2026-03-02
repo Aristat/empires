@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game
-  before_action :set_user_game, only: [:show]
+  before_action :set_user_game, only: [:show, :scores]
   before_action :update_turns, only: [:show]
 
   def show
@@ -17,12 +17,16 @@ class GamesController < ApplicationController
   end
 
   def select_civilization
-    @civilizations = Civilization.where(game_id: @game.id).all
+    @civilizations = Civilization.where(game_id: @game.id)
     @user_game = current_user.user_games.find_by(game: @game)
 
     if @user_game.present?
       redirect_to game_path(@game)
     end
+  end
+
+  def scores
+    @scores_data = Games::PrepareScoresCommand.new(game: @game, current_user_game: @user_game).call
   end
 
   def join

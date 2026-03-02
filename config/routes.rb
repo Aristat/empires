@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :games, only: [:show] do
     member do
+      get :scores
       get :select_civilization
       post :join
       post :end_turn
