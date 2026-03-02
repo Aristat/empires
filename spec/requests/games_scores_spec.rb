@@ -37,7 +37,7 @@ RSpec.describe 'GET /games/:id/scores', type: :request do
 
     it 'renders each player email in the response body' do
       get scores_game_path(game)
-      game.user_games.includes(:user).each do |ug|
+      game.user_games.includes(:user).find_each do |ug|
         expect(response.body).to include(ug.user.email)
       end
     end
@@ -63,7 +63,7 @@ RSpec.describe 'GET /games/:id/scores', type: :request do
 
     it 'renders player emails in the response body' do
       get scores_game_path(game)
-      game.user_games.includes(:user).each do |ug|
+      game.user_games.includes(:user).find_each do |ug|
         expect(response.body).to include(ug.user.email)
       end
     end
