@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game
-  before_action :set_user_game, only: [:show, :scores]
+  before_action :set_user_game, only: [:show]
   before_action :update_turns, only: [:show]
 
   def show
