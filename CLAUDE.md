@@ -1,48 +1,66 @@
 # CLAUDE.md
 
 ## Project Overview
-Ruby on Rails project with multi-agent AI assistance.
+Empires — a turn-based strategy game built with Ruby on Rails.
 
 ## Tech Stack
 - Ruby 3.3 / Rails 7.1
 - PostgreSQL
 - RSpec + FactoryBot + Shoulda Matchers
-- API-only mode
+- ERB views (not API-only)
+
+## Domain Context
+See `.claude/context/project-context.md` for full domain knowledge:
+models, command namespaces, DB schema, BaseCommand pattern, and key conventions.
+
+## Slash Commands (use in Claude Code)
+| Command | Usage |
+|---|---|
+| `/refactor` | `/refactor app/commands/user_games/end_turn_command.rb` |
+| `/write-tests` | `/write-tests app/commands/trades/global_buy_command.rb` |
+| `/new-command` | `/new-command process thief attack result for user_game` |
+| `/build-feature` | `/build-feature add alliance system between players` |
+| `/prd` | `/prd let players send gifts to allies` |
 
 ## Multi-Agent System
-This project uses 4 agents:
-- **orchestrator** → coordinates all agents end-to-end ← start here
+5 agents under `.claude/agents/`:
+- **orchestrator** → coordinates full pipeline ← start here for new features
 - **code-architect** → designs and builds new features
-- **write-tests** → writes and maintains RSpec tests
+- **write-tests** (code-tester.md) → writes and maintains RSpec tests
 - **code-refactorer** → improves existing code quality
+- **prd-writer** → turns rough ideas into complete PRDs
 
 ## How to Invoke Agents
 
-### 🥇 Full pipeline (recommended)
+### Full pipeline (recommended)
 ```bash
-# Orchestrator runs all 3 agents automatically
 claude "$(cat .claude/agents/orchestrator.md)
 Feature to build: [DESCRIBE FEATURE]"
 ```
 
-### 🔧 Individual agents (when needed)
+### Individual agents
 ```bash
 # Architect only
 claude "$(cat .claude/agents/code-architect.md)
 Feature to build: [DESCRIBE FEATURE]"
 
 # Tests only
-claude "$(cat .claude/agents/write-tests.md)
+claude "$(cat .claude/agents/code-tester.md)
 Write tests for: [FILE PATH or CLASS NAME]"
 
 # Refactor only
 claude "$(cat .claude/agents/code-refactorer.md)
 Refactor this file: [FILE PATH]"
+
+# PRD only
+claude "$(cat .claude/agents/prd-writer.md)
+Feature idea: [ROUGH DESCRIPTION]"
 ```
 
 ## Project Conventions
-- Commands objects in `app/commands/`
-- Controllers under `app/controllers/api/v1/`
+- Command objects in `app/commands/<namespace>/`
+- BaseCommand: inherit, call super() in initialize, return self from call
+- Controllers under `app/controllers/` — thin, delegate to commands
 - snake_case for files and methods
-- Thin controllers, fat commands objects
 - Always write tests for new code
+- Queries in `app/queries/`
