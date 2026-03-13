@@ -220,6 +220,12 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:active_mage_towers] = active_mage_towers
     user_data[:research_produced] = research_produced
     user_data[:research_gold_needed] = research_gold_needed
+    user_data[:conquered_land_researches] = user_game.conquered_land_researches
+    user_data[:army_upkeep_cost_researches] = user_game.army_upkeep_cost_researches
+    user_data[:army_training_cost_researches] = user_game.army_training_cost_researches
+    user_data[:wine_production_researches] = user_game.wine_production_researches
+    user_data[:horses_production_researches] = user_game.horses_production_researches
+    user_data[:fort_space_researches] = user_game.fort_space_researches
   end
 
   def prepare_soldier_data

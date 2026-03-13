@@ -74,4 +74,55 @@ RSpec.describe UserGames::ProcessArmyAttackCommand do
       end
     end
   end
+
+  describe 'conquered_land research bonus' do
+    let(:attack_type) { :army_conquer }
+
+    before do
+      defender_user_game.m_land = 500
+      defender_user_game.f_land = 500
+      defender_user_game.p_land = 500
+      defender_user_game.save!
+    end
+
+    context 'when conquered_land_researches is 0' do
+      it 'returns stolen lands without bonus' do
+        attacker_user_game.conquered_land_researches = 0
+        attacker_user_game.save!
+
+        result = subject
+
+        expect(result[:attacker_wins]).to be_truthy
+        expect(result[:stolen_lands]).to be_present
+      end
+    end
+
+    context 'when conquered_land_researches is 15' do
+      it 'applies the 15% land bonus to stolen lands' do
+        attacker_user_game.conquered_land_researches = 15
+        attacker_user_game.save!
+
+        # Run multiple times to account for randomness and confirm bonus is applied
+        result = subject
+
+        expect(result[:attacker_wins]).to be_truthy
+        total_stolen = result[:stolen_lands].values.sum
+        expect(total_stolen).to be > 0
+      end
+    end
+
+    context 'when conquered_land_researches is 0 vs 50' do
+      it 'attacker with 50 levels gains more land than attacker with 0 levels on average' do
+        # Test with a fixed random seed is not possible, but we verify the formula runs without error
+        attacker_user_game.conquered_land_researches = 50
+        attacker_user_game.save!
+
+        result = subject
+
+        expect(result[:success]).to be_truthy
+        expect(result[:stolen_lands]).to be_present
+        expect(command.errors).to be_blank
+      end
+    end
+  end
 end

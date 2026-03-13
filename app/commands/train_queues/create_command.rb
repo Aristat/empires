@@ -103,6 +103,17 @@ module TrainQueues
         end
       end
 
+      if user_game.army_training_cost_researches > 0
+        discount = user_game.army_training_cost_researches / 100.0
+        @need_gold   = (@need_gold   - (@need_gold   * discount)).round
+        @need_wood   = (@need_wood   - (@need_wood   * discount)).round
+        @need_iron   = (@need_iron   - (@need_iron   * discount)).round
+        @need_swords = (@need_swords - (@need_swords * discount)).round
+        @need_bows   = (@need_bows   - (@need_bows   * discount)).round
+        @need_maces  = (@need_maces  - (@need_maces  * discount)).round
+        @need_horses = (@need_horses - (@need_horses * discount)).round
+      end
+
       if user_game.gold < need_gold
         @errors << 'You do not have enough gold for training.'
         return true

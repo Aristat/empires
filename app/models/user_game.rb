@@ -98,7 +98,13 @@ class UserGame < ApplicationRecord
     markets_output: 0,
     explorers: 0,
     catapults_strength: 0,
-    wood_production: 0
+    wood_production: 0,
+    conquered_land: 0,
+    army_upkeep_cost: 0,
+    army_training_cost: 0,
+    wine_production: 0,
+    horses_production: 0,
+    fort_space: 0
   }.freeze
 
   TRADES = {
@@ -141,13 +147,6 @@ class UserGame < ApplicationRecord
   has_many :transfer_queues, dependent: :destroy
   has_many :attack_queues, dependent: :destroy
 
-  # TODO! Add more researches like
-  # Conquered land
-  # Army Upkeep cost
-  # Army Training cost
-  # Wine production
-  # Horses production
-  # Fort space
   enum :current_research, {
     attack_points: 0,
     defense_points: 1,
@@ -160,7 +159,13 @@ class UserGame < ApplicationRecord
     markets_output: 8,
     explorers: 9,
     catapults_strength: 10,
-    wood_production: 11
+    wood_production: 11,
+    conquered_land: 12,
+    army_upkeep_cost: 13,
+    army_training_cost: 14,
+    wine_production: 15,
+    horses_production: 16,
+    fort_space: 17
   }, prefix: true
 
   store_accessor :buildings_statuses, *BUILDING_STATUSES.keys, suffix: true
@@ -235,6 +240,8 @@ class UserGame < ApplicationRecord
             numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 
   validates :military_losses_researches, presence: true, numericality: { less_than_or_equal_to: 50 }
+  validates :army_upkeep_cost_researches, numericality: { less_than_or_equal_to: 50 }
+  validates :army_training_cost_researches, numericality: { less_than_or_equal_to: 50 }
 
   def set_default_settings
     BUILDING_STATUSES.each do |key, default|

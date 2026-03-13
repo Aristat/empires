@@ -471,7 +471,9 @@ module UserGames
       @c_food += can_produce * stable_building[:food_need]
       @r_food -= can_produce * stable_building[:food_need]
 
-      @p_horses = can_produce * stable_building[:production]
+      get_horses = can_produce * stable_building[:production]
+      get_horses = get_horses + (get_horses * (@user_game.horses_production_researches / 100.0)).round
+      @p_horses = get_horses
       @r_horses += @p_horses
       add_message("Stables produced #{@p_horses} horses", 'success')
     end
@@ -502,7 +504,9 @@ module UserGames
       @c_gold += can_produce * winery_building[:wine_gold_need]
       @r_gold -= can_produce * winery_building[:wine_gold_need]
 
-      @p_wine = can_produce * winery_building[:production]
+      get_wine = can_produce * winery_building[:production]
+      get_wine = get_wine + (get_wine * (@user_game.wine_production_researches / 100.0)).round
+      @p_wine = get_wine
       @r_wine += @p_wine
       add_message("Wineries produced #{@p_wine} wine", 'success')
     end
@@ -548,6 +552,16 @@ module UserGames
           break
         end
 
+        if @user_game.current_research == 'army_upkeep_cost' && @user_game.army_upkeep_cost_researches >= 50
+          add_message('You can only have up to 50 research levels for army upkeep cost', 'red')
+          break
+        end
+
+        if @user_game.current_research == 'army_training_cost' && @user_game.army_training_cost_researches >= 50
+          add_message('You can only have up to 50 research levels for army training cost', 'red')
+          break
+        end
+
         @user_game.research_points -= need_research_points
         total_research_levels += 1
 
@@ -576,6 +590,18 @@ module UserGames
           @user_game.catapults_strength_researches += 1
         when 'wood_production'
           @user_game.wood_production_researches += 1
+        when 'conquered_land'
+          @user_game.conquered_land_researches += 1
+        when 'army_upkeep_cost'
+          @user_game.army_upkeep_cost_researches += 1
+        when 'army_training_cost'
+          @user_game.army_training_cost_researches += 1
+        when 'wine_production'
+          @user_game.wine_production_researches += 1
+        when 'horses_production'
+          @user_game.horses_production_researches += 1
+        when 'fort_space'
+          @user_game.fort_space_researches += 1
         end
 
         research_name = @user_game.current_research.titleize.gsub('_', ' ')
@@ -1288,7 +1314,7 @@ module UserGames
         )
       end
 
-      pay_gold = (
+      upkeep_gold = (
         @user_game.unique_unit_soldiers * @data[:soldiers][:unique_unit][:settings][:gold_per_turn] +
         @user_game.swordsman_soldiers * @data[:soldiers][:swordsman][:settings][:gold_per_turn] +
         @user_game.archer_soldiers * @data[:soldiers][:archer][:settings][:gold_per_turn] +
@@ -1297,6 +1323,8 @@ module UserGames
         @user_game.trained_peasant_soldiers * @data[:soldiers][:trained_peasant][:settings][:gold_per_turn] +
         @user_game.thieve_soldiers * @data[:soldiers][:thieve][:settings][:gold_per_turn]
       ).round
+      upkeep_gold = (upkeep_gold - (upkeep_gold * (@user_game.army_upkeep_cost_researches / 100.0))).round
+      pay_gold = upkeep_gold
 
       if pay_gold > @r_gold
         temporary_gold_soldiers = @user_game.unique_unit_soldiers + @user_game.swordsman_soldiers +

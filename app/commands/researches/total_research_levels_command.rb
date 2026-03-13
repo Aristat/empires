@@ -14,7 +14,10 @@ module Researches
         user_game.food_production_researches + user_game.mine_production_researches +
         user_game.weapons_tools_production_researches + user_game.space_effectiveness_researches +
         user_game.markets_output_researches + user_game.explorers_researches +
-        user_game.catapults_strength_researches + user_game.wood_production_researches
+        user_game.catapults_strength_researches + user_game.wood_production_researches +
+        user_game.conquered_land_researches + user_game.army_upkeep_cost_researches +
+        user_game.army_training_cost_researches + user_game.wine_production_researches +
+        user_game.horses_production_researches + user_game.fort_space_researches
     end
   end
 end

@@ -388,7 +388,9 @@ module UserGames
 
       return if attack_points <= 0
 
-      take_land = rand((attack_points / 2).round..attack_points) + 1
+      land_gained = rand((attack_points / 2).round..attack_points) + 1
+      land_gained = land_gained + (land_gained * (user_game.conquered_land_researches / 100.0)).round
+      take_land = land_gained
 
       d_total_land = defender.m_land + defender.p_land + defender.f_land
 

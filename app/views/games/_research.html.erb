@@ -25,7 +25,13 @@
                 ['Markets Output', 'markets_output'],
                 ['Explorers', 'explorers'],
                 ['Catapults Strength', 'catapults_strength'],
-                ['Wood Production', 'wood_production']
+                ['Wood Production', 'wood_production'],
+                ['Conquered Land', 'conquered_land'],
+                ['Army Upkeep Cost', 'army_upkeep_cost'],
+                ['Army Training Cost', 'army_training_cost'],
+                ['Wine Production', 'wine_production'],
+                ['Horses Production', 'horses_production'],
+                ['Fort Space', 'fort_space']
               ], user_game.current_research),
               {}, class: 'form-select' %>
         </div>
@@ -133,6 +139,44 @@
             <td>Explorers</td>
             <td class="text-center"><%= user_game.explorers_researches %></td>
             <td>Your explorers find <%= user_game.explorers_researches %>% more land</td>
+          </tr>
+
+          <tr>
+            <td colspan="3" class="table-primary"><strong>Advanced Military Research</strong></td>
+          </tr>
+          <tr>
+            <td>Conquered Land</td>
+            <td class="text-center"><%= user_game.conquered_land_researches %></td>
+            <td>You gain <%= user_game.conquered_land_researches %>% more land from successful army attacks</td>
+          </tr>
+          <tr>
+            <td>Army Upkeep Cost</td>
+            <td class="text-center"><%= user_game.army_upkeep_cost_researches %></td>
+            <td>Your army upkeep cost is reduced by <%= user_game.army_upkeep_cost_researches %>% (max 50)</td>
+          </tr>
+          <tr>
+            <td>Army Training Cost</td>
+            <td class="text-center"><%= user_game.army_training_cost_researches %></td>
+            <td>All soldier training resource costs are reduced by <%= user_game.army_training_cost_researches %>% (max 50)</td>
+          </tr>
+
+          <tr>
+            <td colspan="3" class="table-primary"><strong>Advanced Production Research</strong></td>
+          </tr>
+          <tr>
+            <td>Wine Production</td>
+            <td class="text-center"><%= user_game.wine_production_researches %></td>
+            <td>Your winery wine production is increased by <%= user_game.wine_production_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Horses Production</td>
+            <td class="text-center"><%= user_game.horses_production_researches %></td>
+            <td>Your stable horse production is increased by <%= user_game.horses_production_researches %>%</td>
+          </tr>
+          <tr>
+            <td>Fort Space</td>
+            <td class="text-center"><%= user_game.fort_space_researches %></td>
+            <td>Your fort soldier capacity is increased by <%= user_game.fort_space_researches %>%</td>
           </tr>
         </tbody>
       </table>
