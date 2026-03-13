@@ -1,4 +1,10 @@
-wh# Project Context: Empires (Rails Game)
+---
+name: project-context
+description: Loads full domain knowledge for the Empires Rails game — models, command namespaces, DB schema, BaseCommand pattern, and key conventions. Use whenever working on this codebase.
+user-invocable: false
+---
+
+# Project Context: Empires (Rails Game)
 
 ## Domain Overview
 A turn-based strategy game. Players join `Game`s as `UserGame`s (choosing a `Civilization`),

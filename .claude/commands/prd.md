@@ -1,4 +1,4 @@
-Read `.claude/context/project-context.md` and `.claude/agents/prd-writer.md` for context.
+Use the `project-context` skill and read `.claude/agents/prd-writer.md` for context.
 
 Create a PRD for this feature idea: $ARGUMENTS
 

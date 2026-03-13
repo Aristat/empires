@@ -1,4 +1,4 @@
-Read `.claude/context/project-context.md` and `.claude/agents/code-tester.md` for context.
+Use the `project-context` skill and read `.claude/agents/code-tester.md` for context.
 
 Write RSpec tests for: $ARGUMENTS
 

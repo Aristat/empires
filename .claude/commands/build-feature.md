@@ -1,4 +1,4 @@
-Read `.claude/context/project-context.md` and `.claude/agents/orchestrator.md` for context.
+Use the `project-context` skill and read `.claude/agents/orchestrator.md` for context.
 
 Run the full agent pipeline for this feature: $ARGUMENTS
 

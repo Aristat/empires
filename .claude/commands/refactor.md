@@ -1,4 +1,4 @@
-Read `.claude/context/project-context.md` and `.claude/agents/code-refactorer.md` for context.
+Use the `project-context` skill and read `.claude/agents/code-refactorer.md` for context.
 
 Refactor the following file: $ARGUMENTS
 

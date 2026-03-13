@@ -1,4 +1,4 @@
-Read `.claude/context/project-context.md` for context on command conventions.
+Use the `project-context` skill for context on command conventions.
 
 Scaffold a new command object based on this description: $ARGUMENTS
 

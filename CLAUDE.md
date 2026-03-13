@@ -10,7 +10,7 @@ Empires — a turn-based strategy game built with Ruby on Rails.
 - ERB views (not API-only)
 
 ## Domain Context
-See `.claude/context/project-context.md` for full domain knowledge:
+The `project-context` skill provides full domain knowledge:
 models, command namespaces, DB schema, BaseCommand pattern, and key conventions.
 
 ## Slash Commands (use in Claude Code)
