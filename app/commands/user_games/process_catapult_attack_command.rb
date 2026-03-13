@@ -1,5 +1,48 @@
 module UserGames
   class ProcessCatapultAttackCommand < BaseCommand
+    # --- Score-ratio run/victory-point tiers for catapult battles ---
+    SCORE_TIERS = [
+      { ratio: 16, run: 0.40, victory: 0.10 },
+      { ratio:  8, run: 0.20, victory: 0.25 },
+      { ratio:  4, run: 0.10, victory: 0.50 },
+      { ratio:  2, run: 0.05, victory: 0.75 },
+    ].freeze
+
+    # --- Repeated-attack penalty tiers (same structure as army attack) ---
+    ATTACK_PENALTY_TIERS = [
+      { range: (3..4),              victory_mult: 0.80, attack_mult: 0.92 },
+      { range: (5..7),              victory_mult: 0.65, attack_mult: 0.84 },
+      { range: (8..9),              victory_mult: 0.50, attack_mult: 0.76 },
+      { range: (10..11),            victory_mult: 0.35, attack_mult: 0.68 },
+      { range: (12..14),            victory_mult: 0.20, attack_mult: 0.60 },
+      { range: (15..Float::INFINITY), victory_mult: 0.01, attack_mult: 0.25 },
+    ].freeze
+
+    # Battle point randomization: ±10% variance
+    BATTLE_VARIANCE = 0.1
+
+    # --- Catapult casualty divisors ---
+    # When attacker is stronger: fewer catapult casualties per battle-point
+    CATAPULT_CASUALTY_DIVISOR_STRONG  = 650.0
+    CATAPULT_ATTACKER_DIVISOR_STRONG  = 400.0
+    # When defender is equally strong or stronger
+    CATAPULT_CASUALTY_DIVISOR_WEAK    = 400.0
+    CATAPULT_ATTACKER_DIVISOR_WEAK    = 650.0
+
+    # Towers defend against catapults: this ratio determines how many defending towers
+    # destroy attacking catapults, and how many towers catapults can destroy
+    TOWER_CATAPULT_KILL_RATIO = 10.0
+
+    # Catapults kill this many people per catapult when targeting population
+    POPULATION_KILL_FACTOR = 12
+
+    # Fraction of catapult attack-points applied to building destruction
+    BUILDINGS_ATTACK_FACTOR = 0.5
+
+    # Attack history weights (same as army attack)
+    ATTACK_HISTORY_LOST_WEIGHT  = 3.0
+    ATTACK_HISTORY_OTHER_WEIGHT = 5.0
+
     attr_reader :user_game, :data, :attack_queue, :defender, :defender_soldiers, :game, :has_attacks, :attack_catapults,
       :defense_catapults, :attack_message, :victory_points, :attack_points, :defense_points
 
@@ -66,7 +109,8 @@ module UserGames
                                      attacker_wins: true
                                    ).count
 
-      @has_attacks = (my_won_attacks + my_lost_attacks / 3.0 + other_won_attacks / 5.0).round
+      # Weighted sum: own wins count fully, own losses at 1/3, others' wins at 1/5
+      @has_attacks = (my_won_attacks + my_lost_attacks / ATTACK_HISTORY_LOST_WEIGHT + other_won_attacks / ATTACK_HISTORY_OTHER_WEIGHT).round
     end
 
     def setup_battle_parameters
@@ -75,18 +119,10 @@ module UserGames
 
       return if defender.blank?
 
-      if user_game.score > defender.score * 16
-        @run_percent = 0.4
-        @victory_points = 0.1
-      elsif user_game.score > defender.score * 8
-        @run_percent = 0.2
-        @victory_points = 0.25
-      elsif user_game.score > defender.score * 4
-        @run_percent = 0.1
-        @victory_points = 0.5
-      elsif user_game.score > defender.score * 2
-        @run_percent = 0.05
-        @victory_points = 0.75
+      tier = SCORE_TIERS.find { |t| user_game.score > defender.score * t[:ratio] }
+      if tier
+        @run_percent = tier[:run]
+        @victory_points = tier[:victory]
       end
 
       @attack_message = [
@@ -119,46 +155,36 @@ module UserGames
     end
 
     def apply_attack_penalties
-      case has_attacks
-      when 3..4
-        @victory_points *= 0.80
-        @attack_points = (attack_points * 0.92).round
-      when 5..7
-        @victory_points *= 0.65
-        @attack_points = (attack_points * 0.84).round
-      when 8..9
-        @victory_points *= 0.50
-        @attack_points = (attack_points * 0.76).round
-      when 10..11
-        @victory_points *= 0.35
-        @attack_points = (attack_points * 0.68).round
-      when 12..14
-        @victory_points *= 0.20
-        @attack_points = (attack_points * 0.60).round
-      when 15..Float::INFINITY
-        @victory_points *= 0.01
-        @attack_points = (attack_points * 0.25).round
+      tier = ATTACK_PENALTY_TIERS.find { |t| t[:range].include?(has_attacks) }
+      return unless tier
+
+      @victory_points *= tier[:victory_mult]
+      @attack_points = (attack_points * tier[:attack_mult]).round
+
+      if has_attacks >= 15
         @attack_message << "#{defender.user.name} was attacked too many times in the past 24 hours. <br>#{user_game.user.name} army is weakened!!!!"
       end
     end
 
     def randomize_battle_points
-      a_start = attack_points - (attack_points * 0.1).round
-      a_end = attack_points + (attack_points * 0.1).round
-      d_start = defense_points - (defense_points * 0.1).round
-      d_end = defense_points + (defense_points * 0.1).round
+      # Apply ±BATTLE_VARIANCE random swing to both sides
+      a_start = attack_points - (attack_points * BATTLE_VARIANCE).round
+      a_end = attack_points + (attack_points * BATTLE_VARIANCE).round
+      d_start = defense_points - (defense_points * BATTLE_VARIANCE).round
+      d_end = defense_points + (defense_points * BATTLE_VARIANCE).round
 
       @attack_points = rand(a_start..a_end)
       @defense_points = rand(d_start..d_end)
     end
 
     def determine_casualties
+      # When attacker is stronger: fewer kills per point (strong side); more kills when matched (weak side)
       if defender.score < user_game.score
-        defender_casualties = ((attack_points / 650.0) * victory_points).round
-        attacker_casualties = (defense_points / 400.0).round
+        defender_casualties = ((attack_points / CATAPULT_CASUALTY_DIVISOR_STRONG) * victory_points).round
+        attacker_casualties = (defense_points / CATAPULT_ATTACKER_DIVISOR_STRONG).round
       else
-        defender_casualties = ((attack_points / 400.0) * victory_points).round
-        attacker_casualties = (defense_points / 650.0).round
+        defender_casualties = ((attack_points / CATAPULT_CASUALTY_DIVISOR_WEAK) * victory_points).round
+        attacker_casualties = (defense_points / CATAPULT_ATTACKER_DIVISOR_WEAK).round
       end
 
       @defender_casualties = [defender_casualties, defense_catapults].min
@@ -195,14 +221,15 @@ module UserGames
     def process_army_and_towers
       attack_points = (attack_catapults * victory_points).round
 
-      # Handle towers
+      # Handle towers: towers kill catapults at 1 per TOWER_CATAPULT_KILL_RATIO towers;
+      # surviving catapults raze towers at 1 per TOWER_CATAPULT_KILL_RATIO attack-points
       if defender.tower > 0
-        cats_killed = (defender.tower / 10.0).round
+        cats_killed = (defender.tower / TOWER_CATAPULT_KILL_RATIO).round
         cats_killed = [cats_killed, attack_catapults].min
         @attack_catapults -= cats_killed
         @attack_message << "#{cats_killed} attacking catapults were annihilated by defending towers"
 
-        d_tower = (attack_points / 10.0).round
+        d_tower = (attack_points / TOWER_CATAPULT_KILL_RATIO).round
         d_tower = [d_tower, defender.tower].min
         defender.tower -= d_tower
         @attack_message << "and #{d_tower} towers were razed by attacking catapults."
@@ -239,7 +266,8 @@ module UserGames
     end
 
     def process_population
-      attack_points = (attack_catapults * 12 * victory_points).round
+      # Each catapult kills POPULATION_KILL_FACTOR people scaled by victory points
+      attack_points = (attack_catapults * POPULATION_KILL_FACTOR * victory_points).round
 
       if attack_points > 0 && defender.people > 0
         kill_people = [attack_points, defender.people].min
@@ -253,7 +281,8 @@ module UserGames
     end
 
     def process_buildings
-      attack_points = (attack_catapults * victory_points * 0.5).round
+      # Scale down catapult attack power for building destruction
+      attack_points = (attack_catapults * victory_points * BUILDINGS_ATTACK_FACTOR).round
 
       defender_buildings = {}
       UserGame::BUILDINGS.each do |building|

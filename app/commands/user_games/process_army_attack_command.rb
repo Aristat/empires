@@ -1,5 +1,69 @@
 module UserGames
   class ProcessArmyAttackCommand < BaseCommand
+    # --- Attack history penalty thresholds (attacks in past 24h weighted by win/loss/other) ---
+    # Weight applied to own lost attacks when summing recent attack history score
+    ATTACK_HISTORY_LOST_WEIGHT = 3.0
+    # Weight applied to other players' won attacks against same defender
+    ATTACK_HISTORY_OTHER_WEIGHT = 5.0
+
+    # --- Score-ratio run/victory-point tiers (attacker score vs defender score) ---
+    # Soldiers that refuse to fight a much weaker enemy (percent of attacking army)
+    # and fraction of normal victory points awarded
+    SCORE_TIERS = [
+      { ratio: 10, run: 0.80, victory: 0.01 },
+      { ratio:  8, run: 0.70, victory: 0.05 },
+      { ratio:  6, run: 0.60, victory: 0.10 },
+      { ratio:  5, run: 0.50, victory: 0.20 },
+      { ratio:  4, run: 0.40, victory: 0.30 },
+      { ratio:  3, run: 0.30, victory: 0.40 },
+      { ratio:  2, run: 0.20, victory: 0.50 },
+    ].freeze
+
+    # --- Repeated-attack penalty tiers (keyed by has_attacks count) ---
+    # Each tier reduces victory_points and attack_points multipliers
+    ATTACK_PENALTY_TIERS = [
+      { range: (3..4),              victory_mult: 0.80, attack_mult: 0.92 },
+      { range: (5..7),              victory_mult: 0.65, attack_mult: 0.84 },
+      { range: (8..9),              victory_mult: 0.50, attack_mult: 0.76 },
+      { range: (10..11),            victory_mult: 0.35, attack_mult: 0.68 },
+      { range: (12..14),            victory_mult: 0.20, attack_mult: 0.60 },
+      { range: (15..Float::INFINITY), victory_mult: 0.01, attack_mult: 0.25 },
+    ].freeze
+
+    # --- Battle point randomization: ±10% variance on final attack/defense points ---
+    BATTLE_VARIANCE = 0.1
+    # Values above this overflow 32-bit integers during rand(); scale down then back up
+    BATTLE_OVERFLOW_THRESHOLD = 2_000_000_000
+    BATTLE_OVERFLOW_SCALE     = 100
+
+    # --- Casualty divisors (how many battle-points per one kill) ---
+    # When attacker is stronger (defender.score < user_game.score): fewer kills per point
+    CASUALTY_DIVISOR_STRONG         = 300.0   # attacker kills per attack_point
+    TOWER_CASUALTY_DIVISOR_STRONG   = 3_000.0 # tower kills per attack_point
+    # When defender is equally strong or stronger: more kills per point
+    CASUALTY_DIVISOR_WEAK           = 150.0
+    TOWER_CASUALTY_DIVISOR_WEAK     = 1_500.0
+
+    # --- Raid attack: building damage contribution per soldier type ---
+    RAID_SWORDSMAN_WEIGHT     = 0.05
+    RAID_ARCHER_WEIGHT        = 0.04
+    RAID_HORSEMAN_WEIGHT      = 0.10
+    RAID_MACEMEN_WEIGHT       = 0.03
+    RAID_TRAINED_PEASANT_WEIGHT = 0.01
+    RAID_SCALE_FACTOR         = 0.1  # overall scale-down of raid damage
+
+    # --- Rob/Slaughter attack: resource/people damage contribution per soldier type ---
+    ROB_SWORDSMAN_WEIGHT      = 1.0
+    ROB_ARCHER_WEIGHT         = 0.9
+    ROB_HORSEMAN_WEIGHT       = 1.5
+    ROB_MACEMEN_WEIGHT        = 0.5
+    ROB_TRAINED_PEASANT_WEIGHT = 0.1
+    ROB_SCALE_FACTOR          = 0.5  # overall scale-down of rob/slaughter damage
+
+    # Gold is stored in a higher denomination; steal in chunks of this size
+    GOLD_DENOMINATION        = 100
+    GOLD_STEAL_CHUNK_SIZE    = 25
+
     attr_reader :user_game, :data, :attack_queue, :defender, :defender_soldiers, :game, :has_attacks,
                 :attack_points, :defense_points
 
@@ -67,7 +131,8 @@ module UserGames
                                      attacker_wins: true
                                    ).count
 
-      @has_attacks = (my_won_attacks + my_lost_attacks / 3.0 + other_won_attacks / 5.0).round
+      # Weighted sum: own wins count fully, own losses at 1/3, others' wins at 1/5
+      @has_attacks = (my_won_attacks + my_lost_attacks / ATTACK_HISTORY_LOST_WEIGHT + other_won_attacks / ATTACK_HISTORY_OTHER_WEIGHT).round
     end
 
     def setup_battle_parameters
@@ -78,27 +143,11 @@ module UserGames
 
       return if defender.blank?
 
-      if user_game.score > defender.score * 10
-        @run_percent = 0.80
-        @victory_points = 0.01
-      elsif user_game.score > defender.score * 8
-        @run_percent = 0.70
-        @victory_points = 0.05
-      elsif user_game.score > defender.score * 6
-        @run_percent = 0.60
-        @victory_points = 0.10
-      elsif user_game.score > defender.score * 5
-        @run_percent = 0.50
-        @victory_points = 0.20
-      elsif user_game.score > defender.score * 4
-        @run_percent = 0.40
-        @victory_points = 0.30
-      elsif user_game.score > defender.score * 3
-        @run_percent = 0.30
-        @victory_points = 0.40
-      elsif user_game.score > defender.score * 2
-        @run_percent = 0.20
-        @victory_points = 0.50
+      # Find the highest score ratio tier that applies; lower tiers penalize attackers more
+      tier = SCORE_TIERS.find { |t| user_game.score > defender.score * t[:ratio] }
+      if tier
+        @run_percent = tier[:run]
+        @victory_points = tier[:victory]
       end
 
       @attack_message = [
@@ -179,25 +228,13 @@ module UserGames
     end
 
     def apply_attack_penalties
-      case has_attacks
-      when 3..4
-        @victory_points *= 0.80
-        @attack_points = (@attack_points * 0.92).round
-      when 5..7
-        @victory_points *= 0.65
-        @attack_points = (@attack_points * 0.84).round
-      when 8..9
-        @victory_points *= 0.50
-        @attack_points = (@attack_points * 0.76).round
-      when 10..11
-        @victory_points *= 0.35
-        @attack_points = (@attack_points * 0.68).round
-      when 12..14
-        @victory_points *= 0.20
-        @attack_points = (@attack_points * 0.60).round
-      when 15..Float::INFINITY
-        @victory_points *= 0.01
-        @attack_points = (@attack_points * 0.25).round
+      tier = ATTACK_PENALTY_TIERS.find { |t| t[:range].include?(has_attacks) }
+      return unless tier
+
+      @victory_points *= tier[:victory_mult]
+      @attack_points = (@attack_points * tier[:attack_mult]).round
+
+      if has_attacks >= 15
         @attack_message << "#{defender.user.name} was attacked too many times in the past 24 hours. <br>#{user_game.user.name} army is weakened!!!!"
       end
     end
@@ -215,24 +252,25 @@ module UserGames
     end
 
     def randomize_battle_points
-      a_start = @attack_points - (@attack_points * 0.1).round
-      a_end = @attack_points + (@attack_points * 0.1).round
-      d_start = @defense_points - (@defense_points * 0.1).round
-      d_end = @defense_points + (@defense_points * 0.1).round
+      # Apply ±BATTLE_VARIANCE random swing to both sides
+      a_start = @attack_points - (@attack_points * BATTLE_VARIANCE).round
+      a_end = @attack_points + (@attack_points * BATTLE_VARIANCE).round
+      d_start = @defense_points - (@defense_points * BATTLE_VARIANCE).round
+      d_end = @defense_points + (@defense_points * BATTLE_VARIANCE).round
 
-      # Handle potential overflow for very large numbers
-      if a_start > 2_000_000_000 || a_end > 2_000_000_000
-        a_start = (a_start / 100).round
-        a_end = (a_end / 100).round
-        @attack_points = (rand(a_start..a_end) * 100).round
+      # Handle potential overflow for very large numbers: scale down, rand, scale back
+      if a_start > BATTLE_OVERFLOW_THRESHOLD || a_end > BATTLE_OVERFLOW_THRESHOLD
+        a_start = (a_start / BATTLE_OVERFLOW_SCALE).round
+        a_end = (a_end / BATTLE_OVERFLOW_SCALE).round
+        @attack_points = (rand(a_start..a_end) * BATTLE_OVERFLOW_SCALE).round
       else
         @attack_points = rand(a_start..a_end)
       end
 
-      if d_start > 2_000_000_000 || d_end > 2_000_000_000
-        d_start = (d_start / 100).round
-        d_end = (d_end / 100).round
-        @defense_points = (rand(d_start..d_end) * 100).round
+      if d_start > BATTLE_OVERFLOW_THRESHOLD || d_end > BATTLE_OVERFLOW_THRESHOLD
+        d_start = (d_start / BATTLE_OVERFLOW_SCALE).round
+        d_end = (d_end / BATTLE_OVERFLOW_SCALE).round
+        @defense_points = (rand(d_start..d_end) * BATTLE_OVERFLOW_SCALE).round
       else
         @defense_points = rand(d_start..d_end)
       end
@@ -242,14 +280,16 @@ module UserGames
       # Calculate defender casualties
       d_total_army = @defense_swordsman + @defense_archer + @defense_horseman + @defense_trained_peasant + @defense_macemen + @defense_unique_unit
 
+      # When attacking a weaker opponent fewer kills result per battle-point (strong side);
+      # against equal/stronger foes each battle-point kills more (weak side).
       if defender.score < user_game.score
-        a_killed = (@defense_points / 300.0).round
-        d_killed = ((@attack_points / 300.0) * @victory_points).round
-        t_killed = ((@attack_points / 3000.0) * @victory_points).round
+        a_killed = (@defense_points / CASUALTY_DIVISOR_STRONG).round
+        d_killed = ((@attack_points / CASUALTY_DIVISOR_STRONG) * @victory_points).round
+        t_killed = ((@attack_points / TOWER_CASUALTY_DIVISOR_STRONG) * @victory_points).round
       else
-        a_killed = (@defense_points / 150.0).round
-        d_killed = ((@attack_points / 150.0) * @victory_points).round
-        t_killed = ((@attack_points / 1500.0) * @victory_points).round
+        a_killed = (@defense_points / CASUALTY_DIVISOR_WEAK).round
+        d_killed = ((@attack_points / CASUALTY_DIVISOR_WEAK) * @victory_points).round
+        t_killed = ((@attack_points / TOWER_CASUALTY_DIVISOR_WEAK) * @victory_points).round
       end
 
       if defender.military_losses_researches <= 50
@@ -495,13 +535,14 @@ module UserGames
     end
 
     def process_raid_attack
+      # Each soldier type contributes a different weight to building destruction power
       attack_points = (
-        @attack_swordsman * 0.05 +
-        @attack_archer * 0.04 +
-        @attack_horseman * 0.1 +
-        @attack_macemen * 0.03 +
-        @attack_trained_peasant * 0.01
-      ) * @victory_points * 0.1
+        @attack_swordsman * RAID_SWORDSMAN_WEIGHT +
+        @attack_archer * RAID_ARCHER_WEIGHT +
+        @attack_horseman * RAID_HORSEMAN_WEIGHT +
+        @attack_macemen * RAID_MACEMEN_WEIGHT +
+        @attack_trained_peasant * RAID_TRAINED_PEASANT_WEIGHT
+      ) * @victory_points * RAID_SCALE_FACTOR
 
       attack_points = attack_points.round
 
@@ -526,27 +567,30 @@ module UserGames
     end
 
     def process_rob_attack
+      # Each soldier type contributes a different weight to looting power
       attack_points = (
-        @attack_swordsman * 1.0 +
-        @attack_archer * 0.9 +
-        @attack_horseman * 1.5 +
-        @attack_macemen * 0.5 +
-        @attack_trained_peasant * 0.1
-      ) * @victory_points * 0.5
+        @attack_swordsman * ROB_SWORDSMAN_WEIGHT +
+        @attack_archer * ROB_ARCHER_WEIGHT +
+        @attack_horseman * ROB_HORSEMAN_WEIGHT +
+        @attack_macemen * ROB_MACEMEN_WEIGHT +
+        @attack_trained_peasant * ROB_TRAINED_PEASANT_WEIGHT
+      ) * @victory_points * ROB_SCALE_FACTOR
 
       attack_points = attack_points.floor
-      d_total_goods = defender.wood + defender.food + defender.iron + (defender.gold / 100).floor
+      # Gold is stored in a larger denomination; normalize to same scale as other resources
+      d_total_goods = defender.wood + defender.food + defender.iron + (defender.gold / GOLD_DENOMINATION).floor
 
       if attack_points > 0 && d_total_goods > 0
         p_wood = defender.wood.to_f / d_total_goods
         p_iron = defender.iron.to_f / d_total_goods
         p_food = defender.food.to_f / d_total_goods
-        p_gold = (defender.gold / 100.0) / d_total_goods
+        p_gold = (defender.gold / GOLD_DENOMINATION.to_f) / d_total_goods
 
         take_wood = (attack_points * p_wood).round
         take_iron = (attack_points * p_iron).round
         take_food = (attack_points * p_food).round
-        take_gold = (attack_points * p_gold).round * 25
+        # Scale gold steal back up to actual gold denomination in chunks
+        take_gold = (attack_points * p_gold).round * GOLD_STEAL_CHUNK_SIZE
 
         # Ensure we don't take more than available
         take_wood = [defender.wood, take_wood].min
@@ -571,13 +615,14 @@ module UserGames
     end
 
     def process_slaughter_attack
+      # Same soldier weights as rob attack — slaughter uses the same combat effectiveness
       attack_points = (
-        @attack_swordsman * 1.0 +
-        @attack_archer * 0.9 +
-        @attack_horseman * 1.5 +
-        @attack_macemen * 0.5 +
-        @attack_trained_peasant * 0.1
-      ) * @victory_points * 0.5
+        @attack_swordsman * ROB_SWORDSMAN_WEIGHT +
+        @attack_archer * ROB_ARCHER_WEIGHT +
+        @attack_horseman * ROB_HORSEMAN_WEIGHT +
+        @attack_macemen * ROB_MACEMEN_WEIGHT +
+        @attack_trained_peasant * ROB_TRAINED_PEASANT_WEIGHT
+      ) * @victory_points * ROB_SCALE_FACTOR
 
       attack_points = attack_points.round
 

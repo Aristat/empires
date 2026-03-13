@@ -6,6 +6,73 @@ module UserGames
 
     WINTER_MONTHS = [11, 12, 1, 2].freeze
 
+    # Calendar: game turns start counting from this year
+    GAME_START_YEAR = 1_000
+
+    # Farm season: farms only produce food in these months (spring–autumn)
+    FARM_SEASON_START_MONTH = 4
+    FARM_SEASON_END_MONTH   = 10
+
+    # Winter heating: one unit of wood heats this many people
+    # (people_burn_one_wood comes from game_data, this is the freeze death ratio)
+    FREEZE_DEATH_WOOD_RATIO = 8.0
+
+    # Wall: probability (out of 100) that wall decay triggers each turn
+    WALL_DECAY_CHANCE     = 25
+    # Wall does not decay below this size
+    WALL_DECAY_MIN_SIZE   = 10
+    # Decay amount = wall * rand(1..100) / WALL_DECAY_RATE
+    WALL_DECAY_RATE       = 750.0
+    # How many builders are needed to produce one unit of wall per turn
+    WALL_BUILDERS_PER_UNIT = 25
+    # Builders consumed (removed from pool) per unit of wall constructed
+    WALL_BUILDERS_CONSUMED_PER_UNIT = 10
+
+    # Food ratio growth: population change values per food_ratio setting
+    # Each entry: { ratio => [growth_min, growth_max, food_multiplier] }
+    # food_multiplier is applied to baseline food_eaten; nil means no change
+    FOOD_RATIO_PARAMS = {
+      -2 => { growth_min: -200, growth_max: -100, food_mult: 0.45 },
+      -1 => { growth_min: -100, growth_max:  -50, food_mult: 0.75 },
+       0 => { growth_min:  -30, growth_max:   50, food_mult: nil  },
+       1 => { growth_min:   50, growth_max:  100, food_mult: 1.5  },
+       2 => { growth_min:  100, growth_max:  200, food_mult: 2.5  },
+       3 => { growth_min:  200, growth_max:  400, food_mult: 4    },
+       4 => { growth_min:  400, growth_max:  800, food_mult: 8    },
+    }.freeze
+
+    # Fraction of population that dies each turn when food runs out
+    STARVATION_DEATH_RATE = 0.07
+
+    # Divisor converting raw growth/decline values into actual population change
+    # growth_delta / GROWTH_RATE_DIVISOR * people = actual people gained/lost
+    GROWTH_RATE_DIVISOR = 10_000.0
+
+    # Fraction of each soldier type that survives when army cannot be fed
+    ARMY_STARVATION_SURVIVAL_RATE = 0.95
+
+    # Tools wear months: tools are consumed only in these months
+    TOOLS_WEAR_MONTHS       = [5, 10].freeze
+    # Tools wear percentage range (as integers; divide by 100 to get fraction)
+    TOOLS_WEAR_MIN_PERCENT  = 10
+    TOOLS_WEAR_MAX_PERCENT  = 20
+
+    # Explorer base land discovery ratios (fraction of explorer count per land type)
+    EXPLORER_MOUNTAIN_RATIO = 0.13
+    EXPLORER_FOREST_RATIO   = 0.26
+    EXPLORER_PLAIN_RATIO    = 0.58
+    # Randomization lower bound: 1/3 of base discovery (max range is base; min is base/3)
+    EXPLORER_MIN_RATIO      = 3.0
+
+    # Explore efficiency: land above this threshold reduces discovery efficiency
+    EXPLORE_LARGE_LAND_THRESHOLD = 500_000
+
+    # Fraction of over-capacity soldiers that desert each turn
+    OVERCAPACITY_DESERTION_RATE = 0.25
+
+    # Fraction of unpaid soldiers that desert each turn (when gold runs out)
+    UNPAID_DESERTION_RATE = 0.1
+
     def initialize(user_game:)
       @user_game = user_game
       @data = PrepareDataCommand.new(user_game: @user_game).call
@@ -13,7 +80,7 @@ module UserGames
 
       temp_turn = @user_game.turn + 1
       @month = temp_turn % 12 + 1
-      @year = (temp_turn / 12).floor + 1000
+      @year = (temp_turn / 12).floor + GAME_START_YEAR
 
       # remaining
       @r_people = @user_game.people
@@ -188,7 +255,7 @@ module UserGames
 
       farm_building = @data[:buildings][:farm][:settings]
 
-      if @month >= 4 && @month <= 10
+      if @month >= FARM_SEASON_START_MONTH && @month <= FARM_SEASON_END_MONTH
         can_produce = (@user_game.farm * (@user_game.farm_status_buildings_statuses / 100.0)).round
         people_need = can_produce * farm_building[:workers]
 
@@ -237,7 +304,9 @@ module UserGames
         add_message("#{burn_wood} wood was used for heat", 'info')
 
         if @r_wood < 0
-          people_with_no_heat = ((@r_wood.abs * @data[:game_data][:people_burn_one_wood]) / 8.0).ceil
+          # Each missing wood unit means people_burn_one_wood people had no heat;
+          # divide by FREEZE_DEATH_WOOD_RATIO to get how many are at risk of freezing
+          people_with_no_heat = ((@r_wood.abs * @data[:game_data][:people_burn_one_wood]) / FREEZE_DEATH_WOOD_RATIO).ceil
           people_with_no_heat = @user_game.people - 1 if people_with_no_heat > @user_game.people
 
           people_freeze = rand((people_with_no_heat / 2)..people_with_no_heat)
@@ -616,9 +685,10 @@ module UserGames
       total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
       total_wall = (total_land * UserGame::WALL_MULTIPLIER).round
 
-      # Handle wall decay (25% chance)
-      if rand(1..100) <= 25 && @user_game.wall > 10
-        decay = (@user_game.wall * (rand(1..100) / 750.0)).round
+      # Handle wall decay (WALL_DECAY_CHANCE% probability each turn)
+      if rand(1..100) <= WALL_DECAY_CHANCE && @user_game.wall > WALL_DECAY_MIN_SIZE
+        # Decay = wall * random_factor; factor is rand(1..100) / WALL_DECAY_RATE
+        decay = (@user_game.wall * (rand(1..100) / WALL_DECAY_RATE)).round
         if decay > 0
           @user_game.wall -= decay
           add_message("#{decay} units of wall deteriorated", 'danger')
@@ -628,7 +698,8 @@ module UserGames
       # Handle wall construction
       if @user_game.wall_build_per_turn > 0 && @user_game.wall < total_wall
         wall_builders = (@num_builders * (@user_game.wall_build_per_turn / 100.0)).round
-        can_produce = (wall_builders / 25).to_i
+        # WALL_BUILDERS_PER_UNIT builders are required to produce one unit of wall
+        can_produce = (wall_builders / WALL_BUILDERS_PER_UNIT).to_i
 
         # Adjust if we would exceed total wall
         if can_produce + @user_game.wall > total_wall
@@ -676,7 +747,7 @@ module UserGames
 
           # Update wall and builders
           @user_game.wall += can_produce
-          @num_builders -= (can_produce * 10)
+          @num_builders -= (can_produce * WALL_BUILDERS_CONSUMED_PER_UNIT)
           add_message("Constructed #{can_produce} units of wall.", 'success')
         end
       end
@@ -689,27 +760,13 @@ module UserGames
       town_center_building = @data[:buildings][:town_center][:settings]
 
       @growth = 0
-      case @user_game.food_ratio
-      when -2
-        @growth = rand(-200..-100)
-        food_eaten = (food_eaten * 0.45).round
-      when -1
-        @growth = rand(-100..-50)
-        food_eaten = (food_eaten * 0.75).round
-      when 0
-        @growth = rand(-30..50)
-      when 1
-        @growth = rand(50..100)
-        food_eaten = (food_eaten * 1.5).round
-      when 2
-        @growth = rand(100..200)
-        food_eaten = (food_eaten * 2.5).round
-      when 3
-        @growth = rand(200..400)
-        food_eaten = (food_eaten * 4).round
-      when 4
-        @growth = rand(400..800)
-        food_eaten = (food_eaten * 8).round
+      # food_ratio controls how much food people eat and how fast population grows/declines.
+      # Positive ratios increase both food consumption and population growth.
+      # Negative ratios reduce food consumption but cause population decline.
+      params = FOOD_RATIO_PARAMS[@user_game.food_ratio]
+      if params
+        @growth = rand(params[:growth_min]..params[:growth_max])
+        food_eaten = (food_eaten * params[:food_mult]).round if params[:food_mult]
       end
 
       add_message("Your people ate #{food_eaten} food", 'info')
@@ -718,7 +775,7 @@ module UserGames
       @r_food -= food_eaten
 
       if @r_food < 0
-        people_die = (@user_game.people * 0.07).round
+        people_die = (@user_game.people * STARVATION_DEATH_RATE).round
         add_message("#{people_die} people died due to lack of food", 'danger')
 
         @user_game.people -= people_die
@@ -736,7 +793,8 @@ module UserGames
       ).call
 
       if @growth > 0 && house_space > @user_game.people
-        people_come = ((@growth / 10000.0) * @user_game.people * @data[:game_data][:pop_increase_modifier]).round
+        # growth / GROWTH_RATE_DIVISOR gives a fraction of current population that migrates in
+        people_come = ((@growth / GROWTH_RATE_DIVISOR) * @user_game.people * @data[:game_data][:pop_increase_modifier]).round
         add_message("Your population increased by #{people_come}", 'success')
         @r_people += people_come
         @user_game.people += people_come
@@ -745,7 +803,8 @@ module UserGames
           @user_game.people = house_space
         end
       elsif @growth < 0
-        people_leave = ((@growth.abs / 10000.0) * @user_game.people).round
+        # Negative growth: abs(growth) / GROWTH_RATE_DIVISOR fraction of population leaves
+        people_leave = ((@growth.abs / GROWTH_RATE_DIVISOR) * @user_game.people).round
         add_message("Due to poor food rationing your population decreased by #{people_leave} people", 'warning')
         @user_game.people -= people_leave
       elsif @growth > 0 && house_space == @user_game.people
@@ -778,8 +837,8 @@ module UserGames
       add_message("Your soldiers ate #{number_with_delimiter(food_eaten)} food")
 
       if @r_food < 0
-        # 5% of army dies when there isn't enough food
-        survival_rate = 0.95
+        # ARMY_STARVATION_SURVIVAL_RATE fraction of each unit type survives when food runs out
+        survival_rate = ARMY_STARVATION_SURVIVAL_RATE
         add_message('Some soldiers died due to the lack of food', 'danger')
 
         @user_game.unique_unit_soldiers = (@user_game.unique_unit_soldiers * survival_rate).round
@@ -987,11 +1046,10 @@ module UserGames
     end
 
     def update_tools_for_builders
-      # Only process in months 5 and 10
-      return unless [5, 10].include?(@month)
+      return unless TOOLS_WEAR_MONTHS.include?(@month)
 
-      # Calculate tools used (10-20% of builders)
-      tools_used = rand(10..20)
+      # Each wear month, TOOLS_WEAR_MIN_PERCENT–TOOLS_WEAR_MAX_PERCENT of builder tools wear out
+      tools_used = rand(TOOLS_WEAR_MIN_PERCENT..TOOLS_WEAR_MAX_PERCENT)
       tools_used = (@num_builders * tools_used / 100.0).round
 
       return if tools_used <= 0
@@ -1013,15 +1071,15 @@ module UserGames
           next
         end
 
-        # Calculate base land discovery
-        mountain_land = (queue.people * 0.13).ceil
-        forest_land = (queue.people * 0.26).ceil
-        plain_land = (queue.people * 0.58).ceil
+        # Base discovery per explorer per land type; fractions of the explorer count
+        mountain_land = (queue.people * EXPLORER_MOUNTAIN_RATIO).ceil
+        forest_land = (queue.people * EXPLORER_FOREST_RATIO).ceil
+        plain_land = (queue.people * EXPLORER_PLAIN_RATIO).ceil
 
-        # Calculate minimum land discovery
-        mountain_min = (mountain_land / 3.0).round
-        forest_min = (forest_land / 3.0).round
-        plains_min = (plain_land / 3.0).round
+        # Minimum discovery = base / EXPLORER_MIN_RATIO (rand picks between min and max)
+        mountain_min = (mountain_land / EXPLORER_MIN_RATIO).round
+        forest_min = (forest_land / EXPLORER_MIN_RATIO).round
+        plains_min = (plain_land / EXPLORER_MIN_RATIO).round
 
         # Adjust based on land type preference
         case queue.seek_land
@@ -1059,10 +1117,11 @@ module UserGames
           plain_land = plain_land + (plain_land * (@user_game.explorers_researches / 100.0)).round
         end
 
-        # Calculate efficiency based on total land
+        # Efficiency decreases as empire grows beyond EXPLORE_LARGE_LAND_THRESHOLD;
+        # mirrors EfficiencyOfExploreCommand but returns 0.0–1.0 fraction rather than %
         total_land = @user_game.m_land + @user_game.f_land + @user_game.p_land
-        efficiency = if total_land > 500_000
-          mult = total_land / 500_000.0
+        efficiency = if total_land > EXPLORE_LARGE_LAND_THRESHOLD
+          mult = total_land / EXPLORE_LARGE_LAND_THRESHOLD.to_f
           mult = 99 if mult >= 100
           (100 - mult) / 100.0
         else
@@ -1285,7 +1344,8 @@ module UserGames
       total_army = UserGames::TotalArmyCommand.new(user_game: @user_game).call
 
       if total_army > total_soldiers_limit
-        too_much = ((total_army - total_soldiers_limit) * 0.25).round
+        # OVERCAPACITY_DESERTION_RATE fraction of excess soldiers desert each turn
+        too_much = ((total_army - total_soldiers_limit) * OVERCAPACITY_DESERTION_RATE).round
         run_swordsman = ((@user_game.swordsman_soldiers.to_f / total_army) * too_much).round
         run_archers = ((@user_game.archer_soldiers.to_f / total_army) * too_much).round
         run_horseman = ((@user_game.horseman_soldiers.to_f / total_army) * too_much).round
@@ -1330,7 +1390,8 @@ module UserGames
         temporary_gold_soldiers = @user_game.unique_unit_soldiers + @user_game.swordsman_soldiers +
           @user_game.archer_soldiers + @user_game.horseman_soldiers + @user_game.macemen_soldiers +
           @user_game.trained_peasant_soldiers + @user_game.thieve_soldiers
-        not_paid = ((pay_gold - @r_gold) * 0.1).round
+        # UNPAID_DESERTION_RATE fraction of unpaid wages causes that many soldiers to desert
+        not_paid = ((pay_gold - @r_gold) * UNPAID_DESERTION_RATE).round
 
         run_unique_unit = ((@user_game.unique_unit_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
         run_swordsman = ((@user_game.swordsman_soldiers.to_f / temporary_gold_soldiers) * not_paid).round
@@ -1386,7 +1447,8 @@ module UserGames
 
       need_wood = @user_game.catapult_soldiers * @data[:soldiers][:catapult][:settings][:wood_per_turn]
       if @r_wood < need_wood && @user_game.catapult_soldiers > 0
-        run_catapults = ((need_wood - @r_wood) * 0.25).round
+        # OVERCAPACITY_DESERTION_RATE of the shortfall in upkeep resources destroys catapults
+        run_catapults = ((need_wood - @r_wood) * OVERCAPACITY_DESERTION_RATE).round
         run_catapults = @user_game.catapult_soldiers if run_catapults > @user_game.catapult_soldiers
         add_message("You did not have enough wood to upkeep your catapults. #{run_catapults} of them were destroyed", 'error')
         @user_game.catapult_soldiers -= run_catapults
@@ -1396,7 +1458,7 @@ module UserGames
 
       need_iron = (@user_game.catapult_soldiers * @data[:soldiers][:catapult][:settings][:iron_per_turn]).round
       if @r_iron < need_iron && @user_game.catapult_soldiers > 0
-        run_catapults = ((need_iron - @r_iron) * 0.25).round
+        run_catapults = ((need_iron - @r_iron) * OVERCAPACITY_DESERTION_RATE).round
         run_catapults = @user_game.catapult_soldiers if run_catapults > @user_game.catapult_soldiers
         add_message("You did not have enough iron to upkeep your catapults. #{run_catapults} of them were destroyed", 'error')
         @user_game.catapult_soldiers -= run_catapults

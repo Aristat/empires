@@ -1,5 +1,40 @@
 module UserGames
   class ProcessThiefAttackCommand < BaseCommand
+    # --- Repeated-attack penalty tiers (same structure as army/catapult attacks) ---
+    ATTACK_PENALTY_TIERS = [
+      { range: (3..4),              victory_mult: 0.80, attack_mult: 0.92 },
+      { range: (5..7),              victory_mult: 0.65, attack_mult: 0.84 },
+      { range: (8..9),              victory_mult: 0.50, attack_mult: 0.76 },
+      { range: (10..11),            victory_mult: 0.35, attack_mult: 0.68 },
+      { range: (12..14),            victory_mult: 0.20, attack_mult: 0.60 },
+      { range: (15..Float::INFINITY), victory_mult: 0.01, attack_mult: 0.25 },
+    ].freeze
+
+    # Battle point randomization: ±10% variance
+    BATTLE_VARIANCE = 0.1
+
+    # --- Thief casualty divisors ---
+    # When attacker is stronger: fewer thief casualties per battle-point
+    THIEF_CASUALTY_DIVISOR_STRONG  = 800.0
+    THIEF_ATTACKER_DIVISOR_STRONG  = 500.0
+    # When defender is equally strong or stronger
+    THIEF_CASUALTY_DIVISOR_WEAK    = 500.0
+    THIEF_ATTACKER_DIVISOR_WEAK    = 800.0
+
+    # Steal goods: random percentage range (as integer basis points, divided by 10000)
+    STEAL_PERCENT_MIN = 250   # 2.5%
+    STEAL_PERCENT_MAX = 500   # 5.0%
+    STEAL_PERCENT_DIVISOR = 10_000
+
+    # Poison water / burn buildings: random percentage range
+    SABOTAGE_PERCENT_MIN = 200  # 2%
+    SABOTAGE_PERCENT_MAX = 400  # 4%
+    SABOTAGE_PERCENT_DIVISOR = 10_000
+
+    # Attack history weights
+    ATTACK_HISTORY_LOST_WEIGHT  = 3.0
+    ATTACK_HISTORY_OTHER_WEIGHT = 5.0
+
     attr_reader :user_game, :data, :attack_queue, :defender, :defender_soldiers, :game, :has_attacks, :attack_thieves,
       :defense_thieves, :attack_message, :victory_points, :attack_points, :defense_points
 
@@ -65,7 +100,8 @@ module UserGames
                                      attacker_wins: true
                                    ).count
 
-      @has_attacks = (my_won_attacks + my_lost_attacks / 3.0 + other_won_attacks / 5.0).round
+      # Weighted sum: own wins count fully, own losses at 1/3, others' wins at 1/5
+      @has_attacks = (my_won_attacks + my_lost_attacks / ATTACK_HISTORY_LOST_WEIGHT + other_won_attacks / ATTACK_HISTORY_OTHER_WEIGHT).round
     end
 
     def setup_battle_parameters
@@ -92,44 +128,34 @@ module UserGames
     end
 
     def apply_attack_penalties
-      case has_attacks
-      when 3..4
-        @victory_points *= 0.80
-        @attack_points = (attack_points * 0.92).round
-      when 5..7
-        @victory_points *= 0.65
-        @attack_points = (attack_points * 0.84).round
-      when 8..9
-        @victory_points *= 0.50
-        @attack_points = (attack_points * 0.76).round
-      when 10..11
-        @victory_points *= 0.35
-        @attack_points = (attack_points * 0.68).round
-      when 12..14
-        @victory_points *= 0.20
-        @attack_points = (attack_points * 0.60).round
-      when 15..Float::INFINITY
-        @victory_points *= 0.01
-        @attack_points = (attack_points * 0.25).round
+      tier = ATTACK_PENALTY_TIERS.find { |t| t[:range].include?(has_attacks) }
+      return unless tier
+
+      @victory_points *= tier[:victory_mult]
+      @attack_points = (attack_points * tier[:attack_mult]).round
+
+      if has_attacks >= 15
         @attack_message << "#{defender.user.name} was attacked too many times in the past 24 hours. #{user_game.user.name} army is weakened!!!!"
       end
     end
 
     def randomize_battle_points
-      attack_variance = (attack_points * 0.1).round
-      defense_variance = (defense_points * 0.1).round
+      # Apply ±BATTLE_VARIANCE random swing to both sides
+      attack_variance = (attack_points * BATTLE_VARIANCE).round
+      defense_variance = (defense_points * BATTLE_VARIANCE).round
 
       @attack_points = rand((attack_points - attack_variance)..(attack_points + attack_variance))
       @defense_points = rand((defense_points - defense_variance)..(defense_points + defense_variance))
     end
 
     def determine_casualties
+      # When attacker is stronger: fewer kills per point; more kills when matched (weak side)
       if defender.score < user_game.score
-        defender_casualties = ((attack_points / 800.0) * victory_points).round
-        attacker_casualties = (defense_points / 500.0).round
+        defender_casualties = ((attack_points / THIEF_CASUALTY_DIVISOR_STRONG) * victory_points).round
+        attacker_casualties = (defense_points / THIEF_ATTACKER_DIVISOR_STRONG).round
       else
-        defender_casualties = ((attack_points / 500.0) * victory_points).round
-        attacker_casualties = (defense_points / 800.0).round
+        defender_casualties = ((attack_points / THIEF_CASUALTY_DIVISOR_WEAK) * victory_points).round
+        attacker_casualties = (defense_points / THIEF_ATTACKER_DIVISOR_WEAK).round
       end
       @defender_casualties = [defender_casualties, defense_thieves].min
       @attacker_casualties = [attacker_casualties, attack_thieves].min
@@ -206,8 +232,8 @@ module UserGames
     end
 
     def steal_goods
-      # get between 2.5 and 5 percents of what another player has
-      percentage = rand(250..500) / 10000.0
+      # Steal between STEAL_PERCENT_MIN/100 and STEAL_PERCENT_MAX/100 percent of each resource
+      percentage = rand(STEAL_PERCENT_MIN..STEAL_PERCENT_MAX) / STEAL_PERCENT_DIVISOR.to_f
       percentage = percentage * victory_points
 
       %i[gold iron wood food tools maces swords bows horses wine].each do |resource|
@@ -223,8 +249,8 @@ module UserGames
     end
 
     def poison_water
-      # kill between 2 and 4 percents of army and people
-      percentage = rand(200..400) / 10000.0
+      # Kill between SABOTAGE_PERCENT_MIN/100 and SABOTAGE_PERCENT_MAX/100 percent of army and people
+      percentage = rand(SABOTAGE_PERCENT_MIN..SABOTAGE_PERCENT_MAX) / SABOTAGE_PERCENT_DIVISOR.to_f
       percentage = percentage * victory_points
 
       casualties = 0
@@ -243,8 +269,8 @@ module UserGames
     end
 
     def burn_buildings
-      # burn between 2 and 4 percents of buildings
-      percentage = rand(200..400) / 10000.0
+      # Burn between SABOTAGE_PERCENT_MIN/100 and SABOTAGE_PERCENT_MAX/100 percent of buildings
+      percentage = rand(SABOTAGE_PERCENT_MIN..SABOTAGE_PERCENT_MAX) / SABOTAGE_PERCENT_DIVISOR.to_f
       percentage = percentage * victory_points
 
       destroyed = {}
