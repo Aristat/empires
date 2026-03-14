@@ -7,7 +7,7 @@ module UserGames
       { range: (8..9),              victory_mult: 0.50, attack_mult: 0.76 },
       { range: (10..11),            victory_mult: 0.35, attack_mult: 0.68 },
       { range: (12..14),            victory_mult: 0.20, attack_mult: 0.60 },
-      { range: (15..Float::INFINITY), victory_mult: 0.01, attack_mult: 0.25 },
+      { range: (15..Float::INFINITY), victory_mult: 0.01, attack_mult: 0.25 }
     ].freeze
 
     # Battle point randomization: ±10% variance

@@ -38,7 +38,7 @@ module UserGames
        1 => { growth_min:   50, growth_max:  100, food_mult: 1.5  },
        2 => { growth_min:  100, growth_max:  200, food_mult: 2.5  },
        3 => { growth_min:  200, growth_max:  400, food_mult: 4    },
-       4 => { growth_min:  400, growth_max:  800, food_mult: 8    },
+       4 => { growth_min:  400, growth_max:  800, food_mult: 8    }
     }.freeze
 
     # Fraction of population that dies each turn when food runs out

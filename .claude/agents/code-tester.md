@@ -127,6 +127,8 @@ For every class, test:
 - NEVER hit external APIs in tests — stub them
 - ALWAYS use `let` for lazy evaluation, `let!` only when needed
 - Use `shared_examples` for repeated patterns
+- NEVER write Capybara or system tests (spec/system/) for any reason — Capybara/Devise integration is broken in this project and browser-based tests are not maintained here
+- NEVER write tests for files under `app/views/` or `app/assets/` — UI/UX changes are not tested
 
 ## Output Format
 After completing, summarize:

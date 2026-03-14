@@ -16,7 +16,7 @@ module UserGames
       { ratio:  5, run: 0.50, victory: 0.20 },
       { ratio:  4, run: 0.40, victory: 0.30 },
       { ratio:  3, run: 0.30, victory: 0.40 },
-      { ratio:  2, run: 0.20, victory: 0.50 },
+      { ratio:  2, run: 0.20, victory: 0.50 }
     ].freeze
 
     # --- Repeated-attack penalty tiers (keyed by has_attacks count) ---
@@ -27,7 +27,7 @@ module UserGames
       { range: (8..9),              victory_mult: 0.50, attack_mult: 0.76 },
       { range: (10..11),            victory_mult: 0.35, attack_mult: 0.68 },
       { range: (12..14),            victory_mult: 0.20, attack_mult: 0.60 },
-      { range: (15..Float::INFINITY), victory_mult: 0.01, attack_mult: 0.25 },
+      { range: (15..Float::INFINITY), victory_mult: 0.01, attack_mult: 0.25 }
     ].freeze
 
     # --- Battle point randomization: ±10% variance on final attack/defense points ---

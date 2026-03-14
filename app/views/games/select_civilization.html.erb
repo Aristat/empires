@@ -1,31 +1,35 @@
 <div class="container mt-4">
-  <h1>Select Your Civilization</h1>
-  <p class="lead">Choose a civilization to start your empire in this game</p>
+  <h1 class="mb-1">Select Your Civilization</h1>
+  <p class="lead text-muted mb-4">Choose a civilization to start your empire in Game #<%= @game.id %></p>
 
   <div class="row">
     <% @civilizations.each do |civilization| %>
       <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title"><%= civilization.name %></h5>
-            <p class="card-text"><%= civilization.description %></p>
+        <div class="card h-100 civ-card">
+          <div class="card-header">
+            <%= civilization.name %>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <p class="card-text text-muted mb-3"><%= civilization.description %></p>
 
-            <h6>Bonuses:</h6>
-            <ul class="list-unstyled">
-              <% civilization.buildings.to_a.each do |key, value| %>
-                <li>
-                  <%= key.humanize %>:
-                  <% if value.present? %>
-                    <span class="text-success">+<%= value %>%</span>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
+            <% if civilization.buildings.present? %>
+              <h6 class="mb-2">Bonuses</h6>
+              <ul class="list-unstyled mb-3">
+                <% civilization.buildings.to_a.each do |key, value| %>
+                  <li class="mb-1">
+                    <%= key.humanize %>:
+                    <% if value.present? %>
+                      <span class="civ-bonus-positive">+<%= value %>%</span>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
 
-            <%= button_to 'Choose Civilization',
-                         join_game_path(@game, civilization_id: civilization.id),
-                         method: :post,
-                         class: 'btn btn-primary' %>
+            <%= button_to "Choose #{civilization.name}",
+                          join_game_path(@game, civilization_id: civilization.id),
+                          method: :post,
+                          class: "btn btn-primary w-100 mt-auto" %>
           </div>
         </div>
       </div>

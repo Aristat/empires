@@ -1,0 +1,601 @@
+/* Empires — Design System
+ * CSS custom properties drive both light and dark themes.
+ * Bootstrap's data-bs-theme is synced by application.js.
+ * ============================================================ */
+
+/* ── Theme Variables ──────────────────────────────────────── */
+:root,
+:root[data-theme="light"] {
+  --bg-primary:      #f5f0e8;
+  --bg-secondary:    #ede8dc;
+  --bg-card:         #ffffff;
+  --bg-card-header:  #e8e0cc;
+  --text-primary:    #2c2416;
+  --text-secondary:  #5a4e3a;
+  --text-muted:      #8a7d6a;
+  --border-color:    #c8b99a;
+  --accent-gold:     #c9952a;
+  --accent-green:    #4a7c59;
+  --accent-red:      #8b3a3a;
+  --accent-blue:     #2d5a8e;
+  --nav-bg:          #2c2416;
+  --nav-text:        #e8d9bb;
+  --btn-primary-bg:  #c9952a;
+  --btn-primary-text:#1a0f00;
+  --tab-active-bg:   #c9952a;
+  --tab-active-text: #1a0f00;
+  --summary-bar-bg:  #e8e0cc;
+  --table-stripe:    #f0ebe0;
+  --badge-bg:        #c9952a;
+  --card-shadow:     0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="dark"] {
+  --bg-primary:      #1a1510;
+  --bg-secondary:    #221d16;
+  --bg-card:         #2a2318;
+  --bg-card-header:  #332c1f;
+  --text-primary:    #e8d9bb;
+  --text-secondary:  #c4b08a;
+  --text-muted:      #7a6e5a;
+  --border-color:    #4a3e2e;
+  --accent-gold:     #d4a83a;
+  --accent-green:    #5a9468;
+  --accent-red:      #c05050;
+  --accent-blue:     #4a80c0;
+  --nav-bg:          #0e0b07;
+  --nav-text:        #e8d9bb;
+  --btn-primary-bg:  #d4a83a;
+  --btn-primary-text:#0e0b07;
+  --tab-active-bg:   #d4a83a;
+  --tab-active-text: #0e0b07;
+  --summary-bar-bg:  #332c1f;
+  --table-stripe:    #231e15;
+  --badge-bg:        #d4a83a;
+  --card-shadow:     none;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
+}
+
+/* ── Typography ───────────────────────────────────────────── */
+h1, h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--accent-gold);
+  letter-spacing: 0.02em;
+}
+
+h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+a {
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-gold);
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+/* ── Navbar ───────────────────────────────────────────────── */
+.navbar {
+  background-color: var(--nav-bg) !important;
+  border-bottom: 2px solid var(--accent-gold);
+  padding: 0.6rem 1rem;
+}
+
+.navbar-brand {
+  color: var(--accent-gold) !important;
+  font-family: Georgia, serif;
+  font-variant: small-caps;
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+}
+
+.navbar .nav-link {
+  color: var(--nav-text) !important;
+  transition: color 0.15s ease;
+}
+
+.navbar .nav-link:hover {
+  color: var(--accent-gold) !important;
+}
+
+.navbar-toggler {
+  border-color: var(--border-color);
+}
+
+.navbar-toggler-icon {
+  filter: invert(0.8);
+}
+
+/* Theme toggle button */
+.theme-toggle-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  line-height: 1;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease;
+}
+
+.theme-toggle-btn:hover {
+  border-color: var(--accent-gold);
+}
+
+/* ── Cards ────────────────────────────────────────────────── */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.card-header {
+  background-color: var(--bg-card-header);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.card-body {
+  color: var(--text-primary);
+}
+
+.card-title {
+  color: var(--accent-gold);
+  font-family: Georgia, serif;
+}
+
+/* ── Buttons ──────────────────────────────────────────────── */
+.btn-primary {
+  background-color: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  font-weight: 600;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: var(--btn-primary-text);
+  filter: brightness(1.1);
+}
+
+.btn-outline-primary {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--accent-gold);
+  color: var(--btn-primary-text);
+}
+
+.btn-danger {
+  background-color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+.btn-link {
+  color: var(--accent-gold);
+}
+
+/* ── Forms ────────────────────────────────────────────────── */
+.form-control,
+.form-select {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, border-color 0.15s ease, color 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--bg-card);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.2rem rgba(201, 149, 42, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.form-label,
+label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Devise plain inputs (no Bootstrap class) */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  width: 100%;
+  transition: border-color 0.15s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus {
+  border-color: var(--accent-gold);
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(201, 149, 42, 0.25);
+}
+
+input[type="submit"] {
+  background-color: var(--btn-primary-bg);
+  border: 1px solid var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+input[type="submit"]:hover {
+  filter: brightness(1.1);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--accent-gold);
+}
+
+/* ── Flash Alerts ─────────────────────────────────────────── */
+.alert-success {
+  background-color: color-mix(in srgb, var(--accent-green) 15%, var(--bg-card));
+  border-color: var(--accent-green);
+  color: var(--text-primary);
+}
+
+.alert-danger {
+  background-color: color-mix(in srgb, var(--accent-red) 15%, var(--bg-card));
+  border-color: var(--accent-red);
+  color: var(--text-primary);
+}
+
+.alert-info {
+  background-color: color-mix(in srgb, var(--accent-blue) 15%, var(--bg-card));
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+
+/* ── Tab Navigation (game sidebar) ───────────────────────── */
+.nav-pills .nav-link {
+  color: var(--text-secondary);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.2rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: var(--bg-card-header);
+  color: var(--text-primary);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--tab-active-bg) !important;
+  color: var(--tab-active-text) !important;
+  font-weight: 600;
+}
+
+/* ── Summary Bar ──────────────────────────────────────────── */
+.summary-bar {
+  background-color: var(--summary-bar-bg);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.summary-bar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1rem;
+  border-right: 1px solid var(--border-color);
+}
+
+.summary-bar__item:last-child {
+  border-right: none;
+}
+
+.summary-bar__label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-bar__value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+/* ── Resource / Land Tables ───────────────────────────────── */
+.resource-table {
+  width: 100%;
+}
+
+.resource-table td {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.resource-table tr:nth-child(odd) td {
+  background-color: var(--table-stripe);
+}
+
+.resource-table img {
+  display: block;
+  margin: 0 auto 0.25rem;
+}
+
+:root[data-theme="dark"] .resource-table img {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+}
+
+/* ── Game Header Card ─────────────────────────────────────── */
+.game-header-card {
+  background: linear-gradient(135deg, var(--bg-card-header) 0%, var(--bg-card) 100%);
+  border-left: 4px solid var(--accent-gold);
+}
+
+.game-header-card .civilization-name {
+  color: var(--accent-gold);
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.game-header__label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.game-header__sub {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.game-header__turns {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+/* ── Last Turn Events ─────────────────────────────────────── */
+.events-card {
+  border-left: 4px solid var(--accent-gold);
+}
+
+.event-positive { color: var(--accent-green); }
+.event-negative { color: var(--accent-red);   }
+.event-neutral  { color: var(--text-secondary); }
+
+/* ── Civilization Selection ───────────────────────────────── */
+.civ-card {
+  transition: border-color 0.2s ease, transform 0.15s ease;
+  border-top: 3px solid transparent;
+}
+
+.civ-card:hover {
+  border-top-color: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.civ-bonus-positive {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+/* ── Auth / Devise Forms ──────────────────────────────────── */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-top: 4px solid var(--accent-gold);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.auth-card h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.auth-card .field {
+  margin-bottom: 1rem;
+}
+
+.auth-card .field label {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.auth-card .actions {
+  margin-top: 1.5rem;
+}
+
+.auth-card #error_explanation {
+  background-color: color-mix(in srgb, var(--accent-red) 12%, var(--bg-card));
+  border: 1px solid var(--accent-red);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.auth-card #error_explanation h2 {
+  font-size: 0.95rem;
+  color: var(--accent-red);
+  margin-bottom: 0.5rem;
+}
+
+.auth-card .devise-links {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.auth-card .devise-links a {
+  color: var(--accent-gold);
+}
+
+/* ── Home Page Hero ───────────────────────────────────────── */
+.home-hero {
+  background: radial-gradient(ellipse at 50% 0%, var(--bg-secondary) 0%, var(--bg-primary) 70%);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  padding: 3rem 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.home-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.home-hero .lead {
+  color: var(--text-secondary);
+}
+
+/* ── Tables (general) ─────────────────────────────────────── */
+.table {
+  color: var(--text-primary);
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: var(--table-stripe);
+  --bs-table-border-color: var(--border-color);
+  --bs-border-color: var(--border-color);
+}
+
+.table th {
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+.table td {
+  border-color: var(--border-color);
+}
+
+/* ── Misc Bootstrap overrides ─────────────────────────────── */
+.bg-light {
+  background-color: var(--bg-secondary) !important;
+}
+
+.bg-white {
+  background-color: var(--bg-card) !important;
+}
+
+.border {
+  border-color: var(--border-color) !important;
+}
+
+.rounded {
+  border-radius: 0.5rem !important;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+.dropdown-item {
+  color: var(--text-primary);
+}
+
+.dropdown-item:hover {
+  background-color: var(--bg-card-header);
+  color: var(--text-primary);
+}
+
+/* ── Responsive adjustments ───────────────────────────────── */
+@media (max-width: 768px) {
+  .summary-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .summary-bar__item {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.5rem 0;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .summary-bar__item:last-child {
+    border-bottom: none;
+  }
+
+  .home-hero {
+    padding: 2rem 1rem;
+  }
+
+  .home-hero h1 {
+    font-size: 1.75rem;
+  }
+}
