@@ -32,3 +32,6 @@
 .tool-versions
 
 .playwright-mcp
+
+/app/assets/builds/*
+!/app/assets/builds/.keep

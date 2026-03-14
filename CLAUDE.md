@@ -57,6 +57,21 @@ claude "$(cat .claude/agents/prd-writer.md)
 Feature idea: [ROUGH DESCRIPTION]"
 ```
 
+## Development Server
+Do NOT start the Rails server or Tailwind watch process automatically.
+The human runs both manually:
+```bash
+bin/rails server
+bin/rails tailwindcss:watch
+```
+
+## Playwright Testing
+When using Playwright to verify UI, log in with:
+- Email: `test@gmail.com`
+- Password: `123456`
+
+Save all screenshots to `.playwright-mcp/screenshots/` only.
+
 ## Project Conventions
 - Command objects in `app/commands/<namespace>/`
 - BaseCommand: inherit, call super() in initialize, return self from call
