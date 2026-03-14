@@ -32,11 +32,12 @@
         <span>Last Turn Events</span>
         <button class="btn btn-sm events-toggle-btn" id="events-toggle" aria-expanded="true" aria-controls="events-body">▲</button>
       </div>
-      <div class="card-body" id="events-body">
+      <div class="events-list" id="events-body">
         <% @user_game.last_message.each do |message| %>
-          <p class="mb-1 <%= bootstrap_text_class(message['color']) %>">
-            <%= message['text'] %>
-          </p>
+          <div class="event-row <%= event_row_class(message['color']) %>">
+            <span class="event-dot" aria-hidden="true"></span>
+            <span class="event-text"><%= message['text'] %></span>
+          </div>
         <% end %>
       </div>
     </div>

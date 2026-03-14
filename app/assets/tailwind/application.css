@@ -386,6 +386,39 @@
   .events-card { border-left: 4px solid var(--accent-gold); }
   .events-toggle-btn { background: none; border: 1px solid var(--border-color); color: var(--accent-gold); font-size: 0.7rem; padding: 0.1rem 0.5rem; line-height: 1.4; cursor: pointer; border-radius: 0.25rem; transition: border-color 0.15s ease; }
   .events-toggle-btn:hover { border-color: var(--accent-gold); opacity: 0.85; }
+
+  /* Event rows */
+  .events-list { padding: 0.35rem 0.5rem; display: flex; flex-direction: column; gap: 2px; }
+  .event-row {
+    display: flex; align-items: flex-start; gap: 0.55rem;
+    padding: 0.32rem 0.65rem; border-radius: 0.3rem;
+    border-left: 3px solid transparent; font-size: 0.875rem; line-height: 1.5;
+    transition: background-color 0.1s ease;
+  }
+  .event-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 0.42em; }
+  .event-success { border-left-color: var(--accent-green); }
+  .event-success .event-dot { background: var(--accent-green); }
+  .event-success .event-text { color: var(--accent-green); }
+  .event-success:hover { background: rgba(46,94,56,0.12); }
+  .event-danger { border-left-color: var(--accent-red); }
+  .event-danger .event-dot { background: var(--accent-red); }
+  .event-danger .event-text { color: var(--accent-red); }
+  .event-danger:hover { background: rgba(122,32,32,0.14); }
+  .event-primary { border-left-color: var(--accent-blue); }
+  .event-primary .event-dot { background: var(--accent-blue); }
+  .event-primary .event-text { color: var(--accent-blue); }
+  .event-primary:hover { background: rgba(30,64,112,0.12); }
+  .event-warning { border-left-color: var(--accent-gold); }
+  .event-warning .event-dot { background: var(--accent-gold); }
+  .event-warning .event-text { color: var(--accent-gold); }
+  .event-warning:hover { background: rgba(184,120,8,0.12); }
+  .event-neutral { border-left-color: var(--border-color); }
+  .event-neutral .event-dot { background: var(--text-muted); }
+  .event-neutral .event-text { color: var(--text-primary); }
+  .event-neutral:hover { background: rgba(255,255,255,0.04); }
+  .event-muted { border-left-color: var(--border-color); }
+  .event-muted .event-dot { background: var(--border-color); }
+  .event-muted .event-text { color: var(--text-muted); }
   .civ-card { transition: border-color 0.2s ease, transform 0.15s ease; border-top: 3px solid transparent; }
   .civ-card:hover { border-top-color: var(--accent-gold); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
   .civ-bonus-positive { color: var(--accent-green); font-weight: 600; }

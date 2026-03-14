@@ -11,6 +11,17 @@ module ApplicationHelper
   # Map arbitrary color names to Bootstrap contextual text classes for consistency
   # Accepted inputs: 'red', 'green', 'yellow', 'blue', 'info', 'warning', 'danger', 'success', 'primary', 'secondary', 'muted', 'dark', 'light'
   # Returns a string like 'text-danger'
+  def event_row_class(color)
+    case color.to_s.strip.downcase
+    when 'red', 'danger'     then 'event-danger'
+    when 'green', 'success'  then 'event-success'
+    when 'yellow', 'warning' then 'event-warning'
+    when 'blue', 'primary'   then 'event-primary'
+    when 'muted', 'secondary' then 'event-muted'
+    else 'event-neutral'
+    end
+  end
+
   def bootstrap_text_class(color)
     key = color.to_s.strip.downcase
     mapped = case key
