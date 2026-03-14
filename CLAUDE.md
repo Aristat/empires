@@ -65,6 +65,8 @@ bin/rails server
 bin/rails tailwindcss:watch
 ```
 
+Do NOT run `bin/rails tailwindcss:build` manually — the watch process rebuilds CSS automatically on every file change, just need to refresh the page instead
+
 ## Playwright Testing
 When using Playwright to verify UI, log in with:
 - Email: `test@gmail.com`

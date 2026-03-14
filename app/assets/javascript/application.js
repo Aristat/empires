@@ -10,7 +10,7 @@ function getPreferredTheme() {
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
   const btn = document.getElementById("theme-toggle");
-  if (btn) btn.textContent = theme === "dark" ? "☀" : "🌙";
+  if (btn) btn.textContent = theme === "dark" ? "☀ Theme" : "🌙 Theme";
 }
 
 function toggleTheme() {
@@ -27,12 +27,24 @@ document.addEventListener("DOMContentLoaded", function () {
   const themeBtn = document.getElementById("theme-toggle");
   if (themeBtn) themeBtn.addEventListener("click", toggleTheme);
 
-  // Navbar collapse
-  const toggler = document.getElementById("navbar-toggler");
-  const navCollapse = document.getElementById("navbarNav");
-  if (toggler && navCollapse) {
-    toggler.addEventListener("click", function () {
-      navCollapse.classList.toggle("show");
+  // Navbar dropdown menu
+  const menuBtn = document.getElementById("navbar-menu-btn");
+  const menuDropdown = document.getElementById("navbar-dropdown");
+  if (menuBtn && menuDropdown) {
+    menuBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const isOpen = !menuDropdown.hidden;
+      menuDropdown.hidden = isOpen;
+      menuBtn.setAttribute("aria-expanded", String(!isOpen));
+    });
+    document.addEventListener("click", function () {
+      if (!menuDropdown.hidden) {
+        menuDropdown.hidden = true;
+        menuBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+    menuDropdown.addEventListener("click", function (e) {
+      e.stopPropagation();
     });
   }
 
