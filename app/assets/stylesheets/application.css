@@ -1,10 +1,10 @@
 /* Empires — Design System
  * CSS custom properties drive both light and dark themes.
  * Bootstrap's data-bs-theme is synced by application.js.
- * Fonts: Cinzel (headings) + Inter (body) via Google Fonts.
+ * Fonts: Merriweather (headings + body) via Google Fonts.
  * ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
 
 /* ── Theme Variables ──────────────────────────────────────── */
 :root,
@@ -74,7 +74,7 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-size: 0.9rem;
   line-height: 1.6;
   transition: background-color 0.25s ease, color 0.25s ease;
@@ -83,13 +83,13 @@ body {
 
 /* ── Typography ───────────────────────────────────────────── */
 h1, h2 {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   color: var(--accent-gold);
   letter-spacing: 0.04em;
 }
 
 h3, h4, h5, h6 {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: 0.03em;
@@ -119,7 +119,7 @@ a:hover {
 
 .navbar-brand {
   color: var(--accent-gold) !important;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-size: 1.25rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -175,7 +175,7 @@ a:hover {
   background-color: var(--bg-card-header);
   border-bottom: 1px solid var(--border-color);
   color: var(--text-primary);
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-weight: 600;
   font-size: 0.8rem;
   letter-spacing: 0.06em;
@@ -187,7 +187,7 @@ a:hover {
 
 .card-title {
   color: var(--accent-gold);
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
 }
 
 /* ── Buttons ──────────────────────────────────────────────── */
@@ -401,7 +401,7 @@ input[type="checkbox"] {
 
 .game-header-card .civilization-name {
   color: var(--accent-gold);
-  font-family: Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-size: 1.2rem;
   font-weight: bold;
 }
@@ -589,7 +589,7 @@ input[type="checkbox"] {
   background-color: #1f1c13;
   border-bottom: 1px solid var(--border-color);
   color: var(--accent-gold);
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-weight: 600;
   letter-spacing: 0.07em;
   font-size: 0.8rem;
@@ -640,7 +640,7 @@ input[type="checkbox"] {
   background: linear-gradient(180deg, #f0b840 0%, #c08820 100%);
   border: 1px solid #5a4010;
   color: #0c0a04;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: 'Merriweather', Georgia, serif;
   font-weight: 700;
   font-size: 0.8rem;
   letter-spacing: 0.08em;
