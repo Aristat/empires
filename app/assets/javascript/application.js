@@ -4,7 +4,7 @@ const THEME_KEY = "empires_theme";
 function getPreferredTheme() {
   const stored = localStorage.getItem(THEME_KEY);
   if (stored) return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "dark";
 }
 
 function applyTheme(theme) {

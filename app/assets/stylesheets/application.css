@@ -1,58 +1,63 @@
 /* Empires — Design System
  * CSS custom properties drive both light and dark themes.
  * Bootstrap's data-bs-theme is synced by application.js.
+ * Fonts: Cinzel (headings) + Inter (body) via Google Fonts.
  * ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
 
 /* ── Theme Variables ──────────────────────────────────────── */
 :root,
 :root[data-theme="light"] {
-  --bg-primary:      #f5f0e8;
-  --bg-secondary:    #ede8dc;
-  --bg-card:         #ffffff;
-  --bg-card-header:  #e8e0cc;
-  --text-primary:    #2c2416;
-  --text-secondary:  #5a4e3a;
-  --text-muted:      #8a7d6a;
-  --border-color:    #c8b99a;
-  --accent-gold:     #c9952a;
-  --accent-green:    #4a7c59;
-  --accent-red:      #8b3a3a;
-  --accent-blue:     #2d5a8e;
-  --nav-bg:          #2c2416;
-  --nav-text:        #e8d9bb;
-  --btn-primary-bg:  #c9952a;
-  --btn-primary-text:#1a0f00;
-  --tab-active-bg:   #c9952a;
-  --tab-active-text: #1a0f00;
-  --summary-bar-bg:  #e8e0cc;
-  --table-stripe:    #f0ebe0;
-  --badge-bg:        #c9952a;
-  --card-shadow:     0 2px 8px rgba(0, 0, 0, 0.08);
+  --bg-primary:      #f2ece0;
+  --bg-secondary:    #e8e0d0;
+  --bg-card:         #faf6ef;
+  --bg-card-header:  #ede5d4;
+  --text-primary:    #1e1a14;
+  --text-secondary:  #4a4030;
+  --text-muted:      #8c7d66;
+  --border-color:    #c9b898;
+  --accent-gold:     #a8720a;
+  --accent-green:    #3d6e4a;
+  --accent-red:      #8b2e2e;
+  --accent-blue:     #2a5080;
+  --nav-bg:          #1a1510;
+  --nav-text:        #f0e6cc;
+  --btn-primary-bg:  #a8720a;
+  --btn-primary-text:#fdf8ee;
+  --tab-active-bg:   #a8720a;
+  --tab-active-text: #fdf8ee;
+  --summary-bar-bg:  #ede5d4;
+  --table-stripe:    #ede8dc;
+  --badge-bg:        #a8720a;
+  --card-shadow:     0 1px 6px rgba(0, 0, 0, 0.07);
+  --panel-border:    1px solid #c9b898;
 }
 
 :root[data-theme="dark"] {
-  --bg-primary:      #1a1510;
-  --bg-secondary:    #221d16;
-  --bg-card:         #2a2318;
-  --bg-card-header:  #332c1f;
-  --text-primary:    #e8d9bb;
-  --text-secondary:  #c4b08a;
-  --text-muted:      #7a6e5a;
-  --border-color:    #4a3e2e;
-  --accent-gold:     #d4a83a;
-  --accent-green:    #5a9468;
-  --accent-red:      #c05050;
-  --accent-blue:     #4a80c0;
-  --nav-bg:          #0e0b07;
-  --nav-text:        #e8d9bb;
-  --btn-primary-bg:  #d4a83a;
-  --btn-primary-text:#0e0b07;
-  --tab-active-bg:   #d4a83a;
-  --tab-active-text: #0e0b07;
-  --summary-bar-bg:  #332c1f;
-  --table-stripe:    #231e15;
-  --badge-bg:        #d4a83a;
+  --bg-primary:      #111009;
+  --bg-secondary:    #18160f;
+  --bg-card:         #16140d;
+  --bg-card-header:  #1f1c13;
+  --text-primary:    #ede0c4;
+  --text-secondary:  #c8b48a;
+  --text-muted:      #7a6e52;
+  --border-color:    #3a3220;
+  --accent-gold:     #e0a832;
+  --accent-green:    #5ea876;
+  --accent-red:      #d95f5f;
+  --accent-blue:     #5090d0;
+  --nav-bg:          #0b0a06;
+  --nav-text:        #ede0c4;
+  --btn-primary-bg:  #e0a832;
+  --btn-primary-text:#0c0a04;
+  --tab-active-bg:   #e0a832;
+  --tab-active-text: #0c0a04;
+  --summary-bar-bg:  #13110a;
+  --table-stripe:    #131109;
+  --badge-bg:        #e0a832;
   --card-shadow:     none;
+  --panel-border:    1px solid #3a3220;
 }
 
 /* ── Base ─────────────────────────────────────────────────── */
@@ -69,23 +74,25 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 0.95rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.9rem;
   line-height: 1.6;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
   min-height: 100vh;
 }
 
 /* ── Typography ───────────────────────────────────────────── */
 h1, h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: 'Cinzel', Georgia, serif;
   color: var(--accent-gold);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
 }
 
 h3, h4, h5, h6 {
+  font-family: 'Cinzel', Georgia, serif;
   font-weight: 600;
   color: var(--text-primary);
+  letter-spacing: 0.03em;
 }
 
 .text-muted {
@@ -112,11 +119,10 @@ a:hover {
 
 .navbar-brand {
   color: var(--accent-gold) !important;
-  font-family: Georgia, serif;
-  font-variant: small-caps;
-  font-size: 1.4rem;
-  font-weight: bold;
-  letter-spacing: 0.06em;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
 }
 
 .navbar .nav-link {
@@ -169,7 +175,10 @@ a:hover {
   background-color: var(--bg-card-header);
   border-bottom: 1px solid var(--border-color);
   color: var(--text-primary);
+  font-family: 'Cinzel', Georgia, serif;
   font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
 }
 
 .card-body {
@@ -178,7 +187,7 @@ a:hover {
 
 .card-title {
   color: var(--accent-gold);
-  font-family: Georgia, serif;
+  font-family: 'Cinzel', Georgia, serif;
 }
 
 /* ── Buttons ──────────────────────────────────────────────── */
@@ -569,6 +578,130 @@ input[type="checkbox"] {
 .dropdown-item:hover {
   background-color: var(--bg-card-header);
   color: var(--text-primary);
+}
+
+/* ── Dark Theme Game Panel Enhancements ───────────────────── */
+:root[data-theme="dark"] .card {
+  border: var(--panel-border);
+}
+
+:root[data-theme="dark"] .card-header {
+  background-color: #1f1c13;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--accent-gold);
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  font-size: 0.8rem;
+}
+
+:root[data-theme="dark"] .summary-bar {
+  border: var(--panel-border);
+  background-color: var(--summary-bar-bg);
+}
+
+:root[data-theme="dark"] .summary-bar__item {
+  border-right-color: var(--border-color);
+}
+
+:root[data-theme="dark"] .game-header-card {
+  border-left: 4px solid var(--accent-gold);
+  border-top: var(--panel-border);
+  border-right: var(--panel-border);
+  border-bottom: var(--panel-border);
+}
+
+.events-toggle-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--accent-gold);
+  font-size: 0.7rem;
+  padding: 0.1rem 0.5rem;
+  line-height: 1.4;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.events-toggle-btn:hover {
+  border-color: var(--accent-gold);
+  opacity: 0.85;
+}
+
+:root[data-theme="dark"] .events-card {
+  border-left: 4px solid var(--accent-gold);
+  border-top: var(--panel-border);
+  border-right: var(--panel-border);
+  border-bottom: var(--panel-border);
+}
+
+/* END TURN button styled like the classic game */
+:root[data-theme="dark"] .btn-primary {
+  background: linear-gradient(180deg, #f0b840 0%, #c08820 100%);
+  border: 1px solid #5a4010;
+  color: #0c0a04;
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+:root[data-theme="dark"] .btn-primary:hover,
+:root[data-theme="dark"] .btn-primary:focus {
+  background: linear-gradient(180deg, #f8c850 0%, #d09830 100%);
+  filter: none;
+}
+
+/* Nav pills (sidebar tabs) in dark theme */
+:root[data-theme="dark"] .nav-pills .nav-link {
+  color: var(--accent-gold);
+  border: 1px solid transparent;
+}
+
+:root[data-theme="dark"] .nav-pills .nav-link:hover {
+  background-color: #181410;
+  border-color: var(--border-color);
+}
+
+:root[data-theme="dark"] .nav-pills .nav-link.active {
+  background: linear-gradient(180deg, #d4aa48 0%, #a07820 100%) !important;
+  border: 1px solid #7a6030 !important;
+  color: #0a0806 !important;
+}
+
+/* Resource/data table borders in dark theme */
+:root[data-theme="dark"] .resource-table td {
+  border-color: #3a3020;
+}
+
+/* Table stripes in dark theme */
+:root[data-theme="dark"] .table {
+  --bs-table-striped-bg: #0e0c08;
+  --bs-table-border-color: #3a3020;
+}
+
+:root[data-theme="dark"] .table th {
+  color: var(--accent-gold);
+  border-color: #3a3020;
+}
+
+/* Event text colors aligned with screenshot style */
+:root[data-theme="dark"] .event-positive { color: #c8a040; }
+:root[data-theme="dark"] .event-negative { color: #d06060; }
+:root[data-theme="dark"] .event-neutral  { color: #e8d9bb; }
+
+/* Home page hero in dark theme */
+:root[data-theme="dark"] .home-hero {
+  background: radial-gradient(ellipse at 50% 0%, #181410 0%, #050403 70%);
+  border: var(--panel-border);
+}
+
+/* Auth card in dark theme */
+:root[data-theme="dark"] .auth-card {
+  border: var(--panel-border);
+  border-top: 4px solid var(--accent-gold);
 }
 
 /* ── Responsive adjustments ───────────────────────────────── */

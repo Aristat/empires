@@ -30,3 +30,5 @@
 /config/master.key
 
 .tool-versions
+
+.playwright-mcp

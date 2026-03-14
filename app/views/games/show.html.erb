@@ -1,4 +1,5 @@
-<div class="container-fluid mt-4">
+<% content_for :container_class, "container-fluid px-3" %>
+<div>
   <!-- Game Header -->
   <div class="card game-header-card mb-4">
     <div class="card-body">
@@ -27,8 +28,11 @@
 
   <% if @user_game.last_message.present? %>
     <div class="card events-card mb-4">
-      <div class="card-header">Last Turn Events</div>
-      <div class="card-body">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Last Turn Events</span>
+        <button class="btn btn-sm events-toggle-btn" id="events-toggle" aria-expanded="true" aria-controls="events-body">▲</button>
+      </div>
+      <div class="card-body" id="events-body">
         <% @user_game.last_message.each do |message| %>
           <p class="mb-1 <%= bootstrap_text_class(message['color']) %>">
             <%= message['text'] %>
@@ -36,6 +40,25 @@
         <% end %>
       </div>
     </div>
+    <script>
+    (function() {
+      var storageKey = "eventsHidden_<%= @user_game.id %>";
+      var btn = document.getElementById("events-toggle");
+      var body = document.getElementById("events-body");
+      if (localStorage.getItem(storageKey) === "1") {
+        body.style.display = "none";
+        btn.textContent = "▼";
+        btn.setAttribute("aria-expanded", "false");
+      }
+      btn.addEventListener("click", function() {
+        var hidden = body.style.display === "none";
+        body.style.display = hidden ? "" : "none";
+        btn.textContent = hidden ? "▲" : "▼";
+        btn.setAttribute("aria-expanded", hidden ? "true" : "false");
+        localStorage.setItem(storageKey, hidden ? "0" : "1");
+      });
+    })();
+    </script>
   <% end %>
 
   <div class="row">
