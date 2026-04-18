@@ -17,9 +17,40 @@ RSpec.describe Games::PrepareScoresCommand do
       end
 
       it 'includes all expected keys in each player hash' do
-        expected_keys = %i[rank id email civilization score total_land research_levels online]
+        expected_keys = %i[rank id email civilization score total_land research_levels online
+                           under_protection protection_turns_remaining]
         result[:players].each do |player|
           expect(player.keys).to match_array(expected_keys)
+        end
+      end
+    end
+
+    context 'protection fields' do
+      context 'when a player has protection_turns > 0' do
+        before { user_games[0].update_columns(protection_turns: 42) }
+
+        it 'sets under_protection to true' do
+          player = result[:players].find { |p| p[:id] == user_games[0].id }
+          expect(player[:under_protection]).to be true
+        end
+
+        it 'sets protection_turns_remaining to the current value' do
+          player = result[:players].find { |p| p[:id] == user_games[0].id }
+          expect(player[:protection_turns_remaining]).to eq(42)
+        end
+      end
+
+      context 'when a player has protection_turns of 0' do
+        before { user_games[0].update_columns(protection_turns: 0) }
+
+        it 'sets under_protection to false' do
+          player = result[:players].find { |p| p[:id] == user_games[0].id }
+          expect(player[:under_protection]).to be false
+        end
+
+        it 'sets protection_turns_remaining to 0' do
+          player = result[:players].find { |p| p[:id] == user_games[0].id }
+          expect(player[:protection_turns_remaining]).to eq(0)
         end
       end
     end

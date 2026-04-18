@@ -21,7 +21,9 @@ module Games
           score: user_game.score,
           total_land: user_game.m_land + user_game.f_land + user_game.p_land,
           research_levels: research_levels,
-          online: user_game.updated_at >= 10.minutes.ago
+          online: user_game.updated_at >= 10.minutes.ago,
+          under_protection: user_game.protection_turns > 0,
+          protection_turns_remaining: user_game.protection_turns
         }
       end
 

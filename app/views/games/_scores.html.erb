@@ -42,11 +42,23 @@
         </thead>
         <tbody>
           <% scores_data[:players].each do |player| %>
-            <tr class="<%= player[:id] == scores_data[:current_user_game_id] ? 'table-info' : '' %>">
+            <%
+              row_class = if player[:id] == scores_data[:current_user_game_id]
+                'table-info'
+              elsif player[:under_protection]
+                'table-warning'
+              else
+                ''
+              end
+            %>
+            <tr class="<%= row_class %>">
               <td><%= player[:rank] %></td>
               <td>
                 <%= "#{player[:email]} (#{player[:id]})" %>
                 <%= '*' if player[:online] %>
+                <% if player[:under_protection] %>
+                  <span title="Under protection for <%= player[:protection_turns_remaining] %> more turns">🛡 <%= player[:protection_turns_remaining] %></span>
+                <% end %>
               </td>
               <td><%= player[:civilization] %></td>
               <td><%= player[:research_levels] %></td>

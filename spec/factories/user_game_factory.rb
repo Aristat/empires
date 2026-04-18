@@ -5,31 +5,73 @@
 #
 # Table name: user_games
 #
-#  id               :bigint           not null, primary key
-#  buildings_statuses :jsonb           not null
-#  current_turns    :integer          default(0), not null
-#  f_land           :integer          default(0), not null
-#  farm             :integer          default(0), not null
-#  food             :integer          default(0), not null
-#  food_ratio       :integer          default(0), not null
-#  gold             :integer          default(0), not null
-#  house            :integer          default(0), not null
-#  hunter           :integer          default(0), not null
-#  iron             :integer          default(0), not null
-#  last_message     :jsonb            not null
-#  m_land           :integer          default(0), not null
-#  p_land           :integer          default(0), not null
-#  people           :integer          default(0), not null
-#  researches       :jsonb            not null
-#  score            :bigint           default(0), not null
-#  soldiers         :jsonb            not null
-#  tools            :integer          default(0), not null
-#  trades           :jsonb            not null
-#  turn             :integer          default(0), not null
-#  wood             :integer          default(0), not null
-#  civilization_id  :bigint           not null
-#  game_id          :bigint           not null
-#  user_id          :bigint           not null
+#  id                  :bigint           not null, primary key
+#  bow_weaponsmith     :integer          default(0), not null
+#  bows                :integer          default(0), not null
+#  buildings_statuses  :jsonb            not null
+#  current_research    :integer
+#  current_turns       :integer          default(0), not null
+#  f_land              :integer          default(0), not null
+#  farm                :integer          default(0), not null
+#  food                :integer          default(0), not null
+#  food_ratio          :integer          default(0), not null
+#  fort                :integer          default(0), not null
+#  gold                :integer          default(0), not null
+#  gold_mine           :integer          default(0), not null
+#  horses              :integer          default(0), not null
+#  house               :integer          default(0), not null
+#  hunter              :integer          default(0), not null
+#  iron                :integer          default(0), not null
+#  iron_mine           :integer          default(0), not null
+#  last_message        :jsonb            not null
+#  last_turn_at        :datetime
+#  m_land              :integer          default(0), not null
+#  mace_weaponsmith    :integer          default(0), not null
+#  maces               :integer          default(0), not null
+#  mage_tower          :integer          default(0), not null
+#  market              :integer          default(0), not null
+#  p_land              :integer          default(0), not null
+#  people              :integer          default(0), not null
+#  protection_turns    :integer          default(0), not null
+#  research_points     :integer          default(0), not null
+#  researches          :jsonb            not null
+#  score               :bigint           default(0), not null
+#  soldiers            :jsonb            not null
+#  stable              :integer          default(0), not null
+#  sword_weaponsmith   :integer          default(0), not null
+#  swords              :integer          default(0), not null
+#  tool_maker          :integer          default(0), not null
+#  tools               :integer          default(0), not null
+#  tower               :integer          default(0), not null
+#  town_center         :integer          default(0), not null
+#  trades              :jsonb            not null
+#  trades_this_turn    :integer          default(0), not null
+#  turn                :integer          default(0), not null
+#  wall                :integer          default(0), not null
+#  wall_build_per_turn :integer          default(0), not null
+#  warehouse           :integer          default(0), not null
+#  weaponsmith         :integer          default(0), not null
+#  wine                :integer          default(0), not null
+#  winery              :integer          default(0), not null
+#  wood                :integer          default(0), not null
+#  wood_cutter         :integer          default(0), not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  civilization_id     :bigint           not null
+#  game_id             :bigint           not null
+#  user_id             :bigint           not null
+#
+# Indexes
+#
+#  index_user_games_on_civilization_id  (civilization_id)
+#  index_user_games_on_game_id          (game_id)
+#  index_user_games_on_user_id          (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (civilization_id => civilizations.id)
+#  fk_rails_...  (game_id => games.id)
+#  fk_rails_...  (user_id => users.id)
 #
 # rubocop:enable Lint/RedundantCopDisableDirective, Layout/LineLength
 FactoryBot.define do

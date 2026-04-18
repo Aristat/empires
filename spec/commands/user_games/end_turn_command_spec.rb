@@ -226,4 +226,33 @@ RSpec.describe UserGames::EndTurnCommand do
       end
     end
   end
+
+  describe 'protection_turns decrement' do
+    context 'when protection_turns is greater than 0' do
+      before { user_game.update!(protection_turns: 10) }
+
+      it 'decrements protection_turns by 1' do
+        subject
+        expect(user_game.reload.protection_turns).to eq(9)
+      end
+    end
+
+    context 'when protection_turns is 1' do
+      before { user_game.update!(protection_turns: 1) }
+
+      it 'decrements to 0' do
+        subject
+        expect(user_game.reload.protection_turns).to eq(0)
+      end
+    end
+
+    context 'when protection_turns is already 0' do
+      before { user_game.update!(protection_turns: 0) }
+
+      it 'stays at 0 and does not go negative' do
+        subject
+        expect(user_game.reload.protection_turns).to eq(0)
+      end
+    end
+  end
 end

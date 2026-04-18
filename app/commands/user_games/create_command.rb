@@ -39,6 +39,7 @@ module UserGames
       user_game.set_default_settings
       user_game.save!
 
+      Games::SetupProtectionTurnsCommand.new(user_game: user_game).call
       UserGames::UpdateScoreCommand.new(user_game: user_game).call
 
       user_game

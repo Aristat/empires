@@ -30,6 +30,7 @@
 #  market              :integer          default(0), not null
 #  p_land              :integer          default(0), not null
 #  people              :integer          default(0), not null
+#  protection_turns    :integer          default(0), not null
 #  research_points     :integer          default(0), not null
 #  researches          :jsonb            not null
 #  score               :bigint           default(0), not null

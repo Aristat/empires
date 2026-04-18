@@ -155,6 +155,7 @@ module UserGames
 
         @user_game.turn += 1
         @user_game.current_turns -= 1
+        @user_game.protection_turns -= 1 if @user_game.protection_turns > 0
         @user_game.last_message = @messages
         @user_game.trades_this_turn = 0
         @user_game.save!

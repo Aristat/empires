@@ -56,7 +56,9 @@ module AttackQueues
     end
 
     def validate_attack
-      if to_user_game.id == user_game.id
+      if to_user_game.protection_turns > 0
+        @errors << "#{to_user_game.user.email} is under protection for #{to_user_game.protection_turns} more turns and cannot be attacked."
+      elsif to_user_game.id == user_game.id
         @errors << 'You cannot attack yourself'
       elsif user_game.wood < wood_cost
         @errors << "You do not have enough wood to send your catapults. You need #{wood_cost} to send that much army."
