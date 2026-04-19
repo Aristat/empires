@@ -73,47 +73,47 @@
       <ul class="nav nav-pills flex-column mb-4" id="gameTabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="builders-tab" data-bs-toggle="tab" data-bs-target="#builders" type="button" role="tab" aria-controls="builders" aria-selected="false">
-            ⚒ Builders
+            🏗️ Builders
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="wall-tab" data-bs-toggle="tab" data-bs-target="#wall" type="button" role="tab" aria-controls="wall" aria-selected="false">
-            🏰 Wall (<%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%)
+            🛡️ Wall (<%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%)
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="explore-tab" data-bs-toggle="tab" data-bs-target="#explore" type="button" role="tab" aria-controls="explore" aria-selected="false">
-            🗺 Explore
+            🧭 Explore
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="local-trade-tab" data-bs-toggle="tab" data-bs-target="#local-trade" type="button" role="tab" aria-controls="local-trade" aria-selected="false">
-            ⚖ Local Trade
+            🏪 Local Trade
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="global-trade-tab" data-bs-toggle="tab" data-bs-target="#global-trade" type="button" role="tab" aria-controls="global-trade" aria-selected="false">
-            🌍 Global Trade
+            🌐 Global Trade
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="research-tab" data-bs-toggle="tab" data-bs-target="#research" type="button" role="tab" aria-controls="research" aria-selected="false">
-            📜 Research
+            🔭 Research
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="army-tab" data-bs-toggle="tab" data-bs-target="#army" type="button" role="tab" aria-controls="army" aria-selected="false">
-            ⚔ Army
+            ⚔️ Army
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="attack-tab" data-bs-toggle="tab" data-bs-target="#attack" type="button" role="tab" aria-controls="attack" aria-selected="false">
-            🗡 Attack
+            🎯 Attack
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
-            📋 Management
+            ⚙️ Management
           </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -160,19 +160,19 @@
                     <td class="align-middle text-center p-3"><strong>Total</strong></td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('mland.gif') %>" alt="Mountain Land" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Mountain Land">⛰️</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.m_land) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('fland.gif') %>" alt="Forest Land" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Forest Land">🌲</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.f_land) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('pland.gif') %>" alt="Plains Land" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Plains Land">🌾</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.p_land) %></span>
                       </div>
                     </td>
@@ -181,19 +181,19 @@
                     <td class="align-middle text-center p-3"><strong>Free</strong></td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('mland_free.gif') %>" alt="Free Mountain" class="mb-1">
+                        <span class="res-emoji res-emoji--free mb-1" role="img" aria-label="Free Mountain">⛰️</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@data[:user_data][:free_mountains]) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('fland_free.gif') %>" alt="Free Forest" class="mb-1">
+                        <span class="res-emoji res-emoji--free mb-1" role="img" aria-label="Free Forest">🌲</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@data[:user_data][:free_forest]) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('pland_free.gif') %>" alt="Free Plains" class="mb-1">
+                        <span class="res-emoji res-emoji--free mb-1" role="img" aria-label="Free Plains">🌾</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@data[:user_data][:free_plains]) %></span>
                       </div>
                     </td>
@@ -210,19 +210,19 @@
                   <tr>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('wood.gif') %>" alt="Wood" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Wood">🪵</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.wood) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('food.gif') %>" alt="Food" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Food">🍖</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.food) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('iron.gif') %>" alt="Iron" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Iron">⚙️</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.iron) %></span>
                       </div>
                     </td>
@@ -230,19 +230,19 @@
                   <tr>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('tools.gif') %>" alt="Tools" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Tools">🔨</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.tools) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('wine.gif') %>" alt="Wine" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Wine">🍷</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.wine) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <img src="<%= asset_path('horses.gif') %>" alt="Horses" class="mb-1">
+                        <span class="res-emoji mb-1" role="img" aria-label="Horses">🐴</span>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.horses) %></span>
                       </div>
                     </td>
