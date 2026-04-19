@@ -25,10 +25,6 @@ class GamesController < ApplicationController
     end
   end
 
-  def scores
-    @scores_data = Games::PrepareScoresCommand.new(game: @game, current_user_game: @user_game).call
-  end
-
   def join
     @civilization = Civilization.find(params[:civilization_id])
 

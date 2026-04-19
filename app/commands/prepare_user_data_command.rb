@@ -404,7 +404,9 @@ class PrepareUserDataCommand < BaseCommand
         civilization: user_game.civilization.name,
         total_land: user_game.m_land + user_game.f_land + user_game.p_land,
         research_levels: research_levels,
-        online: online
+        online: online,
+        under_protection: user_game.protection_turns > 0,
+        protection_turns_remaining: user_game.protection_turns
       }
     end
     user_data[:users] = users

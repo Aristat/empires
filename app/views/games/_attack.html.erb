@@ -3,11 +3,11 @@
     <div class="col-12">
       <h3 class="mb-4">Attack</h3>
 
-      <% if @user_game.turn <= @data[:game_data][:turns_under_protection] %>
+      <% if @user_game.protection_turns > 0 %>
         <div class="alert alert-warning">
           Cannot attack under protection.
           <br>
-          (You are under protection for the first <%= (@data[:game_data][:turns_under_protection].to_f / 12).round(2) %> years of game)
+          (You have <%= @user_game.protection_turns %> turns of protection remaining)
         </div>
       <% else %>
         <!-- Attack Queue Section -->
