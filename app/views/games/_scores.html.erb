@@ -97,11 +97,11 @@
             <button type="button" class="btn btn-outline-primary action-message">Send Message</button>
             <button type="button" class="btn btn-outline-primary action-aid">Send Aid</button>
             <hr>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="0">Conquer Attack</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="10">Catapult Attack</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="20">Steal Information</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="23">Steal Goods</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="24">Poison Water</button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="army">Conquer Attack</button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="catapult">Catapult Attack</button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief">Steal Information</button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief">Steal Goods</button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief">Poison Water</button>
           </div>
         </div>
       </div>
@@ -153,7 +153,18 @@
       document.querySelectorAll('.action-attack').forEach(button => {
         button.addEventListener('click', function() {
           const attackType = this.getAttribute('data-attack-type');
-          postAction(`/user_games/${currentPlayerId}/attacks/new?attack_type=${attackType}`);
+          playerActionsModal.hide();
+
+          document.getElementById('attack-tab').click();
+
+          document.querySelectorAll('input[name="to_user_game_id"]').forEach(input => {
+            input.value = currentPlayerId;
+          });
+
+          const targetForm = document.querySelector(`form[action*="${attackType}_attack"]`);
+          if (targetForm) {
+            setTimeout(() => targetForm.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+          }
         });
       });
     });
