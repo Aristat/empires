@@ -72,6 +72,8 @@ When using Playwright to verify UI, log in with:
 - Email: `test@gmail.com`
 - Password: `123456`
 
+Click "Continue Game" to check the design.
+
 Save all screenshots to `.playwright-mcp/screenshots/` only.
 
 ## Project Conventions

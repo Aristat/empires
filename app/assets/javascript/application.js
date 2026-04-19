@@ -9,8 +9,6 @@ function getPreferredTheme() {
 
 function applyTheme(theme) {
   document.documentElement.setAttribute("data-theme", theme);
-  const btn = document.getElementById("theme-toggle");
-  if (btn) btn.textContent = theme === "dark" ? "☀ Theme" : "🌙 Theme";
 }
 
 function toggleTheme() {
