@@ -49,7 +49,7 @@ module Trades
 
           # Check if sufficient resources are available
           if quantity > transfer_queue.public_send(resource)
-            @errors << "You tried to buy #{quantity} #{resource}, but there are only #{transfer_queue.public_send(resource)} available."
+            @errors << I18n.t('trades.errors.not_enough_resource_available', quantity: quantity, resource: resource, available: transfer_queue.public_send(resource))
             break
           end
 
@@ -58,7 +58,7 @@ module Trades
           cost = quantity * price
 
           if cost > available_gold
-            @errors << "You do not have enough gold to buy #{quantity} #{resource}. You need #{cost} gold."
+            @errors << I18n.t('trades.errors.not_enough_gold_global_buy', quantity: quantity, resource: resource, cost: cost)
             break
           end
 
@@ -66,7 +66,7 @@ module Trades
           user_game.update!(gold: user_game.gold - cost)
           available_gold -= cost
 
-          @messages << "#{number_with_delimiter(quantity)} #{resource} bought for #{number_with_delimiter(cost)}. The caravans with #{resource} will reach your empire in 3 months."
+          @messages << I18n.t('trades.messages.global_resource_bought', quantity: number_with_delimiter(quantity), resource: resource, cost: number_with_delimiter(cost))
 
           remaining_resources = 0
           TransferQueue::RESOURCES.each do |resource_column|

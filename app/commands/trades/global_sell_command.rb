@@ -43,13 +43,13 @@ module Trades
         current_amount = user_game.send(resource)
 
         if sell_amount.negative?
-          @errors << "Cannot sell negative #{resource}."
+          @errors << I18n.t('trades.errors.cannot_sell_negative_resource', resource: resource)
         elsif sell_amount.positive? && sell_amount > current_amount
-          @errors << "You don't have that many #{resource}. You only have #{number_with_delimiter(current_amount)}."
+          @errors << I18n.t('trades.errors.not_enough_resource', resource: resource, amount: number_with_delimiter(current_amount))
         elsif sell_amount.positive? && sell_price < min_price
-          @errors << "The minimum sell price for #{resource} is #{number_with_delimiter(min_price)} gold."
+          @errors << I18n.t('trades.errors.min_price', resource: resource, price: number_with_delimiter(min_price))
         elsif sell_amount.positive? && sell_price > max_price
-          @errors << "The maximum sell price for #{resource} is #{number_with_delimiter(max_price)} gold."
+          @errors << I18n.t('trades.errors.max_price_sell', resource: resource, price: number_with_delimiter(max_price))
         end
       end
 
@@ -60,9 +60,9 @@ module Trades
       trades_remaining = max_trades - user_game.trades_this_turn
 
       if total_sell.zero?
-        @errors << 'Cannot sell 0 goods.'
+        @errors << I18n.t('trades.errors.cannot_sell_zero')
       elsif total_sell > trades_remaining
-        @errors << "You can sell only #{number_with_delimiter(trades_remaining)} more goods this month."
+        @errors << I18n.t('trades.errors.sell_limit', remaining: number_with_delimiter(trades_remaining))
       end
     end
 
@@ -84,7 +84,7 @@ module Trades
       end
 
       if params_for_user_game_update.blank?
-        @errors << 'Cannot sell 0 goods.'
+        @errors << I18n.t('trades.errors.cannot_sell_zero')
         return
       end
 
@@ -102,8 +102,8 @@ module Trades
 
       TransferQueue.create!(params_for_transfer_queue)
 
-      @messages << 'Goods have been sent to the public market. They will reach the market in 3 months.'
-      @messages << "Total value of the transport is #{number_with_delimiter(total_price)}."
+      @messages << I18n.t('trades.messages.goods_sent_to_market')
+      @messages << I18n.t('trades.messages.total_transport_value', value: number_with_delimiter(total_price))
     end
   end
 end

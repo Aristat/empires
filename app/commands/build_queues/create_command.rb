@@ -43,7 +43,7 @@ module BuildQueues
       quantity = params[:building_quantity].to_i
 
       if quantity < 1 || quantity > BuildQueue::MAX_BUILDING_QUANTITY_PER_ACTION
-        @errors << 'Cannot demolish 0 buildings.'
+        @errors << I18n.t('build_queues.errors.cannot_demolish_zero')
         return false
       end
 
@@ -56,7 +56,7 @@ module BuildQueues
       available_buildings = current_buildings - total_demolishing
 
       if available_buildings < quantity
-        @errors << 'You do not have that many buildings of this type.'
+        @errors << I18n.t('build_queues.errors.not_enough_buildings')
         return false
       end
 
@@ -74,13 +74,13 @@ module BuildQueues
 
     def validate_params
       if params[:building_type].blank? || !buildings.key?(params[:building_type].to_sym)
-        @errors << 'Invalid building to build.'
+        @errors << I18n.t('build_queues.errors.invalid_building')
         return false
       end
 
       if params[:building_quantity].to_i <= 0 ||
         params[:building_quantity].to_i > BuildQueue::MAX_BUILDING_QUANTITY_PER_ACTION
-        @errors << 'Invalid number of buildings.'
+        @errors << I18n.t('build_queues.errors.invalid_quantity')
         return false
       end
 
@@ -96,17 +96,17 @@ module BuildQueues
       @needed_iron = building[:settings][:cost_iron] * quantity
 
       if @needed_gold > user_game.gold
-        @errors << "You do not have enough gold.\nYou need #{@needed_gold}"
+        @errors << I18n.t('build_queues.errors.not_enough_gold', needed: @needed_gold)
         return false
       end
 
       if @needed_wood > user_game.wood
-        @errors << "You do not have enough wood.\nYou need #{@needed_wood}"
+        @errors << I18n.t('build_queues.errors.not_enough_wood', needed: @needed_wood)
         return false
       end
 
       if @needed_iron > user_game.iron
-        @errors << "You do not have enough iron.\nYou need #{@needed_iron}"
+        @errors << I18n.t('build_queues.errors.not_enough_iron', needed: @needed_iron)
         return false
       end
 
@@ -128,7 +128,7 @@ module BuildQueues
       end
 
       if needed_land > available_land
-        @errors << "You do not have that much free land. (needed #{needed_land})"
+        @errors << I18n.t('build_queues.errors.not_enough_land', needed: needed_land)
         return false
       end
 

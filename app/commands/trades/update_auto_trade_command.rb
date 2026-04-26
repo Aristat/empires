@@ -32,12 +32,12 @@ module Trades
 
     def validate_auto_trade
       if negative_amounts?
-        @errors << 'Cannot sell or buy negative numbers.'
+        @errors << I18n.t('trades.errors.cannot_sell_or_buy_negative')
         return
       end
 
       if total_trades > max_trades
-        @errors << "You can only trade up to #{number_with_delimiter(max_trades)} goods each month."
+        @errors << I18n.t('trades.errors.trade_limit_month_up_to', max: number_with_delimiter(max_trades))
       end
     end
 

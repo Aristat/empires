@@ -496,14 +496,39 @@ en:
       destroyed: "Building queue item removed"
       destroyed_all: "All building queues cleared"
       error_updating: "Error updating building queue"
+    errors:
+      cannot_demolish_zero: "Cannot demolish 0 buildings."
+      not_enough_buildings: "You do not have that many buildings of this type."
+      invalid_building: "Invalid building to build."
+      invalid_quantity: "Invalid number of buildings."
+      not_enough_gold: "You do not have enough gold.\nYou need %{needed}"
+      not_enough_wood: "You do not have enough wood.\nYou need %{needed}"
+      not_enough_iron: "You do not have enough iron.\nYou need %{needed}"
+      not_enough_land: "You do not have that much free land. (needed %{needed})"
   explore_queues:
     messages:
       destroyed: "Explore queue item removed"
+    errors:
+      not_enough_people: "You don't have that many people."
+      not_enough_horses: "You do not have enough horses to send with your explorers (You need %{required})."
+      not_enough_food: "You don't have that much food."
+      max_explorers: "You can only have a total of %{max} explorers at a time."
   train_queues:
     messages:
       created: "Training queue created successfully"
       destroyed: "Training queue item removed"
       disband: "Soldiers are disbanded"
+    errors:
+      train_limit: "You can only train %{limit} soldiers."
+      not_enough_people: "You do not have enough people."
+      not_enough_gold: "You do not have enough gold for training."
+      not_enough_wood: "You do not have enough wood for training."
+      not_enough_iron: "You do not have enough iron for training."
+      not_enough_bows: "You do not have enough bows for training."
+      not_enough_swords: "You do not have enough swords for training."
+      not_enough_maces: "You do not have enough maces for training."
+      not_enough_horses: "You do not have enough horses for training."
+      not_enough_soldiers_to_disband: "Not enough %{name} soldiers to disband."
   transfer_queues:
     messages:
       destroyed: "Transfer queue item removed"
@@ -511,10 +536,53 @@ en:
     messages:
       created: "Attack queued successfully"
       cancelled: "Attack cancelled"
+      army_preparing: "Your army is preparing to attack %{email} (%{id}). They will reach their destination in 3 months. Your soldiers have been paid %{gold} and given %{food} food for this expedition."
+      army_wine_boost: "%{wine} units of wine will boost army strength by %{percent}"
+      catapults_preparing: "Your catapults are preparing to attack %{email} (%{id})."
+      reaching_destination: "They will reach their destination in 3 months."
+      catapult_resources: "%{wood} wood and %{iron} iron has been sent for upkeep."
+      thieves_preparing: "Your thieves are preparing to attack %{email} (%{id})."
+      thieves_paid: "Your thieves have been paid %{gold} gold and %{food} food for this expedition."
+      army_stopped: "Your army stopped preparing to attack %{name} (%{id})."
+      army_returning: "Your army is returning to your empire as you requested and should be back soon."
+    errors:
+      target_not_found: "Target empire does not exist"
+      target_under_protection: "%{email} is under protection for %{turns} more turns and cannot be attacked."
+      cannot_attack_self: "You cannot attack yourself"
+      not_enough_food_army: "You do not have enough food to send your soldiers. You need %{needed} to send that much army."
+      not_enough_wood_catapult: "You do not have enough wood to send your catapults. You need %{needed} to send that much army."
+      not_enough_iron_catapult: "You do not have enough iron to send your catapults. You need %{needed} to send that much army."
+      not_enough_gold_thieves: "You do not have enough gold to pay your thieves for the attack. You need %{needed} gold"
+      not_enough_food_thieves: "You do not have enough food to send with your thieves for the attack. You need %{needed} food"
+      not_enough_gold_army: "You do not have enough gold to pay your soldiers to fight (You need %{needed} gold)"
+      invalid_attack_type: "Invalid attack type"
+      cannot_send_negative_soldiers: "Cannot send negative soldiers"
+      cannot_send_zero_army: "Cannot send 0 total army"
+      cannot_send_negative_wine: "Cannot send negative wine"
+      wine_per_soldier: "You can only send 1 wine per soldier"
+      not_enough_wine: "You do not have that much wine"
+      army_busy: "Your armies are already attacking someone. Please wait for them to come back."
+      cannot_send_zero_catapults: "Cannot send 0 total catapults"
+      cannot_send_zero_thieves: "Cannot send 0 total thieves"
+      target_too_small: "Cannot attack empires that are half as small as you"
+      target_too_big: "Cannot attack empires that are twice as big as you"
+      cannot_cancel: "This attack cannot be cancelled at this stage"
   aids:
     messages:
       created: "Aid sent successfully"
       destroyed: "Aid cancelled"
+      dispatched: "Transport to %{email} has been dispatched."
+      fee_assessed: "5% fee has been assessed by merchants."
+      caravans_arriving: "Caravans will reach their destination in 3 turns."
+      aid_cancelled: "Aid to empire #%{id} has been cancelled."
+    errors:
+      empire_not_found: "Empire #%{id} not found."
+      aid_cooldown: "You are only allowed to send aid to the same person once every 4 hours."
+      cannot_send_negative: "Cannot send negative %{resource}."
+      not_enough_resource: "You can only send %{amount} %{resource}."
+      cannot_send_zero: "Cannot send 0 goods."
+      send_limit: "You can send only %{remaining} more goods this month."
+      cannot_cancel: "This aid cannot be cancelled anymore."
   trades:
     messages:
       local_buy: "Purchase completed"
@@ -524,6 +592,151 @@ en:
       global_change_prices: "Prices updated"
       global_withdraw: "Withdrawn from market"
       auto_trade: "Auto trade settings updated"
+      resource_sold: "%{quantity} %{resource} sold for %{gold} gold."
+      total_earned: "You made a total of %{gold} gold."
+      resource_bought: "%{quantity} %{resource} bought for %{gold} gold."
+      total_spent: "You spent a total of %{gold} gold."
+      goods_sent_to_market: "Goods have been sent to the public market. They will reach the market in 3 months."
+      total_transport_value: "Total value of the transport is %{value}."
+      global_resource_bought: "%{quantity} %{resource} bought for %{cost}. The caravans with %{resource} will reach your empire in 3 months."
+      price_changed: "Changed price for %{resource} to %{price}"
+      withdrawn_success: "Resources successfully withdrawn from the market."
+    errors:
+      cannot_sell_negative: "Cannot sell negative amounts."
+      cannot_buy_negative: "Cannot buy negative amounts."
+      cannot_sell_or_buy_negative: "Cannot sell or buy negative numbers."
+      trade_limit_turn: "You can only trade %{remaining} more goods this turn."
+      trade_limit_month: "You can only trade %{remaining} more goods this month."
+      trade_limit_month_up_to: "You can only trade up to %{max} goods each month."
+      not_enough_wood_sell: "You do not have that much wood to sell."
+      not_enough_food_sell: "You do not have that much food to sell."
+      not_enough_iron_sell: "You do not have that much iron to sell."
+      not_enough_tools_sell: "You do not have that many tools to sell."
+      not_enough_gold_buy: "You do not have enough gold to buy those goods (you need %{needed} gold)"
+      cannot_sell_negative_resource: "Cannot sell negative %{resource}."
+      not_enough_resource: "You don't have that many %{resource}. You only have %{amount}."
+      min_price: "The minimum sell price for %{resource} is %{price} gold."
+      max_price_sell: "The maximum sell price for %{resource} is %{price} gold."
+      cannot_sell_zero: "Cannot sell 0 goods."
+      sell_limit: "You can sell only %{remaining} more goods this month."
+      not_enough_resource_available: "You tried to buy %{quantity} %{resource}, but there are only %{available} available."
+      not_enough_gold_global_buy: "You do not have enough gold to buy %{quantity} %{resource}. You need %{cost} gold."
+      price_too_low: "Cannot change price for %{resource} to %{price}. Minimum sell price is %{min}."
+      price_too_high: "Cannot change price for %{resource} to %{price}. Maximum sell price is %{max}."
   user_games:
     messages:
       updated: "Settings updated"
+    end_turn:
+      trade:
+        transport_arrived: "A transport with %{resources} arrived from public market."
+      builders:
+        not_enough_people: "Not enough people to work as builders."
+        not_enough_tools: "You do not have enough tools for all of your builders"
+      hunters:
+        not_enough_people: "Not enough people to work at hunters."
+        produced: "Hunters produced %{amount} food"
+      farms:
+        not_enough_people: "Not enough people to work on farms."
+        produced: "Farms produced %{amount} food"
+        winter: "Farms are not producing during winter months."
+      wood_cutters:
+        not_enough_people: "Not enough people to work at woodcutters."
+        produced: "Woodcutters produced %{amount} wood"
+      winter:
+        wood_used: "%{amount} wood was used for heat"
+        people_froze: "%{amount} people froze to death due to the lack of wood for heat"
+      gold_mines:
+        not_enough_people: "Not enough people to work at gold mines."
+        produced: "Gold mines produced %{amount} gold"
+      iron_mines:
+        not_enough_people: "Not enough people to work at iron mines."
+        produced: "Iron mines produced %{amount} iron"
+      tool_makers:
+        not_enough_people: "Not enough people to work at tool makers."
+        not_enough_wood: "Not enough wood to work at tool makers."
+        not_enough_iron: "Not enough iron to work at tool makers."
+        produced: "Tool makers produced %{amount} tools"
+      weaponsmiths:
+        not_enough_people_swords: "Not enough people to produce swords."
+        not_enough_iron_swords: "Not enough iron to produce all swords."
+        not_enough_people_bows: "Not enough people to produce bows."
+        not_enough_wood_bows: "Not enough wood to produce all bows."
+        not_enough_people_maces: "Not enough people to produce maces."
+        not_enough_wood_maces: "Not enough wood to produce all maces."
+        not_enough_iron_maces: "Not enough iron to produce all maces."
+        produced_swords: "Produced %{amount} swords"
+        produced_bows: "Produced %{amount} bows"
+        produced_maces: "Produced %{amount} maces"
+      stables:
+        not_enough_people: "Not enough people to work at stables."
+        produced: "Stables produced %{amount} horses"
+      wineries:
+        not_enough_people: "Not enough people to work at wineries."
+        not_enough_gold: "Not enough gold to work at wineries."
+        produced: "Wineries produced %{amount} wine"
+      mage_towers:
+        not_enough_people: "Not enough people to work at mage towers."
+        not_enough_gold: "Not enough gold to do all research."
+      research:
+        military_losses_max: "You can only have up to 50 research levels for military loss"
+        army_upkeep_max: "You can only have up to 50 research levels for army upkeep cost"
+        army_training_max: "You can only have up to 50 research levels for army training cost"
+        finished: "Finished research of %{name}"
+      wall:
+        deteriorated: "%{amount} units of wall deteriorated"
+        not_enough_gold: "Not enough gold for construction of the great wall."
+        not_enough_wood: "Not enough wood for construction of the great wall."
+        not_enough_iron: "Not enough iron for construction of the great wall."
+        not_enough_wine: "Not enough wine for construction of the great wall."
+        constructed: "Constructed %{amount} units of wall."
+      population:
+        food_eaten: "Your people ate %{amount} food"
+        starvation: "%{amount} people died due to lack of food"
+        growth: "Your population increased by %{amount}"
+        decline: "Due to poor food rationing your population decreased by %{amount} people"
+        housing_limit: "Lack of housing prevents further growth of population."
+        emigration: "Due to lack of housing %{amount} people emigrated from your empire"
+      soldiers_food:
+        eaten: "Your soldiers ate %{amount} food"
+        died: "Some soldiers died due to the lack of food"
+      buildings:
+        no_free_land: "You do not have any free %{land} land to build %{name}"
+        not_enough_land: "Not enough land (%{amount} %{land}) to process construction of %{name}"
+        finished_build: "Finished construction of %{amount} %{name}s"
+        finished_demolish: "Demolished %{amount} %{name}s"
+      training:
+        disbanded_no_forts: "%{amount} training army units were disbanded because of lack of forts"
+        not_enough_forts: "Not enough forts to finish training army"
+        finished_unique_unit: "%{amount} %{name} have finished their training and are ready to serve you"
+        finished_swordsmen: "%{amount} swordsmen have finished their training and are ready to serve you"
+        finished_archers: "%{amount} archers have finished their training and are ready to serve you"
+        finished_horsemen: "%{amount} horsemen have finished their training and are ready to serve you"
+        finished_macemen: "%{amount} macemen have finished their training and are ready to serve you"
+        finished_catapults: "%{amount} catapults have finished their training and are ready to serve you"
+        finished_trained_peasants: "%{amount} trained peasants have finished their training and are ready to serve you"
+        finished_thieves: "%{amount} thieves have finished their training and are ready to serve you"
+      tools:
+        wore_out: "%{amount} tools wore out"
+      explorers:
+        discovered: "Your explorers have discovered %{mountain} mountain land, %{forest} forest land and %{plain} plain land"
+        nothing_found: "Your explorers did not discover any land this turn"
+        mission_ended: "Your explorers ended their mission discovering total %{mountain} mountain land, %{forest} forest land and %{plain} plain land"
+      auto_trade:
+        sold: "Sold %{amount} %{resource} for %{gold}"
+        bought: "Bought %{amount} %{resource} for %{gold}"
+      army:
+        returned: "Your army has returned to the empire"
+      maintenance:
+        overcapacity_desertion: "Due to the lack of place to live some of your soldiers run away (%{unique_unit} %{unique_unit_name}, %{swordsman} %{swordsman_name}, %{archers} %{archer_name}, %{horseman} %{horseman_name}, %{macemen} %{macemen_name}, %{trained_peasants} %{trained_peasant_name}, %{catapults} %{catapult_name} and %{thieves} %{thieve_name})"
+        unpaid_desertion: "Because you did not have enough gold to pay your soldiers some of them run away (%{unique_unit} %{unique_unit_name}, %{swordsman} %{swordsman_name}, %{archers} %{archer_name}, %{horseman} %{horseman_name}, %{macemen} %{macemen_name}, %{trained_peasants} %{trained_peasant_name} and %{thieves} %{thieve_name})"
+        paid: "Your soldiers have been paid %{amount} gold"
+        unique_unit_no_space: "You do not have enough town centers for your %{name}s. %{amount} %{name}s run away"
+        thieves_no_space: "You do not have enough town centers for your thieves. %{amount} thieves run away"
+        catapults_no_space: "You do not have enough town centers for your catapults. %{amount} catapults run away"
+        catapults_no_wood: "You did not have enough wood to upkeep your catapults. %{amount} of them were destroyed"
+        catapults_no_iron: "You did not have enough iron to upkeep your catapults. %{amount} of them were destroyed"
+        catapult_upkeep: "%{wood} wood and %{iron} iron was used to upkeep catapults"
+      storage:
+        overflow: "Due to lack of storage space, you lost %{wood} wood, %{food} food, %{iron} iron, %{tools} tools, %{wine} wine and %{horses} horses"
+      aids:
+        sent: "Aid for player %{email} sent"

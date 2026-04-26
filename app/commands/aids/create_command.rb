@@ -40,7 +40,7 @@ module Aids
       @to_user_game = UserGame.find_by(id: to_user_game_id)
 
       if to_user_game.nil?
-        @errors << "Empire ##{to_user_game_id} not found."
+        @errors << I18n.t('aids.errors.empire_not_found', id: to_user_game_id)
         return
       end
 
@@ -50,7 +50,7 @@ module Aids
                                .exists?(['transfer_queues.created_at >= ?', AID_COOLDOWN_TIME.ago])
 
       if recent_aid
-        @errors << 'You are only allowed to send aid to the same person once every 4 hours.'
+        @errors << I18n.t('aids.errors.aid_cooldown')
         return
       end
 
@@ -61,9 +61,9 @@ module Aids
         current_amount = user_game.send(resource)
 
         if send_amount.negative?
-          @errors << "Cannot send negative #{resource}."
+          @errors << I18n.t('aids.errors.cannot_send_negative', resource: resource)
         elsif send_amount > current_amount
-          @errors << "You can only send #{number_with_delimiter(current_amount)} #{resource}."
+          @errors << I18n.t('aids.errors.not_enough_resource', amount: number_with_delimiter(current_amount), resource: resource)
         end
 
         total_send += send_amount
@@ -75,9 +75,9 @@ module Aids
       trades_remaining = max_trades - user_game.trades_this_turn
 
       if total_send.zero?
-        @errors << 'Cannot send 0 goods.'
+        @errors << I18n.t('aids.errors.cannot_send_zero')
       elsif total_send > trades_remaining
-        @errors << "You can send only #{number_with_delimiter(trades_remaining)} more goods this month."
+        @errors << I18n.t('aids.errors.send_limit', remaining: number_with_delimiter(trades_remaining))
       end
     end
 
@@ -117,9 +117,9 @@ module Aids
 
       TransferQueue.create!(params_for_transfer_queue)
 
-      @messages << "Transport to #{to_user_game.user.email} has been dispatched."
-      @messages << '5% fee has been assessed by merchants.'
-      @messages << 'Caravans will reach their destination in 3 turns.'
+      @messages << I18n.t('aids.messages.dispatched', email: to_user_game.user.email)
+      @messages << I18n.t('aids.messages.fee_assessed')
+      @messages << I18n.t('aids.messages.caravans_arriving')
     end
   end
 end

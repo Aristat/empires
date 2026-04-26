@@ -33,26 +33,26 @@ module ExploreQueues
 
       # Basic validations
       if user_game.people <= quantity
-        @errors << "You don't have that many people."
+        @errors << I18n.t('explore_queues.errors.not_enough_people')
       end
 
       # Horse validations
       required_horses = calculate_horses(quantity, horse_setting)
       if required_horses > 0 && user_game.horses < required_horses
-        @errors << "You do not have enough horses to send with your explorers (You need #{required_horses})."
+        @errors << I18n.t('explore_queues.errors.not_enough_horses', required: required_horses)
       end
 
       # Food validation
       food_needed = calculate_food_needed(quantity)
       if user_game.food < food_needed
-        @errors << "You don't have that much food."
+        @errors << I18n.t('explore_queues.errors.not_enough_food')
       end
 
       # Maximum explorers validation
       total_explorers = user_game.explore_queues.where('turn > 0').sum(:people) + quantity
       max_explorers = user_game.town_center * buildings[:town_center][:settings][:max_explorers]
       if total_explorers > max_explorers
-        @errors << "You can only have a total of #{max_explorers} explorers at a time."
+        @errors << I18n.t('explore_queues.errors.max_explorers', max: max_explorers)
       end
     end
 

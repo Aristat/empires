@@ -92,32 +92,32 @@ module AttackQueues
     def find_to_user_game
       @to_user_game = user_game.game.user_games.find_by(id: params[:to_user_game_id])
 
-      @errors << 'Target empire does not exist' unless to_user_game
+      @errors << I18n.t('attacks.errors.target_not_found') unless to_user_game
     end
 
     def validate_attack
       if to_user_game.protection_turns > 0
-        @errors << "#{to_user_game.user.email} is under protection for #{to_user_game.protection_turns} more turns and cannot be attacked."
+        @errors << I18n.t('attacks.errors.target_under_protection', email: to_user_game.user.email, turns: to_user_game.protection_turns)
       elsif to_user_game.id == user_game.id
-        @errors << 'You cannot attack yourself'
+        @errors << I18n.t('attacks.errors.cannot_attack_self')
       elsif user_game.food < food_cost
-        @errors << "You do not have enough food to send your soldiers. You need #{food_cost} to send that much army."
+        @errors << I18n.t('attacks.errors.not_enough_food_army', needed: food_cost)
       elsif attack_type.blank? || !attack_type.in?(%w[army_conquer army_raid army_rob army_slaughter])
-        @errors << 'Invalid attack type'
+        @errors << I18n.t('attacks.errors.invalid_attack_type')
       elsif soldiers_to_attack.any? { |_, count| count < 0 }
-        @errors << 'Cannot send negative soldiers'
+        @errors << I18n.t('attacks.errors.cannot_send_negative_soldiers')
       elsif total_army <= 0
-        @errors << 'Cannot send 0 total army'
+        @errors << I18n.t('attacks.errors.cannot_send_zero_army')
       elsif wine_cost < 0
-        @errors << 'Cannot send negative wine'
+        @errors << I18n.t('attacks.errors.cannot_send_negative_wine')
       elsif wine_cost > total_army
-        @errors << 'You can only send 1 wine per soldier'
+        @errors << I18n.t('attacks.errors.wine_per_soldier')
       elsif wine_cost > user_game.wine
-        @errors << 'You do not have that much wine'
+        @errors << I18n.t('attacks.errors.not_enough_wine')
       elsif user_game.attack_queues.exists?(attack_type: %w[army_conquer army_raid army_rob army_slaughter])
-        @errors << 'Your armies are already attacking someone. Please wait for them to come back.'
+        @errors << I18n.t('attacks.errors.army_busy')
       elsif user_game.gold < gold_cost
-        @errors << "You do not have enough gold to pay your soldiers to fight (You need #{gold_cost} gold)"
+        @errors << I18n.t('attacks.errors.not_enough_gold_army', needed: gold_cost)
       end
     end
 
@@ -138,10 +138,10 @@ module AttackQueues
 
       attack_queue.save!
 
-      message = "Your army is preparing to attack #{to_user_game.user.email} (#{to_user_game.id}). They will reach their destination in 3 months. Your soldiers have been paid #{gold_cost} and given #{food_cost} food for this expedition."
+      message = I18n.t('attacks.messages.army_preparing', email: to_user_game.user.email, id: to_user_game.id, gold: gold_cost, food: food_cost)
       if wine_cost > 0
         percent_wine = ((wine_cost.to_f / total_army) * 100.0).round
-        message += " #{wine_cost} units of wine will boost army strength by #{percent_wine}"
+        message += " #{I18n.t('attacks.messages.army_wine_boost', wine: wine_cost, percent: percent_wine)}"
       end
 
       messages << message

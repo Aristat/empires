@@ -39,11 +39,9 @@ module Trades
         max_price = game_data["global_#{resource}_max_price"]
 
         if new_price.positive? && new_price < min_price
-          @errors << "Cannot change price for #{resource} to #{number_with_delimiter(new_price)}. " \
-            "Minimum sell price is #{number_with_delimiter(min_price)}."
+          @errors << I18n.t('trades.errors.price_too_low', resource: resource, price: number_with_delimiter(new_price), min: number_with_delimiter(min_price))
         elsif new_price.positive? && new_price > max_price
-          @errors << "Cannot change price for #{resource} to #{number_with_delimiter(new_price)}. " \
-            "Maximum sell price is #{number_with_delimiter(max_price)}."
+          @errors << I18n.t('trades.errors.price_too_high', resource: resource, price: number_with_delimiter(new_price), max: number_with_delimiter(max_price))
         end
       end
     end
@@ -58,7 +56,7 @@ module Trades
 
         if new_price != current_price
           price_changes["#{resource}_price"] = new_price
-          @messages << "Changed price for #{resource} to #{number_with_delimiter(new_price)}"
+          @messages << I18n.t('trades.messages.price_changed', resource: resource, price: number_with_delimiter(new_price))
         end
       end
 

@@ -58,30 +58,30 @@ module AttackQueues
     def find_to_user_game
       @to_user_game = user_game.game.user_games.find_by(id: params[:to_user_game_id])
 
-      @errors << 'Target empire does not exist' unless to_user_game
+      @errors << I18n.t('attacks.errors.target_not_found') unless to_user_game
     end
 
     def validate_attack
       if to_user_game.protection_turns > 0
-        @errors << "#{to_user_game.user.email} is under protection for #{to_user_game.protection_turns} more turns and cannot be attacked."
+        @errors << I18n.t('attacks.errors.target_under_protection', email: to_user_game.user.email, turns: to_user_game.protection_turns)
       elsif to_user_game.id == user_game.id
-        @errors << 'You cannot attack yourself'
+        @errors << I18n.t('attacks.errors.cannot_attack_self')
       elsif user_game.gold < gold_cost
-        @errors << "You do not have enough gold to pay your thieves for the attack. You need #{gold_cost} gold"
+        @errors << I18n.t('attacks.errors.not_enough_gold_thieves', needed: gold_cost)
       elsif user_game.food < food_cost
-        @errors << "You do not have enough food to send with your thieves for the attack. You need #{food_cost} food"
+        @errors << I18n.t('attacks.errors.not_enough_food_thieves', needed: food_cost)
       elsif attack_type.blank? || !attack_type.in?(%w[thief_steal_army_information thief_steal_building_information thief_steal_research_information thief_steal_goods thief_poison_water thief_set_fire])
-        @errors << 'Invalid attack type'
+        @errors << I18n.t('attacks.errors.invalid_attack_type')
       elsif send_thieves <= 0
-        @errors << 'Cannot send 0 total thieves'
+        @errors << I18n.t('attacks.errors.cannot_send_zero_thieves')
       elsif user_game.attack_queues.exists?(
         attack_type: %w[thief_steal_army_information thief_steal_building_information thief_steal_research_information thief_steal_goods thief_poison_water thief_set_fire]
       )
-        @errors << 'Your armies are already attacking someone. Please wait for them to come back.'
+        @errors << I18n.t('attacks.errors.army_busy')
       elsif user_game.score > to_user_game.score * 2
-        @errors << 'Cannot attack empires that are half as small as you'
+        @errors << I18n.t('attacks.errors.target_too_small')
       elsif user_game.score * 2 < to_user_game.score
-        @errors << 'Cannot attack empires that are twice as big as you'
+        @errors << I18n.t('attacks.errors.target_too_big')
       end
     end
 
@@ -98,9 +98,9 @@ module AttackQueues
 
       attack_queue.save!
 
-      messages << "Your thieves are preparing to attack #{to_user_game.user.email} (#{to_user_game.id})."
-      messages << 'They will reach their destination in 3 months.'
-      messages << "Your thieves have been paid #{gold_cost} gold and #{food_cost} food for this expedition."
+      messages << I18n.t('attacks.messages.thieves_preparing', email: to_user_game.user.email, id: to_user_game.id)
+      messages << I18n.t('attacks.messages.reaching_destination')
+      messages << I18n.t('attacks.messages.thieves_paid', gold: gold_cost, food: food_cost)
     end
 
     def update_user_game_resources

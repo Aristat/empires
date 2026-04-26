@@ -52,26 +52,26 @@ module AttackQueues
     def find_to_user_game
       @to_user_game = user_game.game.user_games.find_by(id: params[:to_user_game_id])
 
-      @errors << 'Target empire does not exist' unless to_user_game
+      @errors << I18n.t('attacks.errors.target_not_found') unless to_user_game
     end
 
     def validate_attack
       if to_user_game.protection_turns > 0
-        @errors << "#{to_user_game.user.email} is under protection for #{to_user_game.protection_turns} more turns and cannot be attacked."
+        @errors << I18n.t('attacks.errors.target_under_protection', email: to_user_game.user.email, turns: to_user_game.protection_turns)
       elsif to_user_game.id == user_game.id
-        @errors << 'You cannot attack yourself'
+        @errors << I18n.t('attacks.errors.cannot_attack_self')
       elsif user_game.wood < wood_cost
-        @errors << "You do not have enough wood to send your catapults. You need #{wood_cost} to send that much army."
+        @errors << I18n.t('attacks.errors.not_enough_wood_catapult', needed: wood_cost)
       elsif user_game.iron < iron_cost
-        @errors << "You do not have enough iron to send your catapults. You need #{iron_cost} to send that much army."
+        @errors << I18n.t('attacks.errors.not_enough_iron_catapult', needed: iron_cost)
       elsif attack_type.blank? || !attack_type.in?(%w[catapult_army_and_towers catapult_population catapult_buildings])
-        @errors << 'Invalid attack type'
+        @errors << I18n.t('attacks.errors.invalid_attack_type')
       elsif send_catapults <= 0
-        @errors << 'Cannot send 0 total catapults'
+        @errors << I18n.t('attacks.errors.cannot_send_zero_catapults')
       elsif user_game.attack_queues.exists?(
         attack_type: %w[catapult_army_and_towers catapult_population catapult_buildings]
       )
-        @errors << 'Your armies are already attacking someone. Please wait for them to come back.'
+        @errors << I18n.t('attacks.errors.army_busy')
       end
     end
 
@@ -88,9 +88,9 @@ module AttackQueues
 
       attack_queue.save!
 
-      messages << "Your catapults are preparing to attack #{to_user_game.user.email} (#{to_user_game.id})."
-      messages << 'They will reach their destination in 3 months.'
-      messages << "#{wood_cost} wood and #{iron_cost} iron has been sent for upkeep."
+      messages << I18n.t('attacks.messages.catapults_preparing', email: to_user_game.user.email, id: to_user_game.id)
+      messages << I18n.t('attacks.messages.reaching_destination')
+      messages << I18n.t('attacks.messages.catapult_resources', wood: wood_cost, iron: iron_cost)
     end
 
     def update_user_game_resources

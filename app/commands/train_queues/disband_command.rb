@@ -25,7 +25,7 @@ module TrainQueues
         next unless user_game.respond_to?("#{soldier_key}_soldiers")
 
         if user_game.send("#{soldier_key}_soldiers") < quantity
-          @errors << "Not enough #{soldier[:name]} soldiers to disband."
+          @errors << I18n.t('train_queues.errors.not_enough_soldiers_to_disband', name: soldier[:name])
           next
         end
 

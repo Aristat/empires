@@ -32,7 +32,7 @@ module Trades
         user_game.update!(update_params) if update_params.present?
         transfer_queue.destroy!
 
-        @messages << 'Resources successfully withdrawn from the market.'
+        @messages << I18n.t('trades.messages.withdrawn_success')
       end
     rescue StandardError => e
       @errors << e.message

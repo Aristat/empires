@@ -193,10 +193,7 @@ module UserGames
           next
         end
 
-        message = +'A transport with '
-        message += resources.join(', ')
-        message += ' arrived from public market.'
-        add_message(message, 'warning')
+        add_message(I18n.t('user_games.end_turn.trade.transport_arrived', resources: resources.join(', ')), 'warning')
 
         @r_wood += entry.wood.to_i
         @r_food += entry.food.to_i
@@ -219,17 +216,18 @@ module UserGames
 
       if num_builders > @user_game.people
         num_builders = (@user_game.people / 2).round
-        add_message('Not enough people to work as builders.', 'warning')
+        add_message(I18n.t('user_games.end_turn.builders.not_enough_people'), 'warning')
       end
 
       # Limit builders to available tools
       if num_builders > @user_game.tools
-        add_message('You do not have enough tools for all of your builders', 'danger')
+        add_message(I18n.t('user_games.end_turn.builders.not_enough_tools'), 'danger')
         num_builders = @user_game.tools
       end
 
       @num_builders = num_builders
     end
+
 
     def hunters_production
       return if @user_game.hunter <= 0 || @user_game.hunter_status_buildings_statuses <= 0
@@ -241,14 +239,14 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / hunter_building[:workers]).to_i
-        add_message('Not enough people to work at hunters.', 'warning')
+        add_message(I18n.t('user_games.end_turn.hunters.not_enough_people'), 'warning')
       end
 
       @r_people -= can_produce * hunter_building[:workers]
       get_food = can_produce * hunter_building[:production]
       get_food = get_food + (get_food * (@user_game.food_production_researches / 100.0)).round
       @p_food += get_food
-      add_message("Hunters produced #{get_food} food", 'success')
+      add_message(I18n.t('user_games.end_turn.hunters.produced', amount: get_food), 'success')
     end
 
     def farms_production
@@ -262,16 +260,16 @@ module UserGames
 
         if @r_people < people_need
           can_produce = (@r_people / farm_building[:workers]).to_i
-          add_message('Not enough people to work on farms.', 'warning')
+          add_message(I18n.t('user_games.end_turn.farms.not_enough_people'), 'warning')
         end
 
         @r_people -= can_produce * farm_building[:workers]
         get_food = can_produce * farm_building[:production]
         get_food = get_food + (get_food * (@user_game.food_production_researches / 100.0)).round
         @p_food += get_food
-        add_message("Farms produced #{get_food} food", 'success')
+        add_message(I18n.t('user_games.end_turn.farms.produced', amount: get_food), 'success')
       else
-        add_message('Farms are not producing during winter months.', 'info')
+        add_message(I18n.t('user_games.end_turn.farms.winter'), 'info')
       end
     end
 
@@ -285,7 +283,7 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / wood_cutter_building[:workers]).to_i
-        add_message('Not enough people to work at woodcutters.', 'warning')
+        add_message(I18n.t('user_games.end_turn.wood_cutters.not_enough_people'), 'warning')
       end
 
       @r_people -= can_produce * wood_cutter_building[:workers]
@@ -293,7 +291,7 @@ module UserGames
       get_wood = get_wood + (get_wood * (@user_game.wood_production_researches / 100.0)).round
       @p_wood = get_wood
       @r_wood += @p_wood
-      add_message("Woodcutters produced #{get_wood} wood", 'success')
+      add_message(I18n.t('user_games.end_turn.wood_cutters.produced', amount: get_wood), 'success')
     end
 
     def winter_time
@@ -302,7 +300,7 @@ module UserGames
       if WINTER_MONTHS.include?(@month)
         @r_wood = @r_wood - burn_wood
         @c_wood = @c_wood + burn_wood
-        add_message("#{burn_wood} wood was used for heat", 'info')
+        add_message(I18n.t('user_games.end_turn.winter.wood_used', amount: burn_wood), 'info')
 
         if @r_wood < 0
           # Each missing wood unit means people_burn_one_wood people had no heat;
@@ -313,7 +311,7 @@ module UserGames
           people_freeze = rand((people_with_no_heat / 2)..people_with_no_heat)
           @user_game.people -= people_freeze
 
-          add_message("#{people_freeze} people froze to death due to the lack of wood for heat", 'danger')
+          add_message(I18n.t('user_games.end_turn.winter.people_froze', amount: people_freeze), 'danger')
           @r_wood = 0
         end
       end
@@ -329,7 +327,7 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / gold_mine_building[:workers]).to_i
-        add_message('Not enough people to work at gold mines.', 'warning')
+        add_message(I18n.t('user_games.end_turn.gold_mines.not_enough_people'), 'warning')
       end
 
       @r_people -= can_produce * gold_mine_building[:workers]
@@ -337,7 +335,7 @@ module UserGames
       get_gold = get_gold + (get_gold * (@user_game.mine_production_researches / 100.0)).round
       @p_gold = get_gold
       @r_gold += @p_gold
-      add_message("Gold mines produced #{get_gold} gold", 'success')
+      add_message(I18n.t('user_games.end_turn.gold_mines.produced', amount: get_gold), 'success')
     end
 
     def iron_production
@@ -350,7 +348,7 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / iron_mine_building[:workers]).to_i
-        add_message('Not enough people to work at iron mines.', 'warning')
+        add_message(I18n.t('user_games.end_turn.iron_mines.not_enough_people'), 'warning')
       end
 
       @r_people -= can_produce * iron_mine_building[:workers]
@@ -358,7 +356,7 @@ module UserGames
       get_iron = get_iron + (get_iron * (@user_game.mine_production_researches / 100.0)).round
       @p_iron = get_iron
       @r_iron += @p_iron
-      add_message("Iron mines produced #{get_iron} iron", 'success')
+      add_message(I18n.t('user_games.end_turn.iron_mines.produced', amount: get_iron), 'success')
     end
 
     def tools_production
@@ -371,19 +369,19 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / tool_maker_building[:workers]).to_i
-        add_message('Not enough people to work at tool makers.', 'warning')
+        add_message(I18n.t('user_games.end_turn.tool_makers.not_enough_people'), 'warning')
       end
 
       wood_need = can_produce * tool_maker_building[:tool_wood_need]
       if @r_wood < wood_need
         can_produce = (@r_wood / tool_maker_building[:tool_wood_need]).to_i
-        add_message('Not enough wood to work at tool makers.', 'warning')
+        add_message(I18n.t('user_games.end_turn.tool_makers.not_enough_wood'), 'warning')
       end
 
       iron_need = can_produce * tool_maker_building[:tool_iron_need]
       if @r_iron < iron_need
         can_produce = (@r_iron / tool_maker_building[:tool_iron_need]).to_i
-        add_message('Not enough iron to work at tool makers.', 'warning')
+        add_message(I18n.t('user_games.end_turn.tool_makers.not_enough_iron'), 'warning')
       end
 
       if can_produce <= 0
@@ -402,7 +400,7 @@ module UserGames
       get_tools = get_tools + (get_tools * (@user_game.weapons_tools_production_researches / 100.0)).round
       @p_tools = get_tools
       @r_tools += @p_tools
-      add_message("Tool makers produced #{@p_tools} tools", 'success')
+      add_message(I18n.t('user_games.end_turn.tool_makers.produced', amount: @p_tools), 'success')
     end
 
     def weapons_production
@@ -435,13 +433,13 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / weaponsmith_building[:workers]).to_i
-        add_message('Not enough people to produce swords.', 'warning')
+        add_message(I18n.t('user_games.end_turn.weaponsmiths.not_enough_people_swords'), 'warning')
       end
 
       iron_need = can_produce * weaponsmith_building[:sword_iron_need]
       if @r_iron < iron_need
         can_produce = (@r_iron / weaponsmith_building[:sword_iron_need]).to_i
-        add_message('Not enough iron to produce all swords.', 'warning')
+        add_message(I18n.t('user_games.end_turn.weaponsmiths.not_enough_iron_swords'), 'warning')
       end
 
       can_produce = 0 if can_produce < 0
@@ -460,13 +458,13 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / weaponsmith_building[:workers]).to_i
-        add_message('Not enough people to produce bows.', 'warning')
+        add_message(I18n.t('user_games.end_turn.weaponsmiths.not_enough_people_bows'), 'warning')
       end
 
       wood_need = can_produce * weaponsmith_building[:bow_wood_need]
       if @r_wood < wood_need
         can_produce = (@r_wood / weaponsmith_building[:bow_wood_need]).to_i
-        add_message('Not enough wood to produce all bows.', 'warning')
+        add_message(I18n.t('user_games.end_turn.weaponsmiths.not_enough_wood_bows'), 'warning')
       end
 
       can_produce = 0 if can_produce < 0
@@ -485,19 +483,19 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / weaponsmith_building[:workers]).to_i
-        add_message('Not enough people to produce maces.', 'warning')
+        add_message(I18n.t('user_games.end_turn.weaponsmiths.not_enough_people_maces'), 'warning')
       end
 
       wood_need = can_produce * weaponsmith_building[:mace_wood_need]
       if @r_wood < wood_need
         can_produce = (@r_wood / weaponsmith_building[:mace_wood_need]).to_i
-        add_message('Not enough wood to produce all maces.', 'warning')
+        add_message(I18n.t('user_games.end_turn.weaponsmiths.not_enough_wood_maces'), 'warning')
       end
 
       iron_need = can_produce * weaponsmith_building[:mace_iron_need]
       if @r_iron < iron_need
         can_produce = (@r_iron / weaponsmith_building[:mace_iron_need]).to_i
-        add_message('Not enough iron to produce all maces.', 'warning')
+        add_message(I18n.t('user_games.end_turn.weaponsmiths.not_enough_iron_maces'), 'warning')
       end
 
       can_produce = 0 if can_produce < 0
@@ -513,9 +511,9 @@ module UserGames
       @r_maces += p_maces
 
       # Add production messages
-      add_message("Produced #{p_swords} swords", 'success') if p_swords > 0
-      add_message("Produced #{p_bows} bows", 'success') if p_bows > 0
-      add_message("Produced #{p_maces} maces", 'success') if p_maces > 0
+      add_message(I18n.t('user_games.end_turn.weaponsmiths.produced_swords', amount: p_swords), 'success') if p_swords > 0
+      add_message(I18n.t('user_games.end_turn.weaponsmiths.produced_bows', amount: p_bows), 'success') if p_bows > 0
+      add_message(I18n.t('user_games.end_turn.weaponsmiths.produced_maces', amount: p_maces), 'success') if p_maces > 0
     end
 
     def horses_production
@@ -528,7 +526,7 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / stable_building[:workers]).to_i
-        add_message('Not enough people to work at stables.', 'warning')
+        add_message(I18n.t('user_games.end_turn.stables.not_enough_people'), 'warning')
       end
 
       food_need = can_produce * stable_building[:food_need]
@@ -545,7 +543,7 @@ module UserGames
       get_horses = get_horses + (get_horses * (@user_game.horses_production_researches / 100.0)).round
       @p_horses = get_horses
       @r_horses += @p_horses
-      add_message("Stables produced #{@p_horses} horses", 'success')
+      add_message(I18n.t('user_games.end_turn.stables.produced', amount: @p_horses), 'success')
     end
 
     def wine_production
@@ -558,13 +556,13 @@ module UserGames
 
       if @r_people < people_need
         can_produce = (@r_people / winery_building[:workers]).to_i
-        add_message('Not enough people to work at wineries.', 'warning')
+        add_message(I18n.t('user_games.end_turn.wineries.not_enough_people'), 'warning')
       end
 
       gold_need = can_produce * winery_building[:wine_gold_need]
       if @r_gold < gold_need
         can_produce = (@r_gold / winery_building[:wine_gold_need]).to_i
-        add_message('Not enough gold to work at wineries.', 'warning')
+        add_message(I18n.t('user_games.end_turn.wineries.not_enough_gold'), 'warning')
       end
 
       can_produce = 0 if can_produce < 0
@@ -578,7 +576,7 @@ module UserGames
       get_wine = get_wine + (get_wine * (@user_game.wine_production_researches / 100.0)).round
       @p_wine = get_wine
       @r_wine += @p_wine
-      add_message("Wineries produced #{@p_wine} wine", 'success')
+      add_message(I18n.t('user_games.end_turn.wineries.produced', amount: @p_wine), 'success')
     end
 
     def mage_tower_production
@@ -590,13 +588,13 @@ module UserGames
       people_need = can_produce * mage_tower_building[:workers]
       if @r_people < people_need
         can_produce = (@r_people / mage_tower_building[:workers]).to_i
-        add_message('Not enough people to work at mage towers.', 'red')
+        add_message(I18n.t('user_games.end_turn.mage_towers.not_enough_people'), 'red')
       end
 
       gold_need = can_produce * mage_tower_building[:research_gold_need]
       if @r_gold < gold_need
         can_produce = (@r_gold / mage_tower_building[:research_gold_need]).to_i
-        add_message('Not enough gold to do all research.', 'red')
+        add_message(I18n.t('user_games.end_turn.mage_towers.not_enough_gold'), 'red')
       end
 
       can_produce = 0 if can_produce < 0
@@ -618,17 +616,17 @@ module UserGames
 
       while @user_game.research_points >= need_research_points
         if @user_game.current_research == 'military_losses' && @user_game.military_losses_researches >= 50
-          add_message('You can only have up to 50 research levels for military loss', 'red')
+          add_message(I18n.t('user_games.end_turn.research.military_losses_max'), 'red')
           break
         end
 
         if @user_game.current_research == 'army_upkeep_cost' && @user_game.army_upkeep_cost_researches >= 50
-          add_message('You can only have up to 50 research levels for army upkeep cost', 'red')
+          add_message(I18n.t('user_games.end_turn.research.army_upkeep_max'), 'red')
           break
         end
 
         if @user_game.current_research == 'army_training_cost' && @user_game.army_training_cost_researches >= 50
-          add_message('You can only have up to 50 research levels for army training cost', 'red')
+          add_message(I18n.t('user_games.end_turn.research.army_training_max'), 'red')
           break
         end
 
@@ -675,7 +673,7 @@ module UserGames
         end
 
         research_name = @user_game.current_research.titleize.gsub('_', ' ')
-        add_message("Finished research of #{research_name}", 'warning')
+        add_message(I18n.t('user_games.end_turn.research.finished', name: research_name), 'warning')
         need_research_points = Researches::NextResearchLevelPointsCommand.new(
           total_research_levels: total_research_levels
         ).call
@@ -692,7 +690,7 @@ module UserGames
         decay = (@user_game.wall * (rand(1..100) / WALL_DECAY_RATE)).round
         if decay > 0
           @user_game.wall -= decay
-          add_message("#{decay} units of wall deteriorated", 'danger')
+          add_message(I18n.t('user_games.end_turn.wall.deteriorated', amount: decay), 'danger')
         end
       end
 
@@ -711,25 +709,25 @@ module UserGames
         gold_need = can_produce * @data[:game_data][:wall_use_gold]
         if @r_gold < gold_need
           can_produce = (@r_gold / @data[:game_data][:wall_use_gold]).to_i
-          add_message('Not enough gold for construction of the great wall.', 'danger')
+          add_message(I18n.t('user_games.end_turn.wall.not_enough_gold'), 'danger')
         end
 
         wood_need = can_produce * @data[:game_data][:wall_use_wood]
         if @r_wood < wood_need
           can_produce = (@r_wood / @data[:game_data][:wall_use_wood]).to_i
-          add_message('Not enough wood for construction of the great wall.', 'danger')
+          add_message(I18n.t('user_games.end_turn.wall.not_enough_wood'), 'danger')
         end
 
         iron_need = can_produce * @data[:game_data][:wall_use_iron]
         if @r_iron < iron_need
           can_produce = (@r_iron / @data[:game_data][:wall_use_iron]).to_i
-          add_message('Not enough iron for construction of the great wall.', 'danger')
+          add_message(I18n.t('user_games.end_turn.wall.not_enough_iron'), 'danger')
         end
 
         wine_need = can_produce * @data[:game_data][:wall_use_wine]
         if @r_wine < wine_need
           can_produce = (@r_wine / @data[:game_data][:wall_use_wine]).to_i
-          add_message('Not enough wine for construction of the great wall.', 'danger')
+          add_message(I18n.t('user_games.end_turn.wall.not_enough_wine'), 'danger')
         end
 
         if can_produce > 0
@@ -749,7 +747,7 @@ module UserGames
           # Update wall and builders
           @user_game.wall += can_produce
           @num_builders -= (can_produce * WALL_BUILDERS_CONSUMED_PER_UNIT)
-          add_message("Constructed #{can_produce} units of wall.", 'success')
+          add_message(I18n.t('user_games.end_turn.wall.constructed', amount: can_produce), 'success')
         end
       end
     end
@@ -770,14 +768,14 @@ module UserGames
         food_eaten = (food_eaten * params[:food_mult]).round if params[:food_mult]
       end
 
-      add_message("Your people ate #{food_eaten} food", 'info')
+      add_message(I18n.t('user_games.end_turn.population.food_eaten', amount: food_eaten), 'info')
 
       @c_food += food_eaten
       @r_food -= food_eaten
 
       if @r_food < 0
         people_die = (@user_game.people * STARVATION_DEATH_RATE).round
-        add_message("#{people_die} people died due to lack of food", 'danger')
+        add_message(I18n.t('user_games.end_turn.population.starvation', amount: people_die), 'danger')
 
         @user_game.people -= people_die
 
@@ -796,7 +794,7 @@ module UserGames
       if @growth > 0 && house_space > @user_game.people
         # growth / GROWTH_RATE_DIVISOR gives a fraction of current population that migrates in
         people_come = ((@growth / GROWTH_RATE_DIVISOR) * @user_game.people * @data[:game_data][:pop_increase_modifier]).round
-        add_message("Your population increased by #{people_come}", 'success')
+        add_message(I18n.t('user_games.end_turn.population.growth', amount: people_come), 'success')
         @r_people += people_come
         @user_game.people += people_come
 
@@ -806,17 +804,17 @@ module UserGames
       elsif @growth < 0
         # Negative growth: abs(growth) / GROWTH_RATE_DIVISOR fraction of population leaves
         people_leave = ((@growth.abs / GROWTH_RATE_DIVISOR) * @user_game.people).round
-        add_message("Due to poor food rationing your population decreased by #{people_leave} people", 'warning')
+        add_message(I18n.t('user_games.end_turn.population.decline', amount: people_leave), 'warning')
         @user_game.people -= people_leave
       elsif @growth > 0 && house_space == @user_game.people
-        add_message('Lack of housing prevents further growth of population.', 'warning')
+        add_message(I18n.t('user_games.end_turn.population.housing_limit'), 'warning')
       end
 
       # Check if there's enough housing
       if @user_game.people > house_space
         people_leave = ((@user_game.people - house_space) / 2.0).ceil
         @user_game.people -= people_leave
-        add_message("Due to lack of housing #{people_leave} people emigrated from your empire", 'danger')
+        add_message(I18n.t('user_games.end_turn.population.emigration', amount: people_leave), 'danger')
       end
     end
 
@@ -835,12 +833,12 @@ module UserGames
 
       @c_food += food_eaten
       @r_food -= food_eaten
-      add_message("Your soldiers ate #{number_with_delimiter(food_eaten)} food")
+      add_message(I18n.t('user_games.end_turn.soldiers_food.eaten', amount: number_with_delimiter(food_eaten)))
 
       if @r_food < 0
         # ARMY_STARVATION_SURVIVAL_RATE fraction of each unit type survives when food runs out
         survival_rate = ARMY_STARVATION_SURVIVAL_RATE
-        add_message('Some soldiers died due to the lack of food', 'danger')
+        add_message(I18n.t('user_games.end_turn.soldiers_food.died'), 'danger')
 
         @user_game.unique_unit_soldiers = (@user_game.unique_unit_soldiers * survival_rate).round
         @user_game.swordsman_soldiers = (@user_game.swordsman_soldiers * survival_rate).round
@@ -875,7 +873,7 @@ module UserGames
         end
 
         if has_land <= 0 && queue.queue_type == 'build'
-          add_message("You do not have any free #{building[:settings][:land]} land to build #{building[:name]}", 'danger')
+          add_message(I18n.t('user_games.end_turn.buildings.no_free_land', land: building[:settings][:land], name: building[:name]), 'danger')
           next
         end
 
@@ -903,12 +901,12 @@ module UserGames
           time_remaining = qty_remaining * b_need_time
           land_taken = qty_build * building[:settings][:squares]
 
-          add_message("Not enough land (#{qty_remaining * building[:settings][:squares]} #{building[:settings][:land]}) to process construction of #{building[:name]}", 'danger')
+          add_message(I18n.t('user_games.end_turn.buildings.not_enough_land', amount: qty_remaining * building[:settings][:squares], land: building[:settings][:land], name: building[:name]), 'danger')
         end
 
         constructed = false
         if qty_build > 0 && queue.queue_type == 'build' # built some buildings
-          add_message("Finished construction of #{qty_build} #{building[:name]}s", 'success')
+          add_message(I18n.t('user_games.end_turn.buildings.finished_build', amount: qty_build, name: building[:name]), 'success')
           case building[:settings][:land]
           when 'mountain'
             m_used += land_taken
@@ -922,7 +920,7 @@ module UserGames
           has_buildings = had_buildings + qty_build
           constructed = true
         elsif qty_build > 0 && queue.queue_type == 'demolish' # demolished some buildings
-          add_message("Demolished #{qty_build} #{building[:name]}s", 'success')
+          add_message(I18n.t('user_games.end_turn.buildings.finished_demolish', amount: qty_build, name: building[:name]), 'success')
           case building[:settings][:land]
           when 'mountain'
             m_used -= land_taken
@@ -991,14 +989,14 @@ module UserGames
         train_qty = queue.quantity
 
         if queue.turns_remaining < 0
-          add_message("#{number_with_delimiter(train_qty)} training army units were disbanded because of lack of forts", 'danger')
+          add_message(I18n.t('user_games.end_turn.training.disbanded_no_forts', amount: number_with_delimiter(train_qty)), 'danger')
           @user_game.people += train_qty
         else
           if total_army + train_qty > total_soldiers_limit
             done = false
             train_qty = total_soldiers_limit - total_army
             train_qty = 0 if train_qty < 0
-            add_message('Not enough forts to finish training army', 'danger')
+            add_message(I18n.t('user_games.end_turn.training.not_enough_forts'), 'danger')
           end
 
           case queue.soldier_key
@@ -1036,14 +1034,14 @@ module UserGames
         end
       end
 
-      add_message("#{number_with_delimiter(@trained_unique_unit)} #{@data[:soldiers][:unique_unit][:name]} have finished their training and are ready to serve you", 'success') if @trained_unique_unit > 0
-      add_message("#{number_with_delimiter(@trained_swordsman)} swordsmen have finished their training and are ready to serve you", 'success') if @trained_swordsman > 0
-      add_message("#{number_with_delimiter(@trained_archers)} archers have finished their training and are ready to serve you", 'success') if @trained_archers > 0
-      add_message("#{number_with_delimiter(@trained_horseman)} horsemen have finished their training and are ready to serve you", 'success') if @trained_horseman > 0
-      add_message("#{number_with_delimiter(@trained_macemen)} macemen have finished their training and are ready to serve you", 'success') if @trained_macemen > 0
-      add_message("#{number_with_delimiter(@trained_catapults)} catapults have finished their training and are ready to serve you", 'success') if @trained_catapults > 0
-      add_message("#{number_with_delimiter(@trained_trained_peasants)} trained peasants have finished their training and are ready to serve you", 'success') if @trained_trained_peasants > 0
-      add_message("#{number_with_delimiter(@trained_thieves)} thieves have finished their training and are ready to serve you", 'success') if @trained_thieves > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_unique_unit', amount: number_with_delimiter(@trained_unique_unit), name: @data[:soldiers][:unique_unit][:name]), 'success') if @trained_unique_unit > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_swordsmen', amount: number_with_delimiter(@trained_swordsman)), 'success') if @trained_swordsman > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_archers', amount: number_with_delimiter(@trained_archers)), 'success') if @trained_archers > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_horsemen', amount: number_with_delimiter(@trained_horseman)), 'success') if @trained_horseman > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_macemen', amount: number_with_delimiter(@trained_macemen)), 'success') if @trained_macemen > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_catapults', amount: number_with_delimiter(@trained_catapults)), 'success') if @trained_catapults > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_trained_peasants', amount: number_with_delimiter(@trained_trained_peasants)), 'success') if @trained_trained_peasants > 0
+      add_message(I18n.t('user_games.end_turn.training.finished_thieves', amount: number_with_delimiter(@trained_thieves)), 'success') if @trained_thieves > 0
     end
 
     def update_tools_for_builders
@@ -1055,7 +1053,7 @@ module UserGames
 
       return if tools_used <= 0
 
-      add_message("#{number_with_delimiter(tools_used)} tools wore out")
+      add_message(I18n.t('user_games.end_turn.tools.wore_out', amount: number_with_delimiter(tools_used)))
 
       if @r_tools >= tools_used
         # If has enough tools, supply builders with them
@@ -1142,22 +1140,21 @@ module UserGames
         # Add discovery message
         if mountain_land.positive? || forest_land.positive? || plain_land.positive?
           add_message(
-            "Your explorers have discovered #{mountain_land} mountain land, " \
-            "#{forest_land} forest land and #{plain_land} plain land",
+            I18n.t('user_games.end_turn.explorers.discovered', mountain: mountain_land, forest: forest_land, plain: plain_land),
             'success'
           )
         else
-          add_message('Your explorers did not discover any land this turn', 'info')
+          add_message(I18n.t('user_games.end_turn.explorers.nothing_found'), 'info')
         end
 
         # Update queue
         new_turn = queue.turn - 1
         if new_turn.zero?
           add_message(
-            'Your explorers ended their mission discovering total ' \
-            "#{queue.m_land + mountain_land} mountain land, " \
-            "#{queue.f_land + forest_land} forest land and " \
-            "#{queue.p_land + plain_land} plain land",
+            I18n.t('user_games.end_turn.explorers.mission_ended',
+              mountain: queue.m_land + mountain_land,
+              forest: queue.f_land + forest_land,
+              plain: queue.p_land + plain_land),
             'success'
           )
           queue.destroy
@@ -1182,10 +1179,7 @@ module UserGames
         get_gold = wood_price * @user_game.auto_sell_wood_trades
         @r_wood -= @user_game.auto_sell_wood_trades
         @r_gold += get_gold
-        add_message(
-          "Sold #{number_with_delimiter(@user_game.auto_sell_wood_trades)} wood for #{number_with_delimiter(get_gold)}",
-          'success'
-        )
+        add_message(I18n.t('user_games.end_turn.auto_trade.sold', amount: number_with_delimiter(@user_game.auto_sell_wood_trades), resource: 'wood', gold: number_with_delimiter(get_gold)), 'success')
       end
 
       if @user_game.auto_sell_food_trades > 0 && @r_food >= @user_game.auto_sell_food_trades
@@ -1193,10 +1187,7 @@ module UserGames
         get_gold = food_price * @user_game.auto_sell_food_trades
         @r_food -= @user_game.auto_sell_food_trades
         @r_gold += get_gold
-        add_message(
-          "Sold #{number_with_delimiter(@user_game.auto_sell_food)} food for #{number_with_delimiter(get_gold)}",
-          'success'
-        )
+        add_message(I18n.t('user_games.end_turn.auto_trade.sold', amount: number_with_delimiter(@user_game.auto_sell_food), resource: 'food', gold: number_with_delimiter(get_gold)), 'success')
       end
 
       if @user_game.auto_sell_iron_trades > 0 && @r_iron >= @user_game.auto_sell_iron_trades
@@ -1204,10 +1195,7 @@ module UserGames
         get_gold = iron_price * @user_game.auto_sell_iron_trades
         @r_iron -= @user_game.auto_sell_iron_trades
         @r_gold += get_gold
-        add_message(
-          "Sold #{number_with_delimiter(@user_game.auto_sell_iron_trades)} iron for #{number_with_delimiter(get_gold)}",
-          'success'
-        )
+        add_message(I18n.t('user_games.end_turn.auto_trade.sold', amount: number_with_delimiter(@user_game.auto_sell_iron_trades), resource: 'iron', gold: number_with_delimiter(get_gold)), 'success')
       end
 
       if @user_game.auto_sell_tools_trades > 0 && @r_tools >= @user_game.auto_sell_tools_trades
@@ -1215,10 +1203,7 @@ module UserGames
         get_gold = tool_price * @user_game.auto_sell_tools_trades
         @r_tools -= @user_game.auto_sell_tools_trades
         @r_gold += get_gold
-        add_message(
-          "Sold #{number_with_delimiter(@user_game.auto_sell_tools_trades)} tools for #{number_with_delimiter(get_gold)}",
-          'success'
-        )
+        add_message(I18n.t('user_games.end_turn.auto_trade.sold', amount: number_with_delimiter(@user_game.auto_sell_tools_trades), resource: 'tools', gold: number_with_delimiter(get_gold)), 'success')
       end
 
       if @user_game.auto_buy_wood_trades > 0
@@ -1227,10 +1212,7 @@ module UserGames
         if @r_gold >= use_gold
           @r_wood += @user_game.auto_buy_wood_trades
           @r_gold -= use_gold
-          add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_wood_trades)} wood for #{number_with_delimiter(use_gold)}",
-            'success'
-          )
+          add_message(I18n.t('user_games.end_turn.auto_trade.bought', amount: number_with_delimiter(@user_game.auto_buy_wood_trades), resource: 'wood', gold: number_with_delimiter(use_gold)), 'success')
         end
       end
 
@@ -1240,10 +1222,7 @@ module UserGames
         if @r_gold >= use_gold
           @r_food += @user_game.auto_buy_food_trades
           @r_gold -= use_gold
-          add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_food_trades)} food for #{number_with_delimiter(use_gold)}",
-            'success'
-          )
+          add_message(I18n.t('user_games.end_turn.auto_trade.bought', amount: number_with_delimiter(@user_game.auto_buy_food_trades), resource: 'food', gold: number_with_delimiter(use_gold)), 'success')
         end
       end
 
@@ -1253,10 +1232,7 @@ module UserGames
         if @r_gold >= use_gold
           @r_iron += @user_game.auto_buy_iron_trades
           @r_gold -= use_gold
-          add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_iron_trades)} iron for #{number_with_delimiter(use_gold)}",
-            'success'
-          )
+          add_message(I18n.t('user_games.end_turn.auto_trade.bought', amount: number_with_delimiter(@user_game.auto_buy_iron_trades), resource: 'iron', gold: number_with_delimiter(use_gold)), 'success')
         end
       end
 
@@ -1266,10 +1242,7 @@ module UserGames
         if @r_gold >= use_gold
           @r_tools += @user_game.auto_buy_tools_trades
           @r_gold -= use_gold
-          add_message(
-            "Bought #{number_with_delimiter(@user_game.auto_buy_tools_trades)} tools for #{number_with_delimiter(use_gold)}",
-            'success'
-          )
+          add_message(I18n.t('user_games.end_turn.auto_trade.bought', amount: number_with_delimiter(@user_game.auto_buy_tools_trades), resource: 'tools', gold: number_with_delimiter(use_gold)), 'success')
         end
       end
     end
@@ -1334,7 +1307,7 @@ module UserGames
         attack_queue.destroy!
       end
 
-      add_message('Your army has returned to the empire', 'warning')
+      add_message(I18n.t('user_games.end_turn.army.returned'), 'warning')
     end
 
     def update_maintenance_of_soldiers
@@ -1366,11 +1339,15 @@ module UserGames
         @user_game.catapult_soldiers -= run_catapults
 
         add_message(
-          "Due to the lack of place to live some of your soldiers run away (#{run_unique_unit} #{@data[:soldiers][:unique_unit][:name]}, " \
-          "#{run_swordsman} #{@data[:soldiers][:swordsman][:name]}, #{run_archers} #{@data[:soldiers][:archer][:name]}, " \
-          "#{run_horseman} #{@data[:soldiers][:horseman][:name]}, #{run_macemen} #{@data[:soldiers][:macemen][:name]}, " \
-          "#{run_trained_peasants} #{@data[:soldiers][:trained_peasant][:name]}, " \
-          "#{run_catapults} #{@data[:soldiers][:catapult][:name]} and #{run_thieves} #{@data[:soldiers][:thieve][:name]})",
+          I18n.t('user_games.end_turn.maintenance.overcapacity_desertion',
+            unique_unit: run_unique_unit, unique_unit_name: @data[:soldiers][:unique_unit][:name],
+            swordsman: run_swordsman, swordsman_name: @data[:soldiers][:swordsman][:name],
+            archers: run_archers, archer_name: @data[:soldiers][:archer][:name],
+            horseman: run_horseman, horseman_name: @data[:soldiers][:horseman][:name],
+            macemen: run_macemen, macemen_name: @data[:soldiers][:macemen][:name],
+            trained_peasants: run_trained_peasants, trained_peasant_name: @data[:soldiers][:trained_peasant][:name],
+            catapults: run_catapults, catapult_name: @data[:soldiers][:catapult][:name],
+            thieves: run_thieves, thieve_name: @data[:soldiers][:thieve][:name]),
           'error'
         )
       end
@@ -1411,10 +1388,14 @@ module UserGames
         @user_game.thieve_soldiers -= run_thieves
 
         add_message(
-          "Because you did not have enough gold to pay your soldiers some of them run away (#{run_unique_unit} #{@data[:soldiers][:unique_unit][:name]}, " \
-            "#{run_swordsman} #{@data[:soldiers][:swordsman][:name]}, #{run_archers} #{@data[:soldiers][:archer][:name]}, " \
-            "#{run_horseman} #{@data[:soldiers][:horseman][:name]}, #{run_macemen} #{@data[:soldiers][:macemen][:name]}, " \
-            "#{run_trained_peasants} #{@data[:soldiers][:trained_peasant][:name]} and #{run_thieves} #{@data[:soldiers][:thieve][:name]})",
+          I18n.t('user_games.end_turn.maintenance.unpaid_desertion',
+            unique_unit: run_unique_unit, unique_unit_name: @data[:soldiers][:unique_unit][:name],
+            swordsman: run_swordsman, swordsman_name: @data[:soldiers][:swordsman][:name],
+            archers: run_archers, archer_name: @data[:soldiers][:archer][:name],
+            horseman: run_horseman, horseman_name: @data[:soldiers][:horseman][:name],
+            macemen: run_macemen, macemen_name: @data[:soldiers][:macemen][:name],
+            trained_peasants: run_trained_peasants, trained_peasant_name: @data[:soldiers][:trained_peasant][:name],
+            thieves: run_thieves, thieve_name: @data[:soldiers][:thieve][:name]),
           'error'
         )
 
@@ -1424,26 +1405,26 @@ module UserGames
       else
         @r_gold -= pay_gold
         @c_gold += pay_gold
-        add_message("Your soldiers have been paid #{number_with_delimiter(pay_gold)} gold", 'success') unless pay_gold.zero?
+        add_message(I18n.t('user_games.end_turn.maintenance.paid', amount: number_with_delimiter(pay_gold)), 'success') unless pay_gold.zero?
       end
 
       if @user_game.unique_unit_soldiers > @user_game.town_center
         too_much = @user_game.unique_unit_soldiers - @user_game.town_center
         @user_game.unique_unit_soldiers -= too_much
-        add_message("You do not have enough town centers for your #{@data[:soldiers][:unique_unit][:name]}s. #{too_much} #{@data[:soldiers][:unique_unit][:name]}s run away", 'error')
+        add_message(I18n.t('user_games.end_turn.maintenance.unique_unit_no_space', name: @data[:soldiers][:unique_unit][:name], amount: too_much), 'error')
       end
 
       # Check special unit requirements
       if @user_game.thieve_soldiers > @user_game.town_center
         too_much = @user_game.thieve_soldiers - @user_game.town_center
         @user_game.thieve_soldiers -= too_much
-        add_message("You do not have enough town centers for your thieves. #{too_much} thieves run away", 'error')
+        add_message(I18n.t('user_games.end_turn.maintenance.thieves_no_space', amount: too_much), 'error')
       end
 
       if @user_game.catapult_soldiers > @user_game.town_center
         too_much = @user_game.catapult_soldiers - @user_game.town_center
         @user_game.catapult_soldiers -= too_much
-        add_message("You do not have enough town centers for your catapults. #{too_much} catapults run away", 'error')
+        add_message(I18n.t('user_games.end_turn.maintenance.catapults_no_space', amount: too_much), 'error')
       end
 
       need_wood = @user_game.catapult_soldiers * @data[:soldiers][:catapult][:settings][:wood_per_turn]
@@ -1451,7 +1432,7 @@ module UserGames
         # OVERCAPACITY_DESERTION_RATE of the shortfall in upkeep resources destroys catapults
         run_catapults = ((need_wood - @r_wood) * OVERCAPACITY_DESERTION_RATE).round
         run_catapults = @user_game.catapult_soldiers if run_catapults > @user_game.catapult_soldiers
-        add_message("You did not have enough wood to upkeep your catapults. #{run_catapults} of them were destroyed", 'error')
+        add_message(I18n.t('user_games.end_turn.maintenance.catapults_no_wood', amount: run_catapults), 'error')
         @user_game.catapult_soldiers -= run_catapults
       else
         @r_wood -= need_wood
@@ -1461,14 +1442,14 @@ module UserGames
       if @r_iron < need_iron && @user_game.catapult_soldiers > 0
         run_catapults = ((need_iron - @r_iron) * OVERCAPACITY_DESERTION_RATE).round
         run_catapults = @user_game.catapult_soldiers if run_catapults > @user_game.catapult_soldiers
-        add_message("You did not have enough iron to upkeep your catapults. #{run_catapults} of them were destroyed", 'error')
+        add_message(I18n.t('user_games.end_turn.maintenance.catapults_no_iron', amount: run_catapults), 'error')
         @user_game.catapult_soldiers -= run_catapults
       else
         @r_iron -= need_iron
       end
 
       if need_wood > 0 && need_iron > 0
-        add_message("#{need_wood} wood and #{need_iron} iron was used to upkeep catapults", 'success')
+        add_message(I18n.t('user_games.end_turn.maintenance.catapult_upkeep', wood: need_wood, iron: need_iron), 'success')
       end
     end
 
@@ -1511,8 +1492,10 @@ module UserGames
         @user_game.horses -= steal_horses
 
         add_message(
-          "Due to lack of storage space, you lost #{steal_wood} wood, #{steal_food} food, #{steal_iron} iron," \
-            "#{steal_tools} tools, #{steal_wine} wine and #{steal_horses} horses", 'danger'
+          I18n.t('user_games.end_turn.storage.overflow',
+            wood: steal_wood, food: steal_food, iron: steal_iron,
+            tools: steal_tools, wine: steal_wine, horses: steal_horses),
+          'danger'
         )
       end
     end
@@ -1542,7 +1525,7 @@ module UserGames
 
         aid_transfer.destroy!
 
-        add_message("Aid for player #{recipient.user.email} sent", 'warning')
+        add_message(I18n.t('user_games.end_turn.aids.sent', email: recipient.user.email), 'warning')
       end
     end
   end

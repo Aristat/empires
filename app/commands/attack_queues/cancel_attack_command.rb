@@ -20,7 +20,7 @@ module AttackQueues
       elsif attack_queue.attack_status_on_their_way? || attack_queue.attack_status_almost_there?
         set_returning_status
       else
-        @errors << 'This attack cannot be cancelled at this stage'
+        @errors << I18n.t('attacks.errors.cannot_cancel')
       end
     end
 
@@ -28,7 +28,7 @@ module AttackQueues
 
     def validate_cancellation
       unless attack_queue.can_cancel?
-        @errors << 'This attack cannot be cancelled at this stage'
+        @errors << I18n.t('attacks.errors.cannot_cancel')
       end
     end
 
@@ -52,12 +52,12 @@ module AttackQueues
 
       to_user_id = attack_queue.to_user_game_id
       to_user_name = attack_queue.to_user_game&.user&.email || to_user_id
-      messages << "Your army stopped preparing to attack #{to_user_name} (#{to_user_id})."
+      messages << I18n.t('attacks.messages.army_stopped', name: to_user_name, id: to_user_id)
     end
 
     def set_returning_status
       attack_queue.update!(attack_status: :returning)
-      messages << 'Your army is returning to your empire as you requested and should be back soon.'
+      messages << I18n.t('attacks.messages.army_returning')
     end
   end
 end

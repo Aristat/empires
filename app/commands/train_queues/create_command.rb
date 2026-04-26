@@ -57,12 +57,12 @@ module TrainQueues
       new_training = current_training + total_quantity
 
       if new_training > total_soldiers_limit_for_train
-        @errors << "You can only train #{number_with_delimiter(total_soldiers_limit_for_train)} soldiers."
+        @errors << I18n.t('train_queues.errors.train_limit', limit: number_with_delimiter(total_soldiers_limit_for_train))
         return true
       end
 
       if user_game.people < total_quantity
-        @errors << 'You do not have enough people.'
+        @errors << I18n.t('train_queues.errors.not_enough_people')
         return true
       end
 
@@ -115,37 +115,37 @@ module TrainQueues
       end
 
       if user_game.gold < need_gold
-        @errors << 'You do not have enough gold for training.'
+        @errors << I18n.t('train_queues.errors.not_enough_gold')
         return true
       end
 
       if user_game.wood < need_wood
-        @errors << 'You do not have enough wood for training.'
+        @errors << I18n.t('train_queues.errors.not_enough_wood')
         return
       end
 
       if user_game.iron < need_iron
-        @errors << 'You do not have enough iron for training.'
+        @errors << I18n.t('train_queues.errors.not_enough_iron')
         return true
       end
 
       if user_game.bows < need_bows
-        @errors << 'You do not have enough bows for training.'
+        @errors << I18n.t('train_queues.errors.not_enough_bows')
         return
       end
 
       if user_game.swords < need_swords
-        @errors << 'You do not have enough swords for training.'
+        @errors << I18n.t('train_queues.errors.not_enough_swords')
         return
       end
 
       if user_game.maces < need_maces
-        @errors << 'You do not have enough horses for training.'
+        @errors << I18n.t('train_queues.errors.not_enough_maces')
         return
       end
 
       if user_game.horses < need_horses
-        @errors << 'You do not have enough horses for training.'
+        @errors << I18n.t('train_queues.errors.not_enough_horses')
       end
     end
 

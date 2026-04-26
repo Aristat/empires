@@ -33,17 +33,17 @@ module Trades
 
     def validate_trade
       if negative_amounts?
-        @errors << 'Cannot buy negative amounts.'
+        @errors << I18n.t('trades.errors.cannot_buy_negative')
         return
       end
 
       if total_new_trades > trades_remaining
-        @errors << "You can only trade #{number_with_delimiter(trades_remaining)} more goods this month."
+        @errors << I18n.t('trades.errors.trade_limit_month', remaining: number_with_delimiter(trades_remaining))
         return
       end
 
       if need_gold > user_game.gold
-        @errors << "You do not have enough gold to buy those goods (you need #{number_with_delimiter(need_gold)} gold)"
+        @errors << I18n.t('trades.errors.not_enough_gold_buy', needed: number_with_delimiter(need_gold))
       end
     end
 
@@ -62,22 +62,22 @@ module Trades
 
     def add_success_messages
       if buy_wood > 0
-        @messages << ("#{number_with_delimiter(buy_wood)} wood bought for #{number_with_delimiter(buy_wood * wood_price)} gold.")
+        @messages << I18n.t('trades.messages.resource_bought', quantity: number_with_delimiter(buy_wood), resource: 'wood', gold: number_with_delimiter(buy_wood * wood_price))
       end
 
       if buy_food > 0
-        @messages << ("#{number_with_delimiter(buy_food)} food bought for #{number_with_delimiter(buy_food * food_price)} gold.")
+        @messages << I18n.t('trades.messages.resource_bought', quantity: number_with_delimiter(buy_food), resource: 'food', gold: number_with_delimiter(buy_food * food_price))
       end
 
       if buy_iron > 0
-        @messages << ("#{number_with_delimiter(buy_iron)} iron bought for #{number_with_delimiter(buy_iron * iron_price)} gold.")
+        @messages << I18n.t('trades.messages.resource_bought', quantity: number_with_delimiter(buy_iron), resource: 'iron', gold: number_with_delimiter(buy_iron * iron_price))
       end
 
       if buy_tools > 0
-        @messages << ("#{number_with_delimiter(buy_tools)} tools bought for #{number_with_delimiter(buy_tools * tool_price)} gold.")
+        @messages << I18n.t('trades.messages.resource_bought', quantity: number_with_delimiter(buy_tools), resource: 'tools', gold: number_with_delimiter(buy_tools * tool_price))
       end
 
-      @messages << ("You spent a total of #{number_with_delimiter(need_gold)} gold.")
+      @messages << I18n.t('trades.messages.total_spent', gold: number_with_delimiter(need_gold))
     end
 
     def negative_amounts?

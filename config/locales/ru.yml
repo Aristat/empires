@@ -496,14 +496,39 @@ ru:
       destroyed: "Элемент очереди строительства удалён"
       destroyed_all: "Все очереди строительства очищены"
       error_updating: "Ошибка обновления очереди строительства"
+    errors:
+      cannot_demolish_zero: "Нельзя снести 0 зданий."
+      not_enough_buildings: "У вас недостаточно зданий этого типа."
+      invalid_building: "Недопустимый тип здания."
+      invalid_quantity: "Недопустимое количество зданий."
+      not_enough_gold: "У вас недостаточно золота.\nВам нужно %{needed}"
+      not_enough_wood: "У вас недостаточно дерева.\nВам нужно %{needed}"
+      not_enough_iron: "У вас недостаточно железа.\nВам нужно %{needed}"
+      not_enough_land: "У вас недостаточно свободной земли. (нужно %{needed})"
   explore_queues:
     messages:
       destroyed: "Элемент очереди исследования удалён"
+    errors:
+      not_enough_people: "У вас недостаточно людей."
+      not_enough_horses: "У вас недостаточно лошадей для отправки с исследователями (нужно %{required})."
+      not_enough_food: "У вас недостаточно еды."
+      max_explorers: "Вы можете иметь не более %{max} исследователей одновременно."
   train_queues:
     messages:
       created: "Очередь обучения создана"
       destroyed: "Элемент очереди обучения удалён"
       disband: "Войска распущены"
+    errors:
+      train_limit: "Вы можете обучить только %{limit} воинов."
+      not_enough_people: "У вас недостаточно людей."
+      not_enough_gold: "У вас недостаточно золота для обучения."
+      not_enough_wood: "У вас недостаточно дерева для обучения."
+      not_enough_iron: "У вас недостаточно железа для обучения."
+      not_enough_bows: "У вас недостаточно луков для обучения."
+      not_enough_swords: "У вас недостаточно мечей для обучения."
+      not_enough_maces: "У вас недостаточно булав для обучения."
+      not_enough_horses: "У вас недостаточно лошадей для обучения."
+      not_enough_soldiers_to_disband: "Недостаточно воинов %{name} для роспуска."
   transfer_queues:
     messages:
       destroyed: "Элемент очереди передачи удалён"
@@ -511,10 +536,53 @@ ru:
     messages:
       created: "Атака поставлена в очередь"
       cancelled: "Атака отменена"
+      army_preparing: "Ваша армия готовится атаковать %{email} (%{id}). Они достигнут цели через 3 месяца. Ваши солдаты получили %{gold} золота и %{food} еды для этой экспедиции."
+      army_wine_boost: "%{wine} единиц вина усилят армию на %{percent}"
+      catapults_preparing: "Ваши катапульты готовятся атаковать %{email} (%{id})."
+      reaching_destination: "Они достигнут цели через 3 месяца."
+      catapult_resources: "%{wood} дерева и %{iron} железа отправлено на содержание."
+      thieves_preparing: "Ваши воры готовятся атаковать %{email} (%{id})."
+      thieves_paid: "Ваши воры получили %{gold} золота и %{food} еды за эту экспедицию."
+      army_stopped: "Ваша армия прекратила подготовку к атаке на %{name} (%{id})."
+      army_returning: "Ваша армия возвращается в вашу империю по вашему запросу и скоро будет дома."
+    errors:
+      target_not_found: "Целевая империя не существует"
+      target_under_protection: "%{email} находится под защитой ещё %{turns} ходов и не может быть атакован."
+      cannot_attack_self: "Вы не можете атаковать себя"
+      not_enough_food_army: "У вас недостаточно еды для отправки солдат. Вам нужно %{needed}."
+      not_enough_wood_catapult: "У вас недостаточно дерева для отправки катапульт. Вам нужно %{needed}."
+      not_enough_iron_catapult: "У вас недостаточно железа для отправки катапульт. Вам нужно %{needed}."
+      not_enough_gold_thieves: "У вас недостаточно золота для оплаты воров. Вам нужно %{needed} золота"
+      not_enough_food_thieves: "У вас недостаточно еды для отправки воров. Вам нужно %{needed} еды"
+      not_enough_gold_army: "У вас недостаточно золота для оплаты солдат (нужно %{needed} золота)"
+      invalid_attack_type: "Недопустимый тип атаки"
+      cannot_send_negative_soldiers: "Нельзя отправлять отрицательное количество солдат"
+      cannot_send_zero_army: "Нельзя отправить 0 воинов"
+      cannot_send_negative_wine: "Нельзя отправить отрицательное количество вина"
+      wine_per_soldier: "Можно отправить только 1 вино на солдата"
+      not_enough_wine: "У вас недостаточно вина"
+      army_busy: "Ваши армии уже атакуют кого-то. Подождите, пока они не вернутся."
+      cannot_send_zero_catapults: "Нельзя отправить 0 катапульт"
+      cannot_send_zero_thieves: "Нельзя отправить 0 воров"
+      target_too_small: "Нельзя атаковать империи, которые вдвое меньше вас"
+      target_too_big: "Нельзя атаковать империи, которые вдвое больше вас"
+      cannot_cancel: "Эту атаку нельзя отменить на этом этапе"
   aids:
     messages:
       created: "Помощь отправлена"
       destroyed: "Помощь отменена"
+      dispatched: "Транспорт к %{email} отправлен."
+      fee_assessed: "Торговцы взяли комиссию 5%%."
+      caravans_arriving: "Торговцы достигнут цели через 3 хода."
+      aid_cancelled: "Помощь для империи #%{id} отменена."
+    errors:
+      empire_not_found: "Империя #%{id} не найдена."
+      aid_cooldown: "Вы можете отправлять помощь одному игроку не чаще одного раза в 4 часа."
+      cannot_send_negative: "Нельзя отправлять отрицательное количество %{resource}."
+      not_enough_resource: "Вы можете отправить только %{amount} %{resource}."
+      cannot_send_zero: "Нельзя отправить 0 товаров."
+      send_limit: "Вы можете отправить только %{remaining} товаров в этом месяце."
+      cannot_cancel: "Эту помощь больше нельзя отменить."
   trades:
     messages:
       local_buy: "Покупка завершена"
@@ -524,6 +592,151 @@ ru:
       global_change_prices: "Цены обновлены"
       global_withdraw: "Снято с рынка"
       auto_trade: "Настройки автоторговли обновлены"
+      resource_sold: "%{quantity} %{resource} продано за %{gold} золота."
+      total_earned: "Вы заработали %{gold} золота."
+      resource_bought: "%{quantity} %{resource} куплено за %{gold} золота."
+      total_spent: "Вы потратили %{gold} золота."
+      goods_sent_to_market: "Товары отправлены на публичный рынок. Они достигнут рынка через 3 месяца."
+      total_transport_value: "Общая стоимость перевозки составляет %{value}."
+      global_resource_bought: "%{quantity} %{resource} куплено за %{cost}. Торговцы с %{resource} достигнут вашей империи через 3 месяца."
+      price_changed: "Цена %{resource} изменена на %{price}"
+      withdrawn_success: "Ресурсы успешно сняты с рынка."
+    errors:
+      cannot_sell_negative: "Нельзя продавать отрицательное количество."
+      cannot_buy_negative: "Нельзя покупать отрицательное количество."
+      cannot_sell_or_buy_negative: "Нельзя продавать или покупать отрицательные числа."
+      trade_limit_turn: "Вы можете торговать только %{remaining} товарами в этом ходу."
+      trade_limit_month: "Вы можете торговать только %{remaining} товарами в этом месяце."
+      trade_limit_month_up_to: "Вы можете торговать не более %{max} товарами в месяц."
+      not_enough_wood_sell: "У вас недостаточно дерева для продажи."
+      not_enough_food_sell: "У вас недостаточно еды для продажи."
+      not_enough_iron_sell: "У вас недостаточно железа для продажи."
+      not_enough_tools_sell: "У вас недостаточно инструментов для продажи."
+      not_enough_gold_buy: "У вас недостаточно золота для покупки (нужно %{needed} золота)"
+      cannot_sell_negative_resource: "Нельзя продавать отрицательное количество %{resource}."
+      not_enough_resource: "У вас недостаточно %{resource}. У вас есть только %{amount}."
+      min_price: "Минимальная цена продажи %{resource} составляет %{price} золота."
+      max_price_sell: "Максимальная цена продажи %{resource} составляет %{price} золота."
+      cannot_sell_zero: "Нельзя продать 0 товаров."
+      sell_limit: "Вы можете продать только %{remaining} товаров в этом месяце."
+      not_enough_resource_available: "Вы пытались купить %{quantity} %{resource}, но доступно только %{available}."
+      not_enough_gold_global_buy: "У вас недостаточно золота для покупки %{quantity} %{resource}. Вам нужно %{cost} золота."
+      price_too_low: "Нельзя изменить цену %{resource} на %{price}. Минимальная цена продажи составляет %{min}."
+      price_too_high: "Нельзя изменить цену %{resource} на %{price}. Максимальная цена продажи составляет %{max}."
   user_games:
     messages:
       updated: "Настройки обновлены"
+    end_turn:
+      trade:
+        transport_arrived: "Транспорт с %{resources} прибыл с публичного рынка."
+      builders:
+        not_enough_people: "Недостаточно людей для работы строителями."
+        not_enough_tools: "У вас недостаточно инструментов для всех строителей"
+      hunters:
+        not_enough_people: "Недостаточно людей для работы охотниками."
+        produced: "Охотники добыли %{amount} еды"
+      farms:
+        not_enough_people: "Недостаточно людей для работы на фермах."
+        produced: "Фермы произвели %{amount} еды"
+        winter: "Фермы не производят в зимние месяцы."
+      wood_cutters:
+        not_enough_people: "Недостаточно людей для работы лесорубами."
+        produced: "Лесорубы заготовили %{amount} дерева"
+      winter:
+        wood_used: "%{amount} дерева сожжено для отопления"
+        people_froze: "%{amount} человек замёрзли из-за нехватки дерева для отопления"
+      gold_mines:
+        not_enough_people: "Недостаточно людей для работы на золотых шахтах."
+        produced: "Золотые шахты добыли %{amount} золота"
+      iron_mines:
+        not_enough_people: "Недостаточно людей для работы на железных шахтах."
+        produced: "Железные шахты добыли %{amount} железа"
+      tool_makers:
+        not_enough_people: "Недостаточно людей для работы в мастерских инструментов."
+        not_enough_wood: "Недостаточно дерева для работы в мастерских инструментов."
+        not_enough_iron: "Недостаточно железа для работы в мастерских инструментов."
+        produced: "Мастерские инструментов произвели %{amount} инструментов"
+      weaponsmiths:
+        not_enough_people_swords: "Недостаточно людей для производства мечей."
+        not_enough_iron_swords: "Недостаточно железа для производства всех мечей."
+        not_enough_people_bows: "Недостаточно людей для производства луков."
+        not_enough_wood_bows: "Недостаточно дерева для производства всех луков."
+        not_enough_people_maces: "Недостаточно людей для производства булав."
+        not_enough_wood_maces: "Недостаточно дерева для производства всех булав."
+        not_enough_iron_maces: "Недостаточно железа для производства всех булав."
+        produced_swords: "Произведено %{amount} мечей"
+        produced_bows: "Произведено %{amount} луков"
+        produced_maces: "Произведено %{amount} булав"
+      stables:
+        not_enough_people: "Недостаточно людей для работы в конюшнях."
+        produced: "Конюшни вырастили %{amount} лошадей"
+      wineries:
+        not_enough_people: "Недостаточно людей для работы на виноделнях."
+        not_enough_gold: "Недостаточно золота для работы виноделен."
+        produced: "Виноделни произвели %{amount} вина"
+      mage_towers:
+        not_enough_people: "Недостаточно людей для работы в башнях магов."
+        not_enough_gold: "Недостаточно золота для проведения всех исследований."
+      research:
+        military_losses_max: "Вы можете иметь не более 50 уровней исследования потерь армии"
+        army_upkeep_max: "Вы можете иметь не более 50 уровней исследования содержания армии"
+        army_training_max: "Вы можете иметь не более 50 уровней исследования стоимости обучения армии"
+        finished: "Завершено исследование %{name}"
+      wall:
+        deteriorated: "%{amount} единиц стены разрушилось"
+        not_enough_gold: "Недостаточно золота для строительства Великой стены."
+        not_enough_wood: "Недостаточно дерева для строительства Великой стены."
+        not_enough_iron: "Недостаточно железа для строительства Великой стены."
+        not_enough_wine: "Недостаточно вина для строительства Великой стены."
+        constructed: "Построено %{amount} единиц стены."
+      population:
+        food_eaten: "Ваш народ съел %{amount} еды"
+        starvation: "%{amount} человек умерло от нехватки еды"
+        growth: "Ваше население выросло на %{amount}"
+        decline: "Из-за плохого нормирования питания население сократилось на %{amount} человек"
+        housing_limit: "Нехватка жилья препятствует дальнейшему росту населения."
+        emigration: "Из-за нехватки жилья %{amount} человек покинули вашу империю"
+      soldiers_food:
+        eaten: "Ваши солдаты съели %{amount} еды"
+        died: "Некоторые солдаты погибли из-за нехватки еды"
+      buildings:
+        no_free_land: "У вас нет свободной земли типа %{land} для строительства %{name}"
+        not_enough_land: "Недостаточно земли (%{amount} %{land}) для строительства %{name}"
+        finished_build: "Завершено строительство %{amount} %{name}"
+        finished_demolish: "Снесено %{amount} %{name}"
+      training:
+        disbanded_no_forts: "%{amount} обучающихся солдат распущено из-за нехватки фортов"
+        not_enough_forts: "Недостаточно фортов для завершения обучения армии"
+        finished_unique_unit: "%{amount} %{name} завершили обучение и готовы служить вам"
+        finished_swordsmen: "%{amount} мечников завершили обучение и готовы служить вам"
+        finished_archers: "%{amount} лучников завершили обучение и готовы служить вам"
+        finished_horsemen: "%{amount} всадников завершили обучение и готовы служить вам"
+        finished_macemen: "%{amount} булавоносцев завершили обучение и готовы служить вам"
+        finished_catapults: "%{amount} катапульт завершили обучение и готовы служить вам"
+        finished_trained_peasants: "%{amount} обученных крестьян завершили обучение и готовы служить вам"
+        finished_thieves: "%{amount} воров завершили обучение и готовы служить вам"
+      tools:
+        wore_out: "%{amount} инструментов вышло из строя"
+      explorers:
+        discovered: "Ваши исследователи открыли %{mountain} горной земли, %{forest} лесной земли и %{plain} равнинной земли"
+        nothing_found: "Ваши исследователи не открыли никаких земель в этом ходу"
+        mission_ended: "Ваши исследователи завершили миссию, открыв всего %{mountain} горной земли, %{forest} лесной земли и %{plain} равнинной земли"
+      auto_trade:
+        sold: "Продано %{amount} %{resource} за %{gold}"
+        bought: "Куплено %{amount} %{resource} за %{gold}"
+      army:
+        returned: "Ваша армия вернулась в империю"
+      maintenance:
+        overcapacity_desertion: "Из-за нехватки места некоторые солдаты сбежали (%{unique_unit} %{unique_unit_name}, %{swordsman} %{swordsman_name}, %{archers} %{archer_name}, %{horseman} %{horseman_name}, %{macemen} %{macemen_name}, %{trained_peasants} %{trained_peasant_name}, %{catapults} %{catapult_name} и %{thieves} %{thieve_name})"
+        unpaid_desertion: "Из-за нехватки золота для выплаты жалования некоторые солдаты сбежали (%{unique_unit} %{unique_unit_name}, %{swordsman} %{swordsman_name}, %{archers} %{archer_name}, %{horseman} %{horseman_name}, %{macemen} %{macemen_name}, %{trained_peasants} %{trained_peasant_name} и %{thieves} %{thieve_name})"
+        paid: "Ваши солдаты получили %{amount} золота"
+        unique_unit_no_space: "У вас недостаточно ратуш для %{name}. %{amount} %{name} сбежали"
+        thieves_no_space: "У вас недостаточно ратуш для воров. %{amount} воров сбежали"
+        catapults_no_space: "У вас недостаточно ратуш для катапульт. %{amount} катапульт сбежали"
+        catapults_no_wood: "У вас недостаточно дерева для содержания катапульт. %{amount} из них уничтожены"
+        catapults_no_iron: "У вас недостаточно железа для содержания катапульт. %{amount} из них уничтожены"
+        catapult_upkeep: "%{wood} дерева и %{iron} железа использовано для содержания катапульт"
+      storage:
+        overflow: "Из-за нехватки места для хранения вы потеряли %{wood} дерева, %{food} еды, %{iron} железа, %{tools} инструментов, %{wine} вина и %{horses} лошадей"
+      aids:
+        sent: "Помощь для игрока %{email} отправлена"

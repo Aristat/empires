@@ -28,7 +28,7 @@ module Aids
     def cancel_aid(transfer_queue)
       if transfer_queue.turns_remaining != TransferQueue::DEFAULT_TURNS_REMAINING ||
          transfer_queue.created_at > CANCEL_TIME_LIMIT.ago
-        @errors << 'This aid cannot be cancelled anymore.'
+        @errors << I18n.t('aids.errors.cannot_cancel')
         return
       end
 
@@ -49,7 +49,7 @@ module Aids
       # Delete the transfer queue
       transfer_queue.destroy!
 
-      @messages << "Aid to empire ##{transfer_queue.to_user_game_id} has been cancelled."
+      @messages << I18n.t('aids.messages.aid_cancelled', id: transfer_queue.to_user_game_id)
     end
   end
 end
