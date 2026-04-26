@@ -5,20 +5,20 @@
     <div class="card-body">
       <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
         <div>
-          <span class="game-header__label">GAME #<%= @game.id %></span>
+          <span class="game-header__label"><%= t('game.game_number', id: @game.id) %></span>
           <div class="civilization-name"><%= @user_game.civilization.name %></div>
           <div class="game-header__sub">
             <%= Date::MONTHNAMES[@month] %> <%= @year %> &mdash; <%= season(@month) %>
           </div>
         </div>
         <div class="text-end">
-          <div class="game-header__label">TURNS</div>
+          <div class="game-header__label"><%= t('game.turns') %></div>
           <div class="game-header__turns"><%= @user_game.current_turns %></div>
           <div class="game-header__label">
             <% if @user_game.current_turns >= @game.max_turns %>
-              maximum stored
+              <%= t('game.maximum_stored') %>
             <% else %>
-              next in <%= @next_turn_seconds / 60 %>m <%= @next_turn_seconds % 60 %>s
+              <%= t('game.next_in', minutes: @next_turn_seconds / 60, seconds: @next_turn_seconds % 60) %>
             <% end %>
           </div>
         </div>
@@ -29,7 +29,7 @@
   <% if @user_game.last_message.present? %>
     <div class="card events-card mb-4">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Last Turn Events</span>
+        <span><%= t('game.last_turn_events') %></span>
         <button class="btn btn-sm events-toggle-btn" id="events-toggle" aria-expanded="true" aria-controls="events-body">▲</button>
       </div>
       <div class="events-list" id="events-body">
@@ -66,64 +66,64 @@
     <!-- Left Sidebar -->
     <div class="col-md-2">
       <div class="mb-3">
-        <button onclick="endTurn()" class="btn btn-primary w-100">⚡ End Turn</button>
+        <button onclick="endTurn()" class="btn btn-primary w-100"><%= t('game.end_turn') %></button>
       </div>
 
       <!-- Tab Navigation -->
       <ul class="nav nav-pills flex-column mb-4" id="gameTabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="builders-tab" data-bs-toggle="tab" data-bs-target="#builders" type="button" role="tab" aria-controls="builders" aria-selected="false">
-            🏗️ Builders
+            <%= t('game.tabs.builders') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="wall-tab" data-bs-toggle="tab" data-bs-target="#wall" type="button" role="tab" aria-controls="wall" aria-selected="false">
-            🛡️ Wall (<%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%)
+            <%= t('game.tabs.wall', protection: number_with_delimiter(@data[:user_data][:wall_protection])) %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="explore-tab" data-bs-toggle="tab" data-bs-target="#explore" type="button" role="tab" aria-controls="explore" aria-selected="false">
-            🧭 Explore
+            <%= t('game.tabs.explore') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="local-trade-tab" data-bs-toggle="tab" data-bs-target="#local-trade" type="button" role="tab" aria-controls="local-trade" aria-selected="false">
-            🏪 Local Trade
+            <%= t('game.tabs.local_trade') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="global-trade-tab" data-bs-toggle="tab" data-bs-target="#global-trade" type="button" role="tab" aria-controls="global-trade" aria-selected="false">
-            🌐 Global Trade
+            <%= t('game.tabs.global_trade') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="research-tab" data-bs-toggle="tab" data-bs-target="#research" type="button" role="tab" aria-controls="research" aria-selected="false">
-            🔭 Research
+            <%= t('game.tabs.research') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="army-tab" data-bs-toggle="tab" data-bs-target="#army" type="button" role="tab" aria-controls="army" aria-selected="false">
-            ⚔️ Army
+            <%= t('game.tabs.army') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="attack-tab" data-bs-toggle="tab" data-bs-target="#attack" type="button" role="tab" aria-controls="attack" aria-selected="false">
-            🎯 Attack
+            <%= t('game.tabs.attack') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="management-tab" data-bs-toggle="tab" data-bs-target="#management" type="button" role="tab" aria-controls="management" aria-selected="false">
-            ⚙️ Management
+            <%= t('game.tabs.management') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="aid-tab" data-bs-toggle="tab" data-bs-target="#aid" type="button" role="tab" aria-controls="aid" aria-selected="false">
-            🤝 Aid
+            <%= t('game.tabs.aid') %>
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link w-100 text-start" id="scores-tab" data-bs-toggle="tab" data-bs-target="#scores" type="button" role="tab" aria-controls="scores" aria-selected="false">
-            🏆 Scores
+            <%= t('game.tabs.scores') %>
           </button>
         </li>
       </ul>
@@ -134,15 +134,15 @@
       <!-- Summary Bar -->
       <div class="summary-bar mb-4">
         <div class="summary-bar__item">
-          <span class="summary-bar__label">Score</span>
+          <span class="summary-bar__label"><%= t('game.summary.score') %></span>
           <span class="summary-bar__value"><%= number_with_delimiter(@user_game.score) %></span>
         </div>
         <div class="summary-bar__item">
-          <span class="summary-bar__label">Population</span>
+          <span class="summary-bar__label"><%= t('game.summary.population') %></span>
           <span class="summary-bar__value"><%= number_with_delimiter(@user_game.people) %></span>
         </div>
         <div class="summary-bar__item">
-          <span class="summary-bar__label">Gold</span>
+          <span class="summary-bar__label"><%= t('game.summary.gold') %></span>
           <span class="summary-bar__value"><%= number_with_delimiter(@user_game.gold) %></span>
         </div>
       </div>
@@ -153,11 +153,11 @@
           <div class="row">
             <!-- Land -->
             <div class="col-md-6">
-              <h6 class="text-center fw-bold mb-3">Land</h6>
+              <h6 class="text-center fw-bold mb-3"><%= t('game.land.title') %></h6>
               <table class="table table-sm table-borderless resource-table">
                 <tbody>
                   <tr>
-                    <td class="align-middle text-center p-3"><strong>Total</strong></td>
+                    <td class="align-middle text-center p-3"><strong><%= t('game.land.total') %></strong></td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
                         <span class="res-emoji mb-1" role="img" aria-label="Mountain Land">⛰️</span>
@@ -178,7 +178,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td class="align-middle text-center p-3"><strong>Free</strong></td>
+                    <td class="align-middle text-center p-3"><strong><%= t('game.land.free') %></strong></td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
                         <span class="res-emoji res-emoji--free mb-1" role="img" aria-label="Free Mountain">⛰️</span>
@@ -204,7 +204,7 @@
 
             <!-- Resources -->
             <div class="col-md-6">
-              <h6 class="text-center fw-bold mb-3">Resources</h6>
+              <h6 class="text-center fw-bold mb-3"><%= t('game.resources.title') %></h6>
               <table class="table table-sm table-borderless resource-table">
                 <tbody>
                   <tr>

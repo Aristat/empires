@@ -1,34 +1,494 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  language:
+    en: "EN"
+    ru: "RU"
+
+  nav:
+    empires: "Empires"
+    back_to_games: "Back to Games"
+    edit_profile: "Edit Profile"
+    sign_out: "Sign Out"
+    sign_in: "Sign In"
+    sign_up: "Sign Up"
+    toggle_theme: "Toggle theme"
+    open_menu: "Open menu"
+
+  home:
+    tagline: "Build. Conquer. Endure."
+    welcome_back: "Welcome back, %{name}"
+    available_games: "Available Games"
+    no_games: "No games available yet. Check back soon."
+    game_number: "Game #%{id}"
+    civilization: "Civilization:"
+    turn: "Turn:"
+    continue_game: "Continue Game →"
+    not_joined: "You have not joined this game yet."
+    join_game: "Join Game"
+
+  game:
+    game_number: "GAME #%{id}"
+    turns: "TURNS"
+    maximum_stored: "maximum stored"
+    next_in: "next in %{minutes}m %{seconds}s"
+    last_turn_events: "Last Turn Events"
+    end_turn: "⚡ End Turn"
+    tabs:
+      builders: "🏗️ Builders"
+      wall: "🛡️ Wall (%{protection}%)"
+      explore: "🧭 Explore"
+      local_trade: "🏪 Local Trade"
+      global_trade: "🌐 Global Trade"
+      research: "🔭 Research"
+      army: "⚔️ Army"
+      attack: "🎯 Attack"
+      management: "⚙️ Management"
+      aid: "🤝 Aid"
+      scores: "🏆 Scores"
+    summary:
+      score: "Score"
+      population: "Population"
+      gold: "Gold"
+    land:
+      title: "Land"
+      total: "Total"
+      free: "Free"
+    resources:
+      title: "Resources"
+
+  builders:
+    title: "Build or Demolish"
+    build: "Build"
+    demolish: "Demolish"
+    select_prompt: "--- Select a building to build or demolish ---"
+    queue_btn: "Queue"
+    max_btn: "Max"
+    legend: "W - Wood, I - Iron, G - Gold, P - Plains, F - Forest, M - Mountains"
+    queue_title: "Your Building Queue"
+    table:
+      building: "Building"
+      quantity: "Quantity"
+      time_needed: "Time Needed"
+      actions: "Actions"
+    turns: "turns"
+    all_builders_wall: "All builders are working on great wall"
+    cancel: "Cancel"
+    resume: "Resume"
+    hold: "Hold"
+    cancel_all: "Cancel All"
+    confirm_cancel: "Are you sure?"
+    confirm_cancel_all: "Are you sure you want to cancel all building queues?"
+    demolish_label: "(Demolish)"
+    status_title: "Building Status"
+    status_table:
+      building: "Building"
+      have: "Have"
+      land: "Land"
+      status: "Status"
+      workers: "Workers"
+      production: "Production"
+      consumption: "Consumption"
+    update_production: "Update Production"
+    population:
+      title: "Population"
+      total: "Total:"
+      working: "Working:"
+      construction_workers: "Construction Workers:"
+      wall_builders: "Wall Builders:"
+      not_working: "Not Working:"
+      extra_house_space: "Extra House Space:"
+      not_enough_people: "You do not have enough people for your production."
+      need_more_people: "You need additional %{count} people."
+    can_build_prefix: "Your resources allow you to build"
+
+  wall:
+    title: "Great Wall"
+    current_wall: "You currently have %{count} units of wall which provide you with"
+    extra_protection: "%{percent}% extra protection."
+    wall_needed: "You need %{count} units of wall to have 100% extra defense."
+    builder_percentage: "Percentage of builders you want to dedicate to wall construction:"
+    builder_percentage_label: "Builder Percentage:"
+    builders_info: "%{wall_builders} out of %{num_builders} builders will construct %{wall_build} units of wall every month."
+    monthly_cost: "Wall construction monthly cost:"
+    unit_cost: "Cost to construct 1 unit of wall is:"
+    update: "Update"
+    help_modal:
+      title: "Wall Help"
+      description: "The Great Wall provides additional protection for your empire against attacks. The protection percentage is calculated based on your total land and current wall units."
+      how_it_works: "How it works:"
+      item1: "You need 5% of your total land in wall units for 100% protection"
+      item2: "Builders will automatically construct wall units each turn"
+      item3: "You can adjust the percentage of builders dedicated to wall construction"
+      item4: "Each wall unit costs resources to build"
+      resource_costs: "Resource Costs:"
+      per_unit: "per unit"
+      close: "Close"
+
+  explore:
+    title: "Exploration"
+    help: "Help"
+    active_title: "Active Explorations"
+    status:
+      title: "Exploration Status"
+      current_explorers: "Current Explorers:"
+      maximum_explorers: "Maximum Explorers:"
+      available_horses: "Available Horses:"
+    requirements:
+      title: "Resource Requirements"
+      food_per_explorer: "Food per Explorer:"
+      can_send_food: "Can Send (Food):"
+      can_send_total: "Can Send (Total):"
+    efficiency_warning: "Due to your empire's large size, your explorers are %{efficiency}% efficient."
+    send_explorers_label: "Send explorers:"
+    with_horses: "With horses:"
+    look_for: "Look for:"
+    send_btn: "Send Explorers"
+    horse_options:
+      no_horses: "No Horses"
+      one_horse: "1X Horses"
+      two_horses: "2X Horses"
+      three_horses: "3X Horses"
+    land_options:
+      all_land: "All Land"
+      mountain_land: "Mountain Land"
+      forest_land: "Forest Land"
+      plain_land: "Plain Land"
+    table:
+      explorers: "Explorers"
+      land_type: "Land Type"
+      time_remaining: "Time Remaining"
+      land_discovered: "Land Discovered"
+      actions: "Actions"
+    done: "DONE"
+    land_types:
+      all: "All"
+      mountains: "Mountains"
+      forest: "Forest"
+      plains: "Plains"
+    cancel: "Cancel"
+    confirm_cancel: "Are you sure you want to cancel this exploration?"
+    no_explorers: "You do not have any explorers sent."
+    mountains_label: "Mountains"
+    forest_label: "Forest"
+    plains_label: "Plains"
+    help_modal:
+      title: "Exploration Help"
+      description: "Send explorers to discover new land for your empire. The more explorers you send, the better your chances of finding land."
+      horse_multiplier: "Horse Multiplier:"
+      no_horses_base: "No Horses: Base exploration speed"
+      one_horse_2x: "1X Horses: 2x exploration speed"
+      two_horses_3x: "2X Horses: 3x exploration speed"
+      three_horses_4x: "3X Horses: 4x exploration speed"
+      land_types: "Land Types:"
+      all_land_equal: "All Land: Equal chance for any type"
+      mountain_focus: "Mountain Land: Focus on finding mountains"
+      forest_focus: "Forest Land: Focus on finding forests"
+      plains_focus: "Plains Land: Focus on finding plains"
+      tip_label: "Tip:"
+      tip: "Using horses increases the speed of exploration but requires more resources. Choose wisely based on your current needs and available resources."
+      close: "Close"
+
+  local_trade:
+    title: "Local Trade"
+    help: "Help"
+    description: "Local trade lets you trade small amounts of necessary goods between your people. Number of goods traded depends on how many markets you have."
+    traded_this_turn: "You have traded %{count} goods this turn"
+    can_still_trade: "and you can still trade %{count} goods this turn."
+    max_traded: "and you already sold maximum amount available."
+    you_have: "(You have %{count})"
+    gold_each: "%{price} gold each"
+    buy: "Buy"
+    sell: "Sell"
+    auto_trade_title: "Automatic Trade"
+    auto_trade_description_html: "You might also automate your local trade and create automatic trades.<br>Those trades will occur each time you end your turn.<br>Maximum number of goods you can autotrade is the same<br>as number of goods you can trade normally (%{max}).<br>You are currently auto trading %{current} goods<br>and you can auto trade %{remaining} more goods."
+    auto_buy: "Auto Buy"
+    auto_sell: "Auto Sell"
+    type: "Type"
+    wood: "Wood"
+    food: "Food"
+    iron: "Iron"
+    tools: "Tools"
+    gold: "Gold"
+    total: "Total:"
+    update: "Update"
+
+  global_trade:
+    title: "Global Market"
+    buy_btn_prefix: "Buy"
+    sell_tab: "Sell Resources"
+    buy_tab: "Buy Resources"
+    sell:
+      description_html: "You can send goods to the public market.<br>You need market places to send goods.<br>There is %{fee}% fee after you sell the goods."
+      markets_allow: "Your markets allow you to send %{max} goods each month,"
+      still_available: "out of which %{remaining} are still available."
+      table:
+        resource: "Resource"
+        you_have: "You Have"
+        sell_amount: "Sell Amount"
+        price_per_unit: "Price (per unit)"
+        min_price: "Min Price"
+        max_price: "Max Price"
+      sell_btn: "Sell"
+      dispatched_title: "Dispatched Caravans"
+      caravans_departed: "Caravans departed with:"
+      will_reach: "Will reach their destination in %{turns} turns."
+      on_market: "You have on the public market:"
+      gold_each: "gold each"
+      change_prices: "Change Prices"
+      withdraw: "Withdraw from market"
+      confirm_withdraw: "Are you sure? There is a 10% withdrawal fee."
+    buy:
+      select_resource: "Select resource to buy:"
+      loading: "Loading..."
+      loading_market: "Loading market data..."
+      table:
+        user: "User"
+        available: "Available"
+        you_can_buy: "You Can Buy"
+        price_per_unit: "Price (Per Unit)"
+        buy_quantity: "Buy Quantity"
+        your_listing: "Your Listing"
+      no_listings: "There are no %{resource} listings available to buy at this time."
+      failed_load: "Failed to load market data. Please try again."
+      retry: "Retry"
+      incoming_title: "Incoming Caravans"
+      transport_with: "Transport with"
+      will_reach: "will reach your empire in %{turns} turns."
+      enter_quantity: "Please enter a quantity to buy"
+      failed_buy: "Failed to buy resources"
+
+  army:
+    title: "Army Management"
+    no_fort_warning: "Build forts or town centers to train units."
+    capacity: "Your Forts and Town Centers can hold up to %{max} units"
+    can_train: "and you can train %{max} units at a time."
+    using_capacity: "You are using %{percent}% of your maximum capacity."
+    weapons: "You also have %{swords} swords, %{bows} bows, %{horses} horses and %{maces} maces."
+    military_strength: "Military Strength:"
+    strength_table:
+      attack: "Attacking Power"
+      defense: "Defense Power"
+      army: "Army"
+      catapults: "Catapults"
+      thieves: "Thieves"
+    training_queue: "Training Queue:"
+    queue_table:
+      type: "Type"
+      number: "Number"
+      turns_remaining: "Turns Remaining"
+    cancel: "Cancel"
+    unit_table:
+      unit_type: "Unit Type"
+      you_have: "You Have"
+      upkeep_cost: "Upkeep Cost"
+      attacking: "Attacking"
+      training: "Training"
+      needed_to_train: "Needed To Train"
+      max_train: "Max. Train"
+      num_units: "Num. Units"
+    gold_per_turn: "gold"
+    food_per_turn: "food"
+    train_btn: "Train"
+    forts_full: "Your forts and town center are full."
+    room_for: "You have room for %{count} more soldiers."
+    homeless_soldiers: "%{count} of your soldiers don't have any place to live."
+    disband_instructions: "If you want to disband some of your soldiers, fill up the quantities above and press the button below"
+    disband_btn: "Disband Army"
+    enter_quantities: "Please enter quantities to disband"
+    error_disbanding: "Error disbanding army"
+
+  attack:
+    title: "Attack"
+    under_protection: "Cannot attack under protection."
+    protection_remaining: "(You have %{turns} turns of protection remaining)"
+    no_armies: "Your armies are not attacking anyone."
+    active_armies: "Active Armies"
+    attack_table:
+      empire: "Empire Attacked"
+      type: "Attack Type"
+      your_army: "Your Army"
+      status: "Status"
+      actions: "Actions"
+    revolt_warning: "Warning! Attacking empires smaller than 1/2 of your size will result in revolt."
+    units_of_wine: "units of wine"
+    attack_strength: "Attack Strength: %{percent}%"
+    cancel: "Cancel"
+    army_attack:
+      title: "Army Attack"
+      types:
+        conquer: "Conquer (take land)"
+        raid: "Raid (destroy)"
+        rob: "Rob (steal resources)"
+        slaughter: "Slaughter (kill population)"
+      empire_label: "Empire #"
+      army_units: "Army Units"
+      you_have: "You have %{count}"
+      resources: "Resources"
+      wine_label: "Wine"
+      send_all: "Send All Army"
+      max_wine: "Send max wine?"
+      attack_btn: "Attack"
+    catapult_attack:
+      title: "Catapult Attack"
+      types:
+        army_and_towers: "Catapult Army and Towers"
+        population: "Catapult Population"
+        buildings: "Catapult Buildings"
+      empire_label: "Empire #"
+      send_all: "Send All Catapults"
+      attack_btn: "Attack"
+    thief_attack:
+      title: "Thief Attack"
+      types:
+        steal_army: "Steal Army Information"
+        steal_building: "Steal Building Information"
+        steal_research: "Steal Research Information"
+        steal_goods: "Steal Goods"
+        poison_water: "Poison Water"
+        set_fire: "Set Fire"
+      empire_label: "Empire #"
+      send_all: "Send All Thieves"
+      attack_btn: "Attack"
+
+  research:
+    no_mage_tower: "Build mage towers to start research."
+    status_title: "Research Status"
+    total_levels: "You have a total of %{count} research levels."
+    set_research: "Set current research:"
+    none: "--- None ---"
+    mage_info: "You have %{active} mage towers active producing %{produced} research points and using %{gold} gold every month."
+    time_to_advance: "It takes your mage towers %{months} months to advance research level."
+    change_btn: "Change Research"
+    levels_title: "Research Levels"
+    table:
+      name: "Research Name"
+      current: "Current"
+      description: "Description"
+    categories:
+      military: "Military Research"
+      production: "Production Research"
+      other: "Other Research"
+      advanced_military: "Advanced Military Research"
+      advanced_production: "Advanced Production Research"
+    types:
+      attack_points: "Attack Points"
+      defense_points: "Defense Points"
+      thieves_strength: "Thieves Strength"
+      military_losses: "Military Losses"
+      food_production: "Food Production"
+      mine_production: "Mine Production"
+      weapons_tools_production: "Weapons/Tools Production"
+      space_effectiveness: "Space Effectiveness"
+      markets_output: "Markets Output"
+      explorers: "Explorers"
+      catapults_strength: "Catapults Strength"
+      wood_production: "Wood Production"
+      conquered_land: "Conquered Land"
+      army_upkeep_cost: "Army Upkeep Cost"
+      army_training_cost: "Army Training Cost"
+      wine_production: "Wine Production"
+      horses_production: "Horses Production"
+      fort_space: "Fort Space"
+    descriptions:
+      attack_points: "Your army attack points are increased by %{level}%"
+      defense_points: "Your army defense points are increased by %{level}%"
+      thieves_strength: "Your thieves are %{level}% stronger"
+      catapults_strength: "Your catapults are %{level}% stronger"
+      military_losses: "You lose %{level}% less army in battles"
+      food_production: "Your food production is increased by %{level}%"
+      wood_production: "Your wood production is increased by %{level}%"
+      mine_production: "Your mine production is increased by %{level}%"
+      weapons_tools_production: "Your weaponsmiths and tool makers are %{level}% more effective"
+      space_effectiveness: "Your storage and housing space is increased by %{level}%"
+      markets_output: "You can transfer/aid %{bonus}% more goods"
+      explorers: "Your explorers find %{level}% more land"
+      conquered_land: "You gain %{level}% more land from successful army attacks"
+      army_upkeep_cost: "Your army upkeep cost is reduced by %{level}% (max 50)"
+      army_training_cost: "All soldier training resource costs are reduced by %{level}% (max 50)"
+      wine_production: "Your winery wine production is increased by %{level}%"
+      horses_production: "Your stable horse production is increased by %{level}%"
+      fort_space: "Your fort soldier capacity is increased by %{level}%"
+
+  management:
+    weapon_production:
+      title: "Weapon Production"
+      you_have_weaponsmiths: "You have %{count} weaponsmiths and:"
+      producing_bows: "Producing bows:"
+      producing_swords: "Producing swords:"
+      producing_maces: "Producing maces:"
+      idle_weaponsmiths: "Idle weaponsmiths:"
+      using_title: "Your weaponsmiths are using:"
+      wood_per_month: "%{count} wood per month"
+      iron_per_month: "%{count} iron per month"
+      change_production: "Change Production"
+    food_rationing:
+      title: "Food Rationing"
+      extremely_high: "Extremely High (High population growth)"
+      very_high: "Very High"
+      high: "High"
+      above_average: "Above Average"
+      average: "Average (Normal Growth)"
+      below_average: "Below Average"
+      low: "Low (High Population Decline)"
+      change: "Change Food Rationing"
+
+  aid:
+    title: "Aid"
+    description: "You can send aid to your friends. You need market places to send goods. There is 5% fee for sending goods."
+    markets_allow: "Your markets allow you to send"
+    goods_each_month: "goods each month, out of which"
+    still_available: "are still available."
+    table:
+      you_have: "You Have"
+      send: "Send"
+    send_to_empire: "Send to empire #"
+    send_btn: "Send"
+    dispatched_title: "Dispatched Caravans"
+    sent_to: "Sent to %{email} (#%{id}) with"
+    will_reach: "and will reach their destination in"
+    turns: "turns"
+    cancel_aid: "Cancel this aid"
+    confirm_cancel: "Are you sure you want to cancel this aid?"
+
+  scores:
+    title: "Scores"
+    players_in_game: "There are"
+    players_count: "players in the game."
+    online_singular: "is"
+    online_plural: "are"
+    online_now: "online now."
+    legend:
+      title: "Legend"
+      your_empire: "Your Empire"
+      protection: "Under Protection or vacation mode"
+      research_levels: "R/L - total research levels"
+      online: "* - is online"
+    table:
+      rank: "#"
+      player: "Player"
+      civilization: "Civilization"
+      research: "R/L"
+      land: "Land"
+      score: "Score"
+      actions: "Actions"
+    under_protection: "Under protection for %{turns} more turns"
+    player_actions_title: "Player Actions"
+    actions:
+      send_message: "Send Message"
+      send_aid: "Send Aid"
+      conquer_attack: "Conquer Attack"
+      catapult_attack: "Catapult Attack"
+      steal_information: "Steal Information"
+      steal_goods: "Steal Goods"
+      poison_water: "Poison Water"
+    action_btn: "Actions"
+    actions_for: "Actions for %{name} (%{id})"
+
+  select_civilization:
+    title: "Select Your Civilization"
+    subtitle: "Choose a civilization to start your empire in Game #%{id}"
+    bonuses: "Bonuses"
+    choose: "Choose %{name}"
+
   build_queues:
     messages:
       created: "Building queue created successfully"
@@ -38,7 +498,7 @@ en:
       error_updating: "Error updating building queue"
   explore_queues:
     messages:
-      destroyed: "All explore queues cleared"
+      destroyed: "Explore queue item removed"
   train_queues:
     messages:
       created: "Training queue created successfully"
@@ -47,3 +507,23 @@ en:
   transfer_queues:
     messages:
       destroyed: "Transfer queue item removed"
+  attacks:
+    messages:
+      created: "Attack queued successfully"
+      cancelled: "Attack cancelled"
+  aids:
+    messages:
+      created: "Aid sent successfully"
+      destroyed: "Aid cancelled"
+  trades:
+    messages:
+      local_buy: "Purchase completed"
+      local_sell: "Sale completed"
+      global_sell: "Goods sent to market"
+      global_buy: "Purchase completed"
+      global_change_prices: "Prices updated"
+      global_withdraw: "Withdrawn from market"
+      auto_trade: "Auto trade settings updated"
+  user_games:
+    messages:
+      updated: "Settings updated"

@@ -1,8 +1,8 @@
 <%# Explore Tab Content %>
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Exploration</h5>
-    <%= link_to "Help", "#", class: "btn btn-sm btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#exploreHelpModal" } %>
+    <h5 class="mb-0"><%= t('explore.title') %></h5>
+    <%= link_to t('explore.help'), "#", class: "btn btn-sm btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#exploreHelpModal" } %>
   </div>
   <div class="card-body">
     <%= render 'explore_queues' %>
@@ -11,35 +11,35 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-6">
-            <h6 class="mb-3">Exploration Status</h6>
+            <h6 class="mb-3"><%= t('explore.status.title') %></h6>
             <ul class="list-group list-group-flush">
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Current Explorers:</span>
+                <span><%= t('explore.status.current_explorers') %></span>
                 <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@data[:user_data][:total_explorers]) %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Maximum Explorers:</span>
+                <span><%= t('explore.status.maximum_explorers') %></span>
                 <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@data[:user_data][:max_explorers]) %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Available Horses:</span>
+                <span><%= t('explore.status.available_horses') %></span>
                 <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@user_game.horses) %></span>
               </li>
             </ul>
           </div>
           <div class="col-md-6">
-            <h6 class="mb-3">Resource Requirements</h6>
+            <h6 class="mb-3"><%= t('explore.requirements.title') %></h6>
             <ul class="list-group list-group-flush">
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Food per Explorer:</span>
+                <span><%= t('explore.requirements.food_per_explorer') %></span>
                 <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@data[:user_data][:food_per_explorer]) %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Can Send (Food):</span>
+                <span><%= t('explore.requirements.can_send_food') %></span>
                 <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@data[:user_data][:send_explorers]) %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>Can Send (Total):</span>
+                <span><%= t('explore.requirements.can_send_total') %></span>
                 <span class="badge bg-primary rounded-pill"><%= number_with_delimiter(@data[:user_data][:can_send_explorers]) %></span>
               </li>
             </ul>
@@ -49,7 +49,7 @@
         <% if @data[:user_data][:efficiency_of_explore] < 100 %>
           <div class="alert alert-warning mt-3">
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            Due to your empire's large size, your explorers are <%= @data[:user_data][:efficiency_of_explore] %>% efficient.
+            <%= t('explore.efficiency_warning', efficiency: @data[:user_data][:efficiency_of_explore]) %>
           </div>
         <% end %>
       </div>
@@ -61,7 +61,7 @@
           <div class="row align-items-end">
             <div class="col-md-3">
               <div class="mb-3">
-                <%= f.label :quantity, "Send explorers:", class: "form-label" %>
+                <%= f.label :quantity, t('explore.send_explorers_label'), class: "form-label" %>
                 <%= f.number_field :quantity,
                     value: @data[:user_data][:can_send_explorers],
                     class: "form-control",
@@ -72,13 +72,13 @@
 
             <div class="col-md-3">
               <div class="mb-3">
-                <%= f.label :horse_setting, "With horses:", class: "form-label" %>
+                <%= f.label :horse_setting, t('explore.with_horses'), class: "form-label" %>
                 <%= f.select :horse_setting,
                     options_for_select([
-                      ['No Horses', 'without_horses'],
-                      ['1X Horses', 'one_horse'],
-                      ['2X Horses', 'two_horses'],
-                      ['3X Horses', 'three_horses']
+                      [t('explore.horse_options.no_horses'), 'without_horses'],
+                      [t('explore.horse_options.one_horse'), 'one_horse'],
+                      [t('explore.horse_options.two_horses'), 'two_horses'],
+                      [t('explore.horse_options.three_horses'), 'three_horses']
                     ]),
                     {},
                     class: "form-select",
@@ -88,13 +88,13 @@
 
             <div class="col-md-3">
               <div class="mb-3">
-                <%= f.label :seek_land, "Look for:", class: "form-label" %>
+                <%= f.label :seek_land, t('explore.look_for'), class: "form-label" %>
                 <%= f.select :seek_land,
                     options_for_select([
-                      ['All Land', 'all_land'],
-                      ['Mountain Land', 'mountain_land'],
-                      ['Forest Land', 'forest_land'],
-                      ['Plain Land', 'plain_land']
+                      [t('explore.land_options.all_land'), 'all_land'],
+                      [t('explore.land_options.mountain_land'), 'mountain_land'],
+                      [t('explore.land_options.forest_land'), 'forest_land'],
+                      [t('explore.land_options.plain_land'), 'plain_land']
                     ]),
                     {},
                     class: "form-select",
@@ -103,7 +103,7 @@
             </div>
 
             <div class="col-md-3">
-              <%= f.submit "Send Explorers", class: "btn btn-primary w-100" %>
+              <%= f.submit t('explore.send_btn'), class: "btn btn-primary w-100" %>
             </div>
           </div>
         </div>
@@ -117,47 +117,44 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exploreHelpModalLabel">Exploration Help</h5>
+        <h5 class="modal-title" id="exploreHelpModalLabel"><%= t('explore.help_modal.title') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Send explorers to discover new land for your empire. The more explorers you send, the better your chances of finding land.</p>
+        <p><%= t('explore.help_modal.description') %></p>
 
-        <h6>Horse Multiplier:</h6>
+        <h6><%= t('explore.help_modal.horse_multiplier') %></h6>
         <ul>
-          <li>No Horses: Base exploration speed</li>
-          <li>1X Horses: 2x exploration speed</li>
-          <li>2X Horses: 3x exploration speed</li>
-          <li>3X Horses: 4x exploration speed</li>
+          <li><%= t('explore.help_modal.no_horses_base') %></li>
+          <li><%= t('explore.help_modal.one_horse_2x') %></li>
+          <li><%= t('explore.help_modal.two_horses_3x') %></li>
+          <li><%= t('explore.help_modal.three_horses_4x') %></li>
         </ul>
 
-        <h6>Land Types:</h6>
+        <h6><%= t('explore.help_modal.land_types') %></h6>
         <ul>
-          <li>All Land: Equal chance for any type</li>
-          <li>Mountain Land: Focus on finding mountains</li>
-          <li>Forest Land: Focus on finding forests</li>
-          <li>Plains Land: Focus on finding plains</li>
+          <li><%= t('explore.help_modal.all_land_equal') %></li>
+          <li><%= t('explore.help_modal.mountain_focus') %></li>
+          <li><%= t('explore.help_modal.forest_focus') %></li>
+          <li><%= t('explore.help_modal.plains_focus') %></li>
         </ul>
 
         <div class="alert alert-info mt-3">
-          <strong>Tip:</strong> Using horses increases the speed of exploration but requires more resources. Choose wisely based on your current needs and available resources.
+          <strong><%= t('explore.help_modal.tip_label') %></strong> <%= t('explore.help_modal.tip') %>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('explore.help_modal.close') %></button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // Run this script before the page renders
   (function() {
-    // Get stored values
     const storedHorseSetting = localStorage.getItem('exploreHorseSetting_<%= @user_game.id %>') || 'without_horses';
     const storedLandSetting = localStorage.getItem('exploreLandSetting_<%= @user_game.id %>') || 'all_land';
 
-    // Function to initialize selects
     function initializeSelects() {
       const horseSelect = document.querySelector('[data-explore-setting="horse"]');
       const landSelect = document.querySelector('[data-explore-setting="land"]');
@@ -168,10 +165,8 @@
       }
     }
 
-    // Start initialization
     initializeSelects();
 
-    // Add change event listeners
     document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('[data-explore-setting]').forEach(select => {
         select.addEventListener('change', function() {

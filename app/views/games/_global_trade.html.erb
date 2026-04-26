@@ -1,17 +1,37 @@
+<script>
+  var globalTradeI18n = {
+    buyBtnPrefix: "<%= j t('global_trade.buy_btn_prefix') %>",
+    user: "<%= j t('global_trade.buy.table.user') %>",
+    available: "<%= j t('global_trade.buy.table.available') %>",
+    youCanBuy: "<%= j t('global_trade.buy.table.you_can_buy') %>",
+    pricePerUnit: "<%= j t('global_trade.buy.table.price_per_unit') %>",
+    buyQuantity: "<%= j t('global_trade.buy.table.buy_quantity') %>",
+    yourListing: "<%= j t('global_trade.buy.table.your_listing') %>",
+    noListings: "<%= j t('global_trade.buy.no_listings') %>",
+    failedLoad: "<%= j t('global_trade.buy.failed_load') %>",
+    retry: "<%= j t('global_trade.buy.retry') %>",
+    loading: "<%= j t('global_trade.buy.loading') %>",
+    loadingMarket: "<%= j t('global_trade.buy.loading_market') %>",
+    enterQuantity: "<%= j t('global_trade.buy.enter_quantity') %>",
+    failedBuy: "<%= j t('global_trade.buy.failed_buy') %>",
+    confirmWithdraw: "<%= j t('global_trade.sell.confirm_withdraw') %>"
+  };
+</script>
+
 <div class="card">
   <div class="card-body">
-    <h5 class="card-title">Global Market</h5>
+    <h5 class="card-title"><%= t('global_trade.title') %></h5>
 
     <!-- Market Navigation Tabs -->
     <ul class="nav nav-tabs mb-3" id="marketTabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="sell-tab" data-bs-toggle="tab" data-bs-target="#sell-content" type="button" role="tab" aria-controls="sell-content" aria-selected="true">
-          Sell Resources
+          <%= t('global_trade.sell_tab') %>
         </button>
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="buy-tab" data-bs-toggle="tab" data-bs-target="#buy-content" type="button" role="tab" aria-controls="buy-content" aria-selected="false">
-          Buy Resources
+          <%= t('global_trade.buy_tab') %>
         </button>
       </li>
     </ul>
@@ -20,29 +40,27 @@
       <!-- Sell Tab Content -->
       <div class="tab-pane fade show active" id="sell-content" role="tabpanel" aria-labelledby="sell-tab">
         <p class="card-text">
-          You can send goods to the public market.<br>
-          You need market places to send goods.<br>
-          There is <%= number_with_delimiter(@data[:game_data][:global_fee_percent]) %>% fee after you sell the goods.
+          <%= raw t('global_trade.sell.description_html', fee: number_with_delimiter(@data[:game_data][:global_fee_percent])) %>
         </p>
 
         <div class="alert alert-info">
-          Your markets allow you to send <%= number_with_delimiter(@data[:user_data][:max_trades]) %> goods each month,
+          <%= t('global_trade.sell.markets_allow', max: number_with_delimiter(@data[:user_data][:max_trades])) %>
           <span class="<%= @data[:user_data][:trades_remaining].zero? ? 'text-danger' : '' %>">
-            out of which <%= number_with_delimiter(@data[:user_data][:trades_remaining]) %> are still available.
+            <%= t('global_trade.sell.still_available', remaining: number_with_delimiter(@data[:user_data][:trades_remaining])) %>
           </span>
         </div>
-  
+
         <%= form_with url: global_sell_user_game_trades_path(@user_game), method: :post, local: true do |f| %>
           <div class="table-responsive">
             <table class="table table-bordered">
               <thead class="table-light">
                 <tr>
-                  <th>Resource</th>
-                  <th class="text-end">You Have</th>
-                  <th>Sell Amount</th>
-                  <th>Price (per unit)</th>
-                  <th class="text-end">Min Price</th>
-                  <th class="text-end">Max Price</th>
+                  <th><%= t('global_trade.sell.table.resource') %></th>
+                  <th class="text-end"><%= t('global_trade.sell.table.you_have') %></th>
+                  <th><%= t('global_trade.sell.table.sell_amount') %></th>
+                  <th><%= t('global_trade.sell.table.price_per_unit') %></th>
+                  <th class="text-end"><%= t('global_trade.sell.table.min_price') %></th>
+                  <th class="text-end"><%= t('global_trade.sell.table.max_price') %></th>
                 </tr>
               </thead>
               <tbody>
@@ -74,7 +92,7 @@
               <tfoot>
                 <tr>
                   <td colspan="6" class="text-end">
-                    <%= f.submit 'Sell', class: 'btn btn-primary' %>
+                    <%= f.submit t('global_trade.sell.sell_btn'), class: 'btn btn-primary' %>
                   </td>
                 </tr>
               </tfoot>
@@ -85,7 +103,7 @@
         <% if @data[:user_data][:sell_transfer_queues].present? %>
           <div class="card mt-4">
             <div class="card-header bg-light text-dark">
-              <h5 class="card-title mb-0">Dispatched Caravans</h5>
+              <h5 class="card-title mb-0"><%= t('global_trade.sell.dispatched_title') %></h5>
             </div>
             <div class="card-body">
               <% @data[:user_data][:sell_transfer_queues].each do |transfer| %>
@@ -93,7 +111,7 @@
                   <div class="card-body">
                     <% if transfer.turns_remaining.positive? %>
                       <h6 class="card-subtitle mb-2 text-muted">
-                        Caravans departed with:
+                        <%= t('global_trade.sell.caravans_departed') %>
                       </h6>
                       <div class="row">
                         <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
@@ -105,11 +123,11 @@
                         <% end %>
                       </div>
                       <p class="card-text mt-2">
-                        Will reach their destination in <%= transfer.turns_remaining %> turns.
+                        <%= t('global_trade.sell.will_reach', turns: transfer.turns_remaining) %>
                       </p>
                     <% else %>
                       <h6 class="card-subtitle mb-2 text-muted">
-                        You have on the public market:
+                        <%= t('global_trade.sell.on_market') %>
                       </h6>
                       <%= form_with url: global_change_prices_user_game_trades_path(@user_game, transfer_queue_id: transfer.id), method: :post, local: true do |f| %>
                         <div class="row">
@@ -123,15 +141,15 @@
                                                      class: 'form-control',
                                                      min: @data[:game_data]["global_#{resource}_min_price"],
                                                      max: @data[:game_data]["global_#{resource}_max_price"] %>
-                                  <span class="input-group-text">gold each</span>
+                                  <span class="input-group-text"><%= t('global_trade.sell.gold_each') %></span>
                                 </div>
                               </div>
                             <% end %>
                           <% end %>
                         </div>
                         <div class="mt-3">
-                          <%= f.submit 'Change Prices', class: 'btn btn-primary btn-sm' %>
-                          <button onclick="return withdrawFromMarket(<%= transfer.id %>)" class="btn btn-sm btn-danger">Withdraw from market</button>
+                          <%= f.submit t('global_trade.sell.change_prices'), class: 'btn btn-primary btn-sm' %>
+                          <button onclick="return withdrawFromMarket(<%= transfer.id %>)" class="btn btn-sm btn-danger"><%= t('global_trade.sell.withdraw') %></button>
                         </div>
                       <% end %>
                     <% end %>
@@ -146,7 +164,7 @@
       <!-- Buy Tab Content -->
       <div class="tab-pane fade" id="buy-content" role="tabpanel" aria-labelledby="buy-tab">
         <div class="mb-3">
-          <p>Select resource to buy:</p>
+          <p><%= t('global_trade.buy.select_resource') %></p>
           <div class="btn-group" role="group" aria-label="Resource selection">
             <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
               <button type="button" class="btn btn-outline-secondary resource-btn" data-resource="<%= resource %>">
@@ -159,13 +177,13 @@
         <div id="resource-markets">
           <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
             <div id="<%= resource %>-market" class="resource-market d-none">
-              <h6 class="border-bottom pb-2 mb-3">Buy <%= resource.titleize %> (You have <%= number_with_delimiter(@user_game.send(resource)) %>)</h6>
+              <h6 class="border-bottom pb-2 mb-3">Buy <%= resource.titleize %></h6>
               <div id="<%= resource %>-listings" class="resource-listings">
                 <div class="text-center py-4">
                   <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+                    <span class="visually-hidden"><%= t('global_trade.buy.loading') %></span>
                   </div>
-                  <p class="mt-2">Loading market data...</p>
+                  <p class="mt-2"><%= t('global_trade.buy.loading_market') %></p>
                 </div>
               </div>
             </div>
@@ -175,14 +193,14 @@
         <% if @data[:user_data][:buy_transfer_queues].present? %>
           <div class="card mt-4">
             <div class="card-header bg-light text-dark">
-              <h5 class="card-title mb-0">Incoming Caravans</h5>
+              <h5 class="card-title mb-0"><%= t('global_trade.buy.incoming_title') %></h5>
             </div>
             <div class="card-body">
               <% @data[:user_data][:buy_transfer_queues].each do |caravan| %>
                 <div class="card mb-3">
                   <div class="card-body">
                     <p class="card-text">
-                      Transport with
+                      <%= t('global_trade.buy.transport_with') %>
                       <% resource_details = [] %>
                       <% UserGame::GLOBAL_TRADE_RESOURCES.each do |resource| %>
                         <% if caravan.send(resource).to_i > 0 %>
@@ -190,7 +208,7 @@
                         <% end %>
                       <% end %>
                       <%= resource_details.join(", ") %>
-                      will reach your empire in <%= caravan.turns_remaining %> turns.
+                      <%= t('global_trade.buy.will_reach', turns: caravan.turns_remaining) %>
                     </p>
                   </div>
                 </div>
@@ -205,7 +223,7 @@
 
 <script>
 function withdrawFromMarket(transferId) {
-  if (confirm('Are you sure? There is a 10% withdrawal fee.')) {
+  if (confirm(globalTradeI18n.confirmWithdraw)) {
     fetch('<%= global_withdraw_user_game_trades_path(@user_game) %>', {
       method: 'POST',
       headers: {
@@ -221,11 +239,11 @@ function withdrawFromMarket(transferId) {
         localStorage.setItem('scrollToTop', 'true');
         window.location.reload();
       } else {
-        alert('Failed to withdraw from market. Please try again.');
+        alert(globalTradeI18n.failedLoad);
       }
     }).catch(error => {
       console.error('Error:', error);
-      alert('Failed to withdraw from market. Please try again.');
+      alert(globalTradeI18n.failedLoad);
     });
   }
   return false;
@@ -237,7 +255,6 @@ function submitGlobalBuy(event, resource) {
   const form = document.getElementById(`global-buy-form-${resource}`);
   const quantities = {};
 
-  // Gather all quantity inputs
   form.querySelectorAll('.buy-quantity').forEach(input => {
     const listingId = input.getAttribute('data-listing-id');
     const quantity = parseInt(input.value, 10);
@@ -247,9 +264,8 @@ function submitGlobalBuy(event, resource) {
     }
   });
 
-  // Only proceed if at least one quantity is selected
   if (Object.keys(quantities).length === 0) {
-    alert('Please enter a quantity to buy');
+    alert(globalTradeI18n.enterQuantity);
     return;
   }
 
@@ -271,24 +287,21 @@ function submitGlobalBuy(event, resource) {
       window.location.reload();
     } else {
       return response.json().then(data => {
-        throw new Error(data.error || 'Failed to buy resources');
+        throw new Error(data.error || globalTradeI18n.failedBuy);
       });
     }
   })
   .catch(error => {
     console.error('Error:', error);
-    alert(error.message || 'Failed to buy resources. Please try again.');
+    alert(error.message || globalTradeI18n.failedBuy);
   });
 }
 
-// Global market resource selection and loading
 document.addEventListener('DOMContentLoaded', function() {
-  // Resource button click handlers
   document.querySelectorAll('.resource-btn').forEach(button => {
     button.addEventListener('click', function() {
       const resource = this.getAttribute('data-resource');
 
-      // Update active button state
       document.querySelectorAll('.resource-btn').forEach(btn => {
         btn.classList.remove('active', 'btn-primary');
         btn.classList.add('btn-outline-secondary');
@@ -296,7 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
       this.classList.remove('btn-outline-secondary');
       this.classList.add('active', 'btn-primary');
 
-      // Hide all resource markets and show the selected one
       document.querySelectorAll('.resource-market').forEach(market => {
         market.classList.add('d-none');
       });
@@ -304,31 +316,26 @@ document.addEventListener('DOMContentLoaded', function() {
       const marketElement = document.getElementById(`${resource}-market`);
       marketElement.classList.remove('d-none');
 
-      // Load market data for the resource if not already loaded
       loadMarketData(resource);
     });
   });
 
-  // Function to load market data for a resource
   function loadMarketData(resource) {
     const listingsElement = document.getElementById(`${resource}-listings`);
 
-    // Check if we've already loaded this data
     if (listingsElement.getAttribute('data-loaded') === 'true') {
       return;
     }
 
-    // Set loading state
     listingsElement.innerHTML = `
       <div class="text-center py-4">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">${globalTradeI18n.loading}</span>
         </div>
-        <p class="mt-2">Loading market data...</p>
+        <p class="mt-2">${globalTradeI18n.loadingMarket}</p>
       </div>
     `;
 
-    // Fetch market data for the resource
     fetch(`/user_games/<%= @user_game.id %>/trades/global_market_data?resource=${resource}`, {
       headers: {
         'Accept': 'application/json'
@@ -336,21 +343,19 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => response.json())
     .then(data => {
-      // Mark as loaded
       listingsElement.setAttribute('data-loaded', 'true');
 
       if (data.listings && data.listings.length > 0) {
-        // Render market listings
         listingsElement.innerHTML = `
           <form id="global-buy-form-${resource}" onsubmit="submitGlobalBuy(event, '${resource}')">
             <table class="table table-sm table-bordered">
               <thead class="table-light">
                 <tr>
-                  <th>User</th>
-                  <th>Available</th>
-                  <th>You Can Buy</th>
-                  <th>Price (Per Unit)</th>
-                  <th>Buy Quantity</th>
+                  <th>${globalTradeI18n.user}</th>
+                  <th>${globalTradeI18n.available}</th>
+                  <th>${globalTradeI18n.youCanBuy}</th>
+                  <th>${globalTradeI18n.pricePerUnit}</th>
+                  <th>${globalTradeI18n.buyQuantity}</th>
                 </tr>
               </thead>
               <tbody>
@@ -364,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td>${new Intl.NumberFormat().format(listing.price)}</td>
                     <td>
                       ${listing.user_game_id == <%= @user_game.id %> ?
-                        '<span class="badge bg-info">Your Listing</span>' :
+                        `<span class="badge bg-info">${globalTradeI18n.yourListing}</span>` :
                         `<input type="number" data-listing-id="${listing.id}" class="form-control form-control-sm buy-quantity" min="0" max="${listing.available}">`
                       }
                     </td>
@@ -375,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <tfoot>
                 <tr>
                   <td colspan="4" class="text-end">
-                    <button type="submit" class="btn btn-primary btn-sm">Buy ${resource.charAt(0).toUpperCase() + resource.slice(1)}</button>
+                    <button type="submit" class="btn btn-primary btn-sm">${globalTradeI18n.buyBtnPrefix} ${resource.charAt(0).toUpperCase() + resource.slice(1)}</button>
                   </td>
                 </tr>
               </tfoot>
@@ -383,10 +388,9 @@ document.addEventListener('DOMContentLoaded', function() {
           </form>
         `;
       } else {
-        // No listings available
         listingsElement.innerHTML = `
           <div class="alert alert-info">
-            There are no ${resource} listings available to buy at this time.
+            ${globalTradeI18n.noListings.replace('%{resource}', resource.charAt(0).toUpperCase() + resource.slice(1))}
           </div>
         `;
       }
@@ -395,16 +399,14 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error loading market data:', error);
       listingsElement.innerHTML = `
         <div class="alert alert-danger">
-          Failed to load market data. Please try again.
-          <button class="btn btn-outline-secondary btn-sm ms-2" onclick="loadMarketData('${resource}')">Retry</button>
+          ${globalTradeI18n.failedLoad}
+          <button class="btn btn-outline-secondary btn-sm ms-2" onclick="loadMarketData('${resource}')">${globalTradeI18n.retry}</button>
         </div>
       `;
     });
   }
 
-  // Show first resource market by default when buy tab is activated
   document.getElementById('buy-tab').addEventListener('shown.bs.tab', function() {
-    // Click the first resource button if none are active
     if (!document.querySelector('.resource-btn.active')) {
       document.querySelector('.resource-btn').click();
     }

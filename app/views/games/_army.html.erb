@@ -1,53 +1,54 @@
 <% if @user_game.fort.zero? && @user_game.town_center.zero? %>
   <div class="alert alert-danger">
-    <strong>Build forts or town centers to train units.</strong>
+    <strong><%= t('army.no_fort_warning') %></strong>
   </div>
 <% else %>
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">Army Management</h5>
+      <h5 class="card-title"><%= t('army.title') %></h5>
 
       <div class="mb-4">
         <p>
-          Your Forts and Town Centers can hold up to <%= number_with_delimiter(@data[:user_data][:total_soldiers_limit]) %> units<br>
-          and you can train <%= number_with_delimiter(@data[:user_data][:total_soldiers_limit_for_train]) %> units at a time.
+          <%= t('army.capacity', max: number_with_delimiter(@data[:user_data][:total_soldiers_limit])) %><br>
+          <%= t('army.can_train', max: number_with_delimiter(@data[:user_data][:total_soldiers_limit_for_train])) %>
         </p>
         <p>
-          You are using <%= number_with_precision(@data[:user_data][:total_soldiers_percentage], precision: 1) %>% of your maximum capacity.
+          <%= t('army.using_capacity', percent: number_with_precision(@data[:user_data][:total_soldiers_percentage], precision: 1)) %>
         </p>
         <p>
-          You also have <%= number_with_delimiter(@user_game.swords) %> swords,
-          <%= number_with_delimiter(@user_game.bows) %> bows,
-          <%= number_with_delimiter(@user_game.horses) %> horses and
-          <%= number_with_delimiter(@user_game.maces) %> maces.
+          <%= t('army.weapons',
+                swords: number_with_delimiter(@user_game.swords),
+                bows: number_with_delimiter(@user_game.bows),
+                horses: number_with_delimiter(@user_game.horses),
+                maces: number_with_delimiter(@user_game.maces)) %>
         </p>
       </div>
 
       <hr class="border-secondary">
 
       <div class="mb-4">
-        <h6>Military Strength:</h6>
+        <h6><%= t('army.military_strength') %></h6>
         <table class="table table-bordered">
           <thead>
             <tr>
               <th></th>
-              <th>Attacking Power</th>
-              <th>Defense Power</th>
+              <th><%= t('army.strength_table.attack') %></th>
+              <th><%= t('army.strength_table.defense') %></th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Army</td>
+              <td><%= t('army.strength_table.army') %></td>
               <td><%= number_with_delimiter(@data[:user_data][:attack_power]) %></td>
               <td><%= number_with_delimiter(@data[:user_data][:defense_power]) %></td>
             </tr>
             <tr>
-              <td>Catapults</td>
+              <td><%= t('army.strength_table.catapults') %></td>
               <td><%= number_with_delimiter(@data[:user_data][:catapult_attack_power]) %></td>
               <td><%= number_with_delimiter(@data[:user_data][:catapult_defense_power]) %></td>
             </tr>
             <tr>
-              <td>Thieves</td>
+              <td><%= t('army.strength_table.thieves') %></td>
               <td><%= number_with_delimiter(@data[:user_data][:thieves_attack_power]) %></td>
               <td><%= number_with_delimiter(@data[:user_data][:thieves_defense_power]) %></td>
             </tr>
@@ -59,13 +60,13 @@
 
       <% if @data[:user_data][:training_queues].present? %>
         <div class="mb-4">
-          <h6>Training Queue:</h6>
+          <h6><%= t('army.training_queue') %></h6>
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Type</th>
-                <th>Number</th>
-                <th>Turns Remaining</th>
+                <th><%= t('army.queue_table.type') %></th>
+                <th><%= t('army.queue_table.number') %></th>
+                <th><%= t('army.queue_table.turns_remaining') %></th>
                 <th></th>
               </tr>
             </thead>
@@ -76,7 +77,7 @@
                   <td><%= number_with_delimiter(queue_item[:quantity]) %></td>
                   <td><%= queue_item[:turns_remaining] %></td>
                   <td>
-                    <%= button_to 'Cancel', user_game_train_queue_path(@user_game, queue_item[:id]),
+                    <%= button_to t('army.cancel'), user_game_train_queue_path(@user_game, queue_item[:id]),
                         method: :delete, class: 'btn btn-sm btn-danger' %>
                   </td>
                 </tr>
@@ -91,14 +92,14 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Unit Type</th>
-                <th>You Have</th>
-                <th>Upkeep Cost</th>
-                <th>Attacking</th>
-                <th>Training</th>
-                <th>Needed To Train</th>
-                <th>Max. Train</th>
-                <th>Num. Units</th>
+                <th><%= t('army.unit_table.unit_type') %></th>
+                <th><%= t('army.unit_table.you_have') %></th>
+                <th><%= t('army.unit_table.upkeep_cost') %></th>
+                <th><%= t('army.unit_table.attacking') %></th>
+                <th><%= t('army.unit_table.training') %></th>
+                <th><%= t('army.unit_table.needed_to_train') %></th>
+                <th><%= t('army.unit_table.max_train') %></th>
+                <th><%= t('army.unit_table.num_units') %></th>
               </tr>
             </thead>
             <tbody>
@@ -175,7 +176,7 @@
                 <td></td>
                 <td><%= number_with_delimiter(@data[:user_data][:total_soldiers_can_train]) %></td>
                 <td class="text-center">
-                  <%= f.submit 'Train', class: 'btn btn-sm btn-primary' %>
+                  <%= f.submit t('army.train_btn'), class: 'btn btn-sm btn-primary' %>
                 </td>
               </tr>
             </tbody>
@@ -184,32 +185,33 @@
 
         <div class="mt-3">
           <% if @data[:user_data][:total_soldiers_can_hold] == 0 %>
-            <p>Your forts and town center are full.</p>
+            <p><%= t('army.forts_full') %></p>
           <% elsif @data[:user_data][:total_soldiers_can_hold] > 0 %>
-            <p>You have room for <%= number_with_delimiter(@data[:user_data][:total_soldiers_can_hold]) %> more soldiers.</p>
+            <p><%= t('army.room_for', count: number_with_delimiter(@data[:user_data][:total_soldiers_can_hold])) %></p>
           <% else %>
-            <p class="text-danger"><%= number_with_delimiter(@data[:user_data][:total_soldiers_can_hold].abs) %> of your soldiers don't have any place to live.</p>
+            <p class="text-danger"><%= t('army.homeless_soldiers', count: number_with_delimiter(@data[:user_data][:total_soldiers_can_hold].abs)) %></p>
           <% end %>
 
           <p>
-            If you want to disband some of your soldiers,<br>
-            fill up the quantities above and press the button below
+            <%= t('army.disband_instructions') %>
           </p>
-          <%= f.submit 'Disband Army', class: 'btn btn-danger btn-sm', onclick: "return copyFormValues()" %>
+          <%= f.submit t('army.disband_btn'), class: 'btn btn-danger btn-sm', onclick: "return copyFormValues()" %>
 
           <script>
+            var armyI18n = {
+              enterQuantities: "<%= j t('army.enter_quantities') %>",
+              errorDisbanding: "<%= j t('army.error_disbanding') %>"
+            };
+
             function copyFormValues() {
-              // Get all training input fields
               const trainingInputs = document.querySelectorAll('input.train-queues-field');
               let hasValues = false;
               const trainQueues = {};
 
-              // Check if any field has a value and collect data as an object
               trainingInputs.forEach(input => {
                 const value = parseInt(input.value);
                 if (value > 0) {
                   hasValues = true;
-                  // Extract the key from the name format "train_queues[key]"
                   const keyMatch = input.name.match(/train_queues\[(.*?)\]/);
                   if (keyMatch && keyMatch[1]) {
                     trainQueues[keyMatch[1]] = value;
@@ -218,11 +220,10 @@
               });
 
               if (!hasValues) {
-                alert('Please enter quantities to disband');
+                alert(armyI18n.enterQuantities);
                 return false;
               }
 
-              // Submit using fetch with JSON payload
               fetch('<%= disband_user_game_train_queues_path(@user_game) %>', {
                 method: 'POST',
                 headers: {
@@ -237,12 +238,12 @@
                   localStorage.setItem('scrollToTop', 'true');
                   window.location.reload();
                 } else {
-                  alert('Error disbanding army');
+                  alert(armyI18n.errorDisbanding);
                 }
               })
               .catch(error => {
                 console.error('Error:', error);
-                alert('Error disbanding army');
+                alert(armyI18n.errorDisbanding);
               });
 
               return false;

@@ -1,25 +1,25 @@
 <div class="card">
   <div class="card-header">
-    <h5 class="mb-0">Scores</h5>
+    <h5 class="mb-0"><%= t('scores.title') %></h5>
   </div>
   <div class="card-body">
     <div class="row mb-4">
       <div class="col-md-8">
         <p>
-          There are <strong><%= scores_data[:total_players] %></strong> players in the game.
-          <%= scores_data[:online_players] %> <%= scores_data[:online_players] == 1 ? 'is' : 'are' %> online now.
+          <%= t('scores.players_in_game') %> <strong><%= scores_data[:total_players] %></strong> <%= t('scores.players_count') %>
+          <%= scores_data[:online_players] %> <%= scores_data[:online_players] == 1 ? t('scores.online_singular') : t('scores.online_plural') %> <%= t('scores.online_now') %>
         </p>
       </div>
       <div class="col-md-4">
         <div class="card">
           <div class="card-header">
-            <h6 class="mb-0">Legend</h6>
+            <h6 class="mb-0"><%= t('scores.legend.title') %></h6>
           </div>
           <div class="card-body">
-            <p class="mb-1"><span class="text-info">Your Empire</span></p>
-            <p class="mb-1"><span class="text-warning">Under Protection or vacation mode</span></p>
-            <p class="mb-1">R/L - total research levels</p>
-            <p class="mb-0">* - is online</p>
+            <p class="mb-1"><span class="text-info"><%= t('scores.legend.your_empire') %></span></p>
+            <p class="mb-1"><span class="text-warning"><%= t('scores.legend.protection') %></span></p>
+            <p class="mb-1"><%= t('scores.legend.research_levels') %></p>
+            <p class="mb-0"><%= t('scores.legend.online') %></p>
           </div>
         </div>
       </div>
@@ -29,14 +29,14 @@
       <table class="table table-bordered table-striped">
         <thead class="table-light">
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Player</th>
-            <th scope="col">Civilization</th>
-            <th scope="col">R/L</th>
-            <th scope="col">Land</th>
-            <th scope="col">Score</th>
+            <th scope="col"><%= t('scores.table.rank') %></th>
+            <th scope="col"><%= t('scores.table.player') %></th>
+            <th scope="col"><%= t('scores.table.civilization') %></th>
+            <th scope="col"><%= t('scores.table.research') %></th>
+            <th scope="col"><%= t('scores.table.land') %></th>
+            <th scope="col"><%= t('scores.table.score') %></th>
             <% if show_actions %>
-              <th scope="col">Actions</th>
+              <th scope="col"><%= t('scores.table.actions') %></th>
             <% end %>
           </tr>
         </thead>
@@ -57,7 +57,7 @@
                 <%= "#{player[:email]} (#{player[:id]})" %>
                 <%= '*' if player[:online] %>
                 <% if player[:under_protection] %>
-                  <span title="Under protection for <%= player[:protection_turns_remaining] %> more turns">🛡 <%= player[:protection_turns_remaining] %></span>
+                  <span title="<%= t('scores.under_protection', turns: player[:protection_turns_remaining]) %>">🛡 <%= player[:protection_turns_remaining] %></span>
                 <% end %>
               </td>
               <td><%= player[:civilization] %></td>
@@ -70,7 +70,7 @@
                     <button type="button" class="btn btn-sm btn-outline-secondary action-btn"
                             data-player-id="<%= player[:id] %>"
                             data-player-name="<%= j player[:email] %>">
-                      Actions
+                      <%= t('scores.action_btn') %>
                     </button>
                   <% end %>
                 </td>
@@ -89,19 +89,19 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="playerActionsModalLabel">Player Actions</h5>
+          <h5 class="modal-title" id="playerActionsModalLabel"><%= t('scores.player_actions_title') %></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <div class="d-grid gap-2">
-            <button type="button" class="btn btn-outline-primary action-message">Send Message</button>
-            <button type="button" class="btn btn-outline-primary action-aid">Send Aid</button>
+            <button type="button" class="btn btn-outline-primary action-message"><%= t('scores.actions.send_message') %></button>
+            <button type="button" class="btn btn-outline-primary action-aid"><%= t('scores.actions.send_aid') %></button>
             <hr>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="army">Conquer Attack</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="catapult">Catapult Attack</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief">Steal Information</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief">Steal Goods</button>
-            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief">Poison Water</button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="army"><%= t('scores.actions.conquer_attack') %></button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="catapult"><%= t('scores.actions.catapult_attack') %></button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief"><%= t('scores.actions.steal_information') %></button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief"><%= t('scores.actions.steal_goods') %></button>
+            <button type="button" class="btn btn-outline-danger action-attack" data-attack-type="thief"><%= t('scores.actions.poison_water') %></button>
           </div>
         </div>
       </div>
@@ -109,6 +109,8 @@
   </div>
 
   <script>
+    var actionsForTemplate = "<%= j t('scores.actions_for') %>";
+
     document.addEventListener('DOMContentLoaded', function() {
       let currentPlayerId = null;
       let currentPlayerName = null;
@@ -120,7 +122,7 @@
           currentPlayerId = this.getAttribute('data-player-id');
           currentPlayerName = this.getAttribute('data-player-name');
           document.getElementById('playerActionsModalLabel').textContent =
-            `Actions for ${currentPlayerName} (${currentPlayerId})`;
+            actionsForTemplate.replace('%{name}', currentPlayerName).replace('%{id}', currentPlayerId);
           playerActionsModal.show();
         });
       });

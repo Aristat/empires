@@ -1,16 +1,16 @@
 <div class="card mt-4">
   <div class="card-header bg-light text-dark">
-    <h5 class="mb-0">Weapon Production</h5>
+    <h5 class="mb-0"><%= t('management.weapon_production.title') %></h5>
   </div>
   <div class="card-body">
     <%= form_with(url: user_game_path(@user_game), method: :put, local: true) do |f| %>
       <div class="mb-3">
-        <p class="mb-3">You have <%= number_with_delimiter(@user_game.weaponsmith) %> weaponsmiths and:</p>
+        <p class="mb-3"><%= t('management.weapon_production.you_have_weaponsmiths', count: number_with_delimiter(@user_game.weaponsmith)) %></p>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="form-group">
-              <%= f.label :bow_weaponsmith, "Producing bows:", class: "form-label" %>
+              <%= f.label :bow_weaponsmith, t('management.weapon_production.producing_bows'), class: "form-label" %>
               <%= f.number_field :bow_weaponsmith,
                                  value: @user_game.bow_weaponsmith,
                                  class: "form-control",
@@ -21,7 +21,7 @@
 
           <div class="col-md-6">
             <div class="form-group">
-              <%= f.label :sword_weaponsmith, "Producing swords:", class: "form-label" %>
+              <%= f.label :sword_weaponsmith, t('management.weapon_production.producing_swords'), class: "form-label" %>
               <%= f.number_field :sword_weaponsmith,
                                  value: @user_game.sword_weaponsmith,
                                  class: "form-control",
@@ -34,7 +34,7 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <div class="form-group">
-              <%= f.label :mace_weaponsmith, "Producing maces:", class: "form-label" %>
+              <%= f.label :mace_weaponsmith, t('management.weapon_production.producing_maces'), class: "form-label" %>
               <%= f.number_field :mace_weaponsmith,
                                  value: @user_game.mace_weaponsmith,
                                  class: "form-control",
@@ -45,7 +45,7 @@
 
           <div class="col-md-6">
             <div class="form-group">
-              <label class="form-label">Idle weaponsmiths:</label>
+              <label class="form-label"><%= t('management.weapon_production.idle_weaponsmiths') %></label>
               <div class="form-control bg-light">
                 <%= number_with_delimiter(@user_game.weaponsmith - @user_game.bow_weaponsmith - @user_game.sword_weaponsmith - @user_game.mace_weaponsmith) %>
               </div>
@@ -54,16 +54,16 @@
         </div>
 
         <div class="alert alert-info">
-          <p class="mb-0">Your weaponsmiths are using:</p>
+          <p class="mb-0"><%= t('management.weapon_production.using_title') %></p>
           <ul class="mb-0">
-            <li><%= number_with_delimiter(@user_game.bow_weaponsmith * 2 + @user_game.mace_weaponsmith * 3) %> wood per month</li>
-            <li><%= number_with_delimiter(@user_game.sword_weaponsmith * 2 + @user_game.mace_weaponsmith * 2) %> iron per month</li>
+            <li><%= t('management.weapon_production.wood_per_month', count: number_with_delimiter(@user_game.bow_weaponsmith * 2 + @user_game.mace_weaponsmith * 3)) %></li>
+            <li><%= t('management.weapon_production.iron_per_month', count: number_with_delimiter(@user_game.sword_weaponsmith * 2 + @user_game.mace_weaponsmith * 2)) %></li>
           </ul>
         </div>
       </div>
 
       <div class="text-center">
-        <%= f.submit 'Change Production', class: 'btn btn-primary' %>
+        <%= f.submit t('management.weapon_production.change_production'), class: 'btn btn-primary' %>
       </div>
     <% end %>
   </div>
@@ -71,47 +71,47 @@
 
 <div class="card">
   <div class="card-header bg-light text-dark">
-    <h5 class="mb-0">Food Rationing</h5>
+    <h5 class="mb-0"><%= t('management.food_rationing.title') %></h5>
   </div>
   <div class="card-body">
     <%= form_with(url: user_game_path(@user_game), method: :put, local: true) do |f| %>
       <div class="form-check mb-2">
         <%= f.radio_button :food_ratio, 4, class: 'form-check-input', checked: @user_game.food_ratio == 4 %>
-        <%= f.label :food_ratio, 'Extremely High (High population growth)', class: 'form-check-label', value: 4 %>
+        <%= f.label :food_ratio, t('management.food_rationing.extremely_high'), class: 'form-check-label', value: 4 %>
       </div>
 
       <div class="form-check mb-2">
         <%= f.radio_button :food_ratio, 3, class: 'form-check-input', checked: @user_game.food_ratio == 3 %>
-        <%= f.label :food_ratio, 'Very High', class: 'form-check-label', value: 3 %>
+        <%= f.label :food_ratio, t('management.food_rationing.very_high'), class: 'form-check-label', value: 3 %>
       </div>
 
       <div class="form-check mb-2">
         <%= f.radio_button :food_ratio, 2, class: 'form-check-input', checked: @user_game.food_ratio == 2 %>
-        <%= f.label :food_ratio, 'High', class: 'form-check-label', value: 2 %>
+        <%= f.label :food_ratio, t('management.food_rationing.high'), class: 'form-check-label', value: 2 %>
       </div>
 
       <div class="form-check mb-2">
         <%= f.radio_button :food_ratio, 1, class: 'form-check-input', checked: @user_game.food_ratio == 1 %>
-        <%= f.label :food_ratio, 'Above Average', class: 'form-check-label', value: 1 %>
+        <%= f.label :food_ratio, t('management.food_rationing.above_average'), class: 'form-check-label', value: 1 %>
       </div>
 
       <div class="form-check mb-2">
         <%= f.radio_button :food_ratio, 0, class: 'form-check-input', checked: @user_game.food_ratio == 0 %>
-        <%= f.label :food_ratio, 'Average (Normal Growth)', class: 'form-check-label', value: 0 %>
+        <%= f.label :food_ratio, t('management.food_rationing.average'), class: 'form-check-label', value: 0 %>
       </div>
 
       <div class="form-check mb-2">
         <%= f.radio_button :food_ratio, -1, class: 'form-check-input', checked: @user_game.food_ratio == -1 %>
-        <%= f.label :food_ratio, 'Below Average', class: 'form-check-label', value: -1 %>
+        <%= f.label :food_ratio, t('management.food_rationing.below_average'), class: 'form-check-label', value: -1 %>
       </div>
 
       <div class="form-check mb-3">
         <%= f.radio_button :food_ratio, -2, class: 'form-check-input', checked: @user_game.food_ratio == -2 %>
-        <%= f.label :food_ratio, 'Low (High Population Decline)', class: 'form-check-label', value: -2 %>
+        <%= f.label :food_ratio, t('management.food_rationing.low'), class: 'form-check-label', value: -2 %>
       </div>
 
       <div class="text-center">
-        <%= f.submit 'Change Food Rationing', class: 'btn btn-primary' %>
+        <%= f.submit t('management.food_rationing.change'), class: 'btn btn-primary' %>
       </div>
     <% end %>
   </div>

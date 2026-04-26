@@ -1,37 +1,37 @@
 <% if user_game.mage_tower.zero? %>
   <div class="alert alert-danger">
-    <strong>Build mage towers to start research.</strong>
+    <strong><%= t('research.no_mage_tower') %></strong>
   </div>
 <% else %>
   <div class="card mb-4">
     <div class="card-body">
-      <h5 class="card-title">Research Status</h5>
-      <p>You have a total of <%= number_with_delimiter(@data[:user_data][:total_research_levels]) %> research levels.</p>
+      <h5 class="card-title"><%= t('research.status_title') %></h5>
+      <p><%= t('research.total_levels', count: number_with_delimiter(@data[:user_data][:total_research_levels])) %></p>
 
       <%= form_with url: user_game_path(user_game), method: :patch, local: true do |f| %>
         <div class="mb-3">
-          <label class="form-label">Set current research:</label>
+          <label class="form-label"><%= t('research.set_research') %></label>
           <%= f.select :current_research,
               options_for_select([
-                ['--- None ---', nil],
-                ['Attack Points', 'attack_points'],
-                ['Defense Points', 'defense_points'],
-                ['Thieves Strength', 'thieves_strength'],
-                ['Military Losses', 'military_losses'],
-                ['Food Production', 'food_production'],
-                ['Mine Production', 'mine_production'],
-                ['Weapons/Tools Production', 'weapons_tools_production'],
-                ['Space Effectiveness', 'space_effectiveness'],
-                ['Markets Output', 'markets_output'],
-                ['Explorers', 'explorers'],
-                ['Catapults Strength', 'catapults_strength'],
-                ['Wood Production', 'wood_production'],
-                ['Conquered Land', 'conquered_land'],
-                ['Army Upkeep Cost', 'army_upkeep_cost'],
-                ['Army Training Cost', 'army_training_cost'],
-                ['Wine Production', 'wine_production'],
-                ['Horses Production', 'horses_production'],
-                ['Fort Space', 'fort_space']
+                [t('research.none'), nil],
+                [t('research.types.attack_points'), 'attack_points'],
+                [t('research.types.defense_points'), 'defense_points'],
+                [t('research.types.thieves_strength'), 'thieves_strength'],
+                [t('research.types.military_losses'), 'military_losses'],
+                [t('research.types.food_production'), 'food_production'],
+                [t('research.types.mine_production'), 'mine_production'],
+                [t('research.types.weapons_tools_production'), 'weapons_tools_production'],
+                [t('research.types.space_effectiveness'), 'space_effectiveness'],
+                [t('research.types.markets_output'), 'markets_output'],
+                [t('research.types.explorers'), 'explorers'],
+                [t('research.types.catapults_strength'), 'catapults_strength'],
+                [t('research.types.wood_production'), 'wood_production'],
+                [t('research.types.conquered_land'), 'conquered_land'],
+                [t('research.types.army_upkeep_cost'), 'army_upkeep_cost'],
+                [t('research.types.army_training_cost'), 'army_training_cost'],
+                [t('research.types.wine_production'), 'wine_production'],
+                [t('research.types.horses_production'), 'horses_production'],
+                [t('research.types.fort_space'), 'fort_space']
               ], user_game.current_research),
               {}, class: 'form-select' %>
         </div>
@@ -43,140 +43,142 @@
           </p>
 
           <p class="small">
-            You have <%= number_with_delimiter(@data[:user_data][:active_mage_towers]) %> mage towers active producing <%= number_with_delimiter(@data[:user_data][:research_produced]) %> research points
-            and using <%= number_with_delimiter(@data[:user_data][:research_gold_needed]) %> gold every month.
+            <%= t('research.mage_info',
+                  active: number_with_delimiter(@data[:user_data][:active_mage_towers]),
+                  produced: number_with_delimiter(@data[:user_data][:research_produced]),
+                  gold: number_with_delimiter(@data[:user_data][:research_gold_needed])) %>
 
             <% if @data[:user_data][:research_produced].positive? %>
-              <br>It takes your mage towers <%= number_with_precision(@data[:user_data][:next_research_level_points].to_f / @data[:user_data][:research_produced], precision: 1) %> months to advance research level.
+              <br><%= t('research.time_to_advance', months: number_with_precision(@data[:user_data][:next_research_level_points].to_f / @data[:user_data][:research_produced], precision: 1)) %>
             <% end %>
           </p>
         <% end %>
 
-        <%= f.submit 'Change Research', class: 'btn btn-primary' %>
+        <%= f.submit t('research.change_btn'), class: 'btn btn-primary' %>
       <% end %>
     </div>
   </div>
 
   <div class="card">
     <div class="card-body">
-      <h5 class="card-title">Research Levels</h5>
+      <h5 class="card-title"><%= t('research.levels_title') %></h5>
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th>Research Name</th>
-            <th class="text-center">Current</th>
-            <th>Description</th>
+            <th><%= t('research.table.name') %></th>
+            <th class="text-center"><%= t('research.table.current') %></th>
+            <th><%= t('research.table.description') %></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td colspan="3" class="table-primary"><strong>Military Research</strong></td>
+            <td colspan="3" class="table-primary"><strong><%= t('research.categories.military') %></strong></td>
           </tr>
           <tr>
-            <td>Attack Points</td>
+            <td><%= t('research.types.attack_points') %></td>
             <td class="text-center"><%= user_game.attack_points_researches %></td>
-            <td>Your army attack points are increased by <%= user_game.attack_points_researches %>%</td>
+            <td><%= t('research.descriptions.attack_points', level: user_game.attack_points_researches) %></td>
           </tr>
           <tr>
-            <td>Defense Points</td>
+            <td><%= t('research.types.defense_points') %></td>
             <td class="text-center"><%= user_game.defense_points_researches %></td>
-            <td>Your army defense points are increased by <%= user_game.defense_points_researches %>%</td>
+            <td><%= t('research.descriptions.defense_points', level: user_game.defense_points_researches) %></td>
           </tr>
           <tr>
-            <td>Thieves Strength</td>
+            <td><%= t('research.types.thieves_strength') %></td>
             <td class="text-center"><%= user_game.thieves_strength_researches %></td>
-            <td>Your thieves are <%= user_game.thieves_strength_researches %>% stronger</td>
+            <td><%= t('research.descriptions.thieves_strength', level: user_game.thieves_strength_researches) %></td>
           </tr>
           <tr>
-            <td>Catapults Strength</td>
+            <td><%= t('research.types.catapults_strength') %></td>
             <td class="text-center"><%= user_game.catapults_strength_researches %></td>
-            <td>Your catapults are <%= user_game.catapults_strength_researches %>% stronger</td>
+            <td><%= t('research.descriptions.catapults_strength', level: user_game.catapults_strength_researches) %></td>
           </tr>
           <tr>
-            <td>Military Losses</td>
+            <td><%= t('research.types.military_losses') %></td>
             <td class="text-center"><%= user_game.military_losses_researches %></td>
-            <td>You lose <%= user_game.military_losses_researches %>% less army in battles</td>
+            <td><%= t('research.descriptions.military_losses', level: user_game.military_losses_researches) %></td>
           </tr>
 
           <tr>
-            <td colspan="3" class="table-primary"><strong>Production Research</strong></td>
+            <td colspan="3" class="table-primary"><strong><%= t('research.categories.production') %></strong></td>
           </tr>
           <tr>
-            <td>Food Production</td>
+            <td><%= t('research.types.food_production') %></td>
             <td class="text-center"><%= user_game.food_production_researches %></td>
-            <td>Your food production is increased by <%= user_game.food_production_researches %>%</td>
+            <td><%= t('research.descriptions.food_production', level: user_game.food_production_researches) %></td>
           </tr>
           <tr>
-            <td>Wood Production</td>
+            <td><%= t('research.types.wood_production') %></td>
             <td class="text-center"><%= user_game.wood_production_researches %></td>
-            <td>Your wood production is increased by <%= user_game.wood_production_researches %>%</td>
+            <td><%= t('research.descriptions.wood_production', level: user_game.wood_production_researches) %></td>
           </tr>
           <tr>
-            <td>Mine Production</td>
+            <td><%= t('research.types.mine_production') %></td>
             <td class="text-center"><%= user_game.mine_production_researches %></td>
-            <td>Your mine production is increased by <%= user_game.mine_production_researches %>%</td>
+            <td><%= t('research.descriptions.mine_production', level: user_game.mine_production_researches) %></td>
           </tr>
           <tr>
-            <td>Weapons/Tools Production</td>
+            <td><%= t('research.types.weapons_tools_production') %></td>
             <td class="text-center"><%= user_game.weapons_tools_production_researches %></td>
-            <td>Your weaponsmiths and tool makers are <%= user_game.weapons_tools_production_researches %>% more effective</td>
+            <td><%= t('research.descriptions.weapons_tools_production', level: user_game.weapons_tools_production_researches) %></td>
           </tr>
 
           <tr>
-            <td colspan="3" class="table-primary"><strong>Other Research</strong></td>
+            <td colspan="3" class="table-primary"><strong><%= t('research.categories.other') %></strong></td>
           </tr>
           <tr>
-            <td>Space Effectiveness</td>
+            <td><%= t('research.types.space_effectiveness') %></td>
             <td class="text-center"><%= user_game.space_effectiveness_researches %></td>
-            <td>Your storage and housing space is increased by <%= user_game.space_effectiveness_researches %>%</td>
+            <td><%= t('research.descriptions.space_effectiveness', level: user_game.space_effectiveness_researches) %></td>
           </tr>
           <tr>
-            <td>Markets Output</td>
+            <td><%= t('research.types.markets_output') %></td>
             <td class="text-center"><%= user_game.markets_output_researches %></td>
-            <td>You can transfer/aid <%= (user_game.markets_output_researches * UserGame::MARKETS_OUTPUT_RESEARCHES_MULTIPLIER) %>% more goods</td>
+            <td><%= t('research.descriptions.markets_output', bonus: user_game.markets_output_researches * UserGame::MARKETS_OUTPUT_RESEARCHES_MULTIPLIER) %></td>
           </tr>
           <tr>
-            <td>Explorers</td>
+            <td><%= t('research.types.explorers') %></td>
             <td class="text-center"><%= user_game.explorers_researches %></td>
-            <td>Your explorers find <%= user_game.explorers_researches %>% more land</td>
+            <td><%= t('research.descriptions.explorers', level: user_game.explorers_researches) %></td>
           </tr>
 
           <tr>
-            <td colspan="3" class="table-primary"><strong>Advanced Military Research</strong></td>
+            <td colspan="3" class="table-primary"><strong><%= t('research.categories.advanced_military') %></strong></td>
           </tr>
           <tr>
-            <td>Conquered Land</td>
+            <td><%= t('research.types.conquered_land') %></td>
             <td class="text-center"><%= user_game.conquered_land_researches %></td>
-            <td>You gain <%= user_game.conquered_land_researches %>% more land from successful army attacks</td>
+            <td><%= t('research.descriptions.conquered_land', level: user_game.conquered_land_researches) %></td>
           </tr>
           <tr>
-            <td>Army Upkeep Cost</td>
+            <td><%= t('research.types.army_upkeep_cost') %></td>
             <td class="text-center"><%= user_game.army_upkeep_cost_researches %></td>
-            <td>Your army upkeep cost is reduced by <%= user_game.army_upkeep_cost_researches %>% (max 50)</td>
+            <td><%= t('research.descriptions.army_upkeep_cost', level: user_game.army_upkeep_cost_researches) %></td>
           </tr>
           <tr>
-            <td>Army Training Cost</td>
+            <td><%= t('research.types.army_training_cost') %></td>
             <td class="text-center"><%= user_game.army_training_cost_researches %></td>
-            <td>All soldier training resource costs are reduced by <%= user_game.army_training_cost_researches %>% (max 50)</td>
+            <td><%= t('research.descriptions.army_training_cost', level: user_game.army_training_cost_researches) %></td>
           </tr>
 
           <tr>
-            <td colspan="3" class="table-primary"><strong>Advanced Production Research</strong></td>
+            <td colspan="3" class="table-primary"><strong><%= t('research.categories.advanced_production') %></strong></td>
           </tr>
           <tr>
-            <td>Wine Production</td>
+            <td><%= t('research.types.wine_production') %></td>
             <td class="text-center"><%= user_game.wine_production_researches %></td>
-            <td>Your winery wine production is increased by <%= user_game.wine_production_researches %>%</td>
+            <td><%= t('research.descriptions.wine_production', level: user_game.wine_production_researches) %></td>
           </tr>
           <tr>
-            <td>Horses Production</td>
+            <td><%= t('research.types.horses_production') %></td>
             <td class="text-center"><%= user_game.horses_production_researches %></td>
-            <td>Your stable horse production is increased by <%= user_game.horses_production_researches %>%</td>
+            <td><%= t('research.descriptions.horses_production', level: user_game.horses_production_researches) %></td>
           </tr>
           <tr>
-            <td>Fort Space</td>
+            <td><%= t('research.types.fort_space') %></td>
             <td class="text-center"><%= user_game.fort_space_researches %></td>
-            <td>Your fort soldier capacity is increased by <%= user_game.fort_space_researches %>%</td>
+            <td><%= t('research.descriptions.fort_space', level: user_game.fort_space_researches) %></td>
           </tr>
         </tbody>
       </table>

@@ -1,21 +1,21 @@
 <div class="home-hero">
-  <h1>⚔ Empires</h1>
+  <h1>⚔ <%= t('nav.empires') %></h1>
   <% if user_signed_in? %>
-    <p class="lead">Welcome back, <strong><%= current_user.name %></strong></p>
+    <p class="lead"><%= t('home.welcome_back', name: current_user.name) %></p>
   <% else %>
-    <p class="lead">Build. Conquer. Endure.</p>
+    <p class="lead"><%= t('home.tagline') %></p>
     <div class="mt-3">
-      <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary me-2" %>
-      <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-outline-primary" %>
+      <%= link_to t('nav.sign_in'), new_user_session_path, class: "btn btn-primary me-2" %>
+      <%= link_to t('nav.sign_up'), new_user_registration_path, class: "btn btn-outline-primary" %>
     </div>
   <% end %>
 </div>
 
 <% if user_signed_in? %>
-  <h2 class="mb-3">Available Games</h2>
+  <h2 class="mb-3"><%= t('home.available_games') %></h2>
 
   <% if Game.count == 0 %>
-    <div class="alert alert-info">No games available yet. Check back soon.</div>
+    <div class="alert alert-info"><%= t('home.no_games') %></div>
   <% else %>
     <div class="row">
       <% Game.all.each do |game| %>
@@ -23,22 +23,22 @@
         <div class="col-md-4 mb-4">
           <div class="card h-100 civ-card">
             <div class="card-header">
-              Game #<%= game.id %>
+              <%= t('home.game_number', id: game.id) %>
             </div>
             <div class="card-body d-flex flex-column">
               <% if user_game %>
                 <p class="card-text mb-1">
-                  <span class="text-muted">Civilization:</span>
+                  <span class="text-muted"><%= t('home.civilization') %></span>
                   <strong><%= user_game.civilization.name %></strong>
                 </p>
                 <p class="card-text mb-3">
-                  <span class="text-muted">Turn:</span>
+                  <span class="text-muted"><%= t('home.turn') %></span>
                   <strong><%= user_game.turn %></strong>
                 </p>
-                <%= link_to "Continue Game →", game_path(game), class: "btn btn-primary mt-auto" %>
+                <%= link_to t('home.continue_game'), game_path(game), class: "btn btn-primary mt-auto" %>
               <% else %>
-                <p class="card-text text-muted mb-3">You have not joined this game yet.</p>
-                <%= link_to "Join Game", select_civilization_game_path(game), class: "btn btn-outline-primary mt-auto" %>
+                <p class="card-text text-muted mb-3"><%= t('home.not_joined') %></p>
+                <%= link_to t('home.join_game'), select_civilization_game_path(game), class: "btn btn-outline-primary mt-auto" %>
               <% end %>
             </div>
           </div>

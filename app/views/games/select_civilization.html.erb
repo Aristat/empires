@@ -1,6 +1,6 @@
 <div class="container mt-4">
-  <h1 class="mb-1">Select Your Civilization</h1>
-  <p class="lead text-muted mb-4">Choose a civilization to start your empire in Game #<%= @game.id %></p>
+  <h1 class="mb-1"><%= t('select_civilization.title') %></h1>
+  <p class="lead text-muted mb-4"><%= t('select_civilization.subtitle', id: @game.id) %></p>
 
   <div class="row">
     <% @civilizations.each do |civilization| %>
@@ -13,7 +13,7 @@
             <p class="card-text text-muted mb-3"><%= civilization.description %></p>
 
             <% if civilization.buildings.present? %>
-              <h6 class="mb-2">Bonuses</h6>
+              <h6 class="mb-2"><%= t('select_civilization.bonuses') %></h6>
               <ul class="list-unstyled mb-3">
                 <% civilization.buildings.to_a.each do |key, value| %>
                   <li class="mb-1">
@@ -26,7 +26,7 @@
               </ul>
             <% end %>
 
-            <%= button_to "Choose #{civilization.name}",
+            <%= button_to t('select_civilization.choose', name: civilization.name),
                           join_game_path(@game, civilization_id: civilization.id),
                           method: :post,
                           class: "btn btn-primary w-100 mt-auto" %>

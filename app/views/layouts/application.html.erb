@@ -37,10 +37,14 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
             <path d="M3 20h18M5 20V9l4 3 3-6 3 6 4-3v11" />
           </svg>
-          <span>Empires</span>
+          <span><%= t('nav.empires') %></span>
         <% end %>
         <div class="navbar-actions">
-          <button id="theme-toggle" class="navbar-icon-btn" aria-label="Toggle theme">
+          <div class="navbar-lang">
+            <%= link_to t('language.en'), switch_locale_path(:en), class: "navbar-lang-btn #{I18n.locale == :en ? 'active' : ''}" %>
+            <%= link_to t('language.ru'), switch_locale_path(:ru), class: "navbar-lang-btn #{I18n.locale == :ru ? 'active' : ''}" %>
+          </div>
+          <button id="theme-toggle" class="navbar-icon-btn" aria-label="<%= t('nav.toggle_theme') %>">
             <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
               <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
             </svg>
@@ -48,19 +52,19 @@
               <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
             </svg>
           </button>
-          <button class="navbar-icon-btn" id="navbar-menu-btn" aria-label="Open menu" aria-expanded="false">
+          <button class="navbar-icon-btn" id="navbar-menu-btn" aria-label="<%= t('nav.open_menu') %>" aria-expanded="false">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
               <path d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
           </button>
           <div class="navbar-dropdown" id="navbar-dropdown" hidden>
             <% if user_signed_in? %>
-              <%= link_to "Back to Games", root_path, class: "navbar-dropdown-item" %>
-              <%= link_to "Edit Profile", edit_user_registration_path, class: "navbar-dropdown-item" %>
-              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "navbar-dropdown-item", form_class: "navbar-dropdown-form" %>
+              <%= link_to t('nav.back_to_games'), root_path, class: "navbar-dropdown-item" %>
+              <%= link_to t('nav.edit_profile'), edit_user_registration_path, class: "navbar-dropdown-item" %>
+              <%= button_to t('nav.sign_out'), destroy_user_session_path, method: :delete, class: "navbar-dropdown-item", form_class: "navbar-dropdown-form" %>
             <% else %>
-              <%= link_to "Sign In", new_user_session_path, class: "navbar-dropdown-item" %>
-              <%= link_to "Sign Up", new_user_registration_path, class: "navbar-dropdown-item" %>
+              <%= link_to t('nav.sign_in'), new_user_session_path, class: "navbar-dropdown-item" %>
+              <%= link_to t('nav.sign_up'), new_user_registration_path, class: "navbar-dropdown-item" %>
             <% end %>
           </div>
         </div>

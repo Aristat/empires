@@ -1,28 +1,28 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h3 class="mb-4">Attack</h3>
+      <h3 class="mb-4"><%= t('attack.title') %></h3>
 
       <% if @user_game.protection_turns > 0 %>
         <div class="alert alert-warning">
-          Cannot attack under protection.
+          <%= t('attack.under_protection') %>
           <br>
-          (You have <%= @user_game.protection_turns %> turns of protection remaining)
+          <%= t('attack.protection_remaining', turns: @user_game.protection_turns) %>
         </div>
       <% else %>
         <!-- Attack Queue Section -->
         <% if @data[:user_data][:attack_queues].blank? %>
-          <div class="alert alert-info">Your armies are not attacking anyone.</div>
+          <div class="alert alert-info"><%= t('attack.no_armies') %></div>
         <% else %>
-          <h4>Active Armies</h4>
+          <h4><%= t('attack.active_armies') %></h4>
           <table class="table table-bordered">
             <thead>
               <tr class="table-light">
-                <th>Empire Attacked</th>
-                <th>Attack Type</th>
-                <th>Your Army</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th><%= t('attack.attack_table.empire') %></th>
+                <th><%= t('attack.attack_table.type') %></th>
+                <th><%= t('attack.attack_table.your_army') %></th>
+                <th><%= t('attack.attack_table.status') %></th>
+                <th><%= t('attack.attack_table.actions') %></th>
               </tr>
             </thead>
             <tbody>
@@ -32,7 +32,7 @@
                     <%= attack_queue.to_user_game.user.email %>
                     <% if attack_queue.to_user_game.score < @user_game.score / 2 %>
                       <div class="text-danger small">
-                        Warning! Attacking empires smaller than 1/2 of your size will result in revolt.
+                        <%= t('attack.revolt_warning') %>
                       </div>
                     <% end %>
                   </td>
@@ -46,14 +46,14 @@
                       <% if attack_queue.send("#{key}_soldiers") > 0 %><div><%= number_with_delimiter(attack_queue.send("#{key}_soldiers")) %> <%= soldier[:name] %></div><% end %>
                     <% end %>
 
-                    <% if attack_queue.cost_wine.to_i > 0 %><div><%= number_with_delimiter(attack_queue.cost_wine) %> units of wine</div><% end %>
+                    <% if attack_queue.cost_wine.to_i > 0 %><div><%= number_with_delimiter(attack_queue.cost_wine) %> <%= t('attack.units_of_wine') %></div><% end %>
 
-                    <div class="mt-2"><strong>Attack Strength: <%= number_with_delimiter(100) %>%</strong></div>
+                    <div class="mt-2"><strong><%= t('attack.attack_strength', percent: number_with_delimiter(100)) %></strong></div>
                   </td>
                   <td><%= attack_queue.attack_status %></td>
                   <td>
                     <% if attack_queue.can_cancel? %>
-                      <%= link_to "Cancel", cancel_attack_user_game_attack_path(@user_game, attack_queue), class: "btn btn-sm btn-danger" %>
+                      <%= link_to t('attack.cancel'), cancel_attack_user_game_attack_path(@user_game, attack_queue), class: "btn btn-sm btn-danger" %>
                     <% end %>
                   </td>
                 </tr>
@@ -66,24 +66,24 @@
         <div class="row mt-4">
           <div class="col-md-6 mx-auto">
             <div class="card border-dark mb-4">
-              <div class="card-header bg-light text-dark">Army Attack</div>
+              <div class="card-header bg-light text-dark"><%= t('attack.army_attack.title') %></div>
               <div class="card-body">
                 <%= form_with url: army_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
                   <div class="mb-3">
                     <%= form.select :attack_type, [
-                      ["Conquer (take land)", 'army_conquer'],
-                      ["Raid (destroy)", 'army_raid'],
-                      ["Rob (steal resources)", 'army_rob'],
-                      ["Slaughter (kill population)", 'army_slaughter']
+                      [t('attack.army_attack.types.conquer'), 'army_conquer'],
+                      [t('attack.army_attack.types.raid'), 'army_raid'],
+                      [t('attack.army_attack.types.rob'), 'army_rob'],
+                      [t('attack.army_attack.types.slaughter'), 'army_slaughter']
                     ], {}, { class: "form-select" } %>
                   </div>
 
                   <div class="mb-3">
-                    <%= form.label :to_user_game_id, "Empire #", class: "form-label" %>
+                    <%= form.label :to_user_game_id, t('attack.army_attack.empire_label'), class: "form-label" %>
                     <%= form.text_field :to_user_game_id, value: params[:to_user_game_id], class: "form-control", maxlength: 5, size: 3 %>
                   </div>
 
-                  <h5 class="mb-3">Army Units</h5>
+                  <h5 class="mb-3"><%= t('attack.army_attack.army_units') %></h5>
 
                   <% @data[:soldiers].each do |key, soldier| %>
                     <% next if soldier[:settings][:turns].negative? %>
@@ -93,33 +93,33 @@
                       <%= form.label key, soldier[:name], class: "form-label" %>
                       <div class="input-group">
                         <%= form.text_field key, value: 0, class: "form-control", maxlength: 10 %>
-                        <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][key][:count]) %></span>
+                        <span class="input-group-text"><%= t('attack.army_attack.you_have', count: number_with_delimiter(@data[:user_data][key][:count])) %></span>
                       </div>
                     </div>
                   <% end %>
 
                   <div class="mb-3 form-check">
                     <%= form.check_box :send_all, class: "form-check-input", value: '0' %>
-                    <%= form.label :send_all, "Send All Army", class: "form-check-label" %>
+                    <%= form.label :send_all, t('attack.army_attack.send_all'), class: "form-check-label" %>
                   </div>
 
-                  <h5 class="mb-3 mt-4">Resources</h5>
+                  <h5 class="mb-3 mt-4"><%= t('attack.army_attack.resources') %></h5>
 
                   <div class="mb-2">
-                    <%= form.label :cost_wine, "Wine", class: "form-label" %>
+                    <%= form.label :cost_wine, t('attack.army_attack.wine_label'), class: "form-label" %>
                     <div class="input-group">
                       <%= form.text_field :cost_wine, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@user_game.wine) %></span>
+                      <span class="input-group-text"><%= t('attack.army_attack.you_have', count: number_with_delimiter(@user_game.wine)) %></span>
                     </div>
                   </div>
 
                   <div class="mb-3 form-check">
                     <%= form.check_box :maximum_wine, class: "form-check-input" %>
-                    <%= form.label :maximum_wine, 'Send max wine?', class: "form-check-label" %>
+                    <%= form.label :maximum_wine, t('attack.army_attack.max_wine'), class: "form-check-label" %>
                   </div>
 
                   <div class="text-center">
-                    <%= form.submit "Attack", class: "btn btn-danger" %>
+                    <%= form.submit t('attack.army_attack.attack_btn'), class: "btn btn-danger" %>
                   </div>
                 <% end %>
               </div>
@@ -131,19 +131,19 @@
         <div class="row mt-4">
           <div class="col-md-6 mx-auto">
             <div class="card border-dark mb-4">
-              <div class="card-header bg-light text-dark">Catapult Attack</div>
+              <div class="card-header bg-light text-dark"><%= t('attack.catapult_attack.title') %></div>
               <div class="card-body">
                 <%= form_with url: catapult_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
                   <div class="mb-3">
                     <%= form.select :attack_type, [
-                      ["Catapult Army and Towers", 'catapult_army_and_towers'],
-                      ["Catapult Population", 'catapult_population'],
-                      ["Catapult Buildings", 'catapult_buildings']
+                      [t('attack.catapult_attack.types.army_and_towers'), 'catapult_army_and_towers'],
+                      [t('attack.catapult_attack.types.population'), 'catapult_population'],
+                      [t('attack.catapult_attack.types.buildings'), 'catapult_buildings']
                     ], {}, { class: "form-select" } %>
                   </div>
 
                   <div class="mb-3">
-                    <%= form.label :to_user_game_id, "Empire #", class: "form-label" %>
+                    <%= form.label :to_user_game_id, t('attack.catapult_attack.empire_label'), class: "form-label" %>
                     <%= form.text_field :to_user_game_id, value: params[:to_user_game_id], class: "form-control", maxlength: 5, size: 3 %>
                   </div>
 
@@ -151,17 +151,17 @@
                     <%= form.label :catapult, @data[:soldiers][:catapult][:name], class: "form-label" %>
                     <div class="input-group">
                       <%= form.text_field :catapult, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:catapult][:count]) %></span>
+                      <span class="input-group-text"><%= t('attack.army_attack.you_have', count: number_with_delimiter(@data[:user_data][:catapult][:count])) %></span>
                     </div>
                   </div>
 
                   <div class="mb-3 form-check">
                     <%= form.check_box :send_all, class: "form-check-input", id: "catapult_send_all" %>
-                    <%= form.label :send_all, "Send All Catapults", class: "form-check-label", for: "catapult_send_all" %>
+                    <%= form.label :send_all, t('attack.catapult_attack.send_all'), class: "form-check-label", for: "catapult_send_all" %>
                   </div>
 
                   <div class="text-center">
-                    <%= form.submit "Attack", class: "btn btn-danger" %>
+                    <%= form.submit t('attack.catapult_attack.attack_btn'), class: "btn btn-danger" %>
                   </div>
                 <% end %>
               </div>
@@ -173,22 +173,22 @@
         <div class="row mt-4">
           <div class="col-md-6 mx-auto">
             <div class="card border-dark mb-4">
-              <div class="card-header bg-light text-dark">Thief Attack</div>
+              <div class="card-header bg-light text-dark"><%= t('attack.thief_attack.title') %></div>
               <div class="card-body">
                 <%= form_with url: thief_attack_user_game_attacks_path(@user_game), method: :post, local: true do |form| %>
                   <div class="mb-3">
                     <%= form.select :attack_type, [
-                      ["Steal Army Information", 'thief_steal_army_information'],
-                      ["Steal Building Information", 'thief_steal_building_information'],
-                      ["Steal Research Information", 'thief_steal_research_information'],
-                      ["Steal Goods", 'thief_steal_goods'],
-                      ["Poison Water", 'thief_poison_water'],
-                      ["Set Fire", 'thief_set_fire']
+                      [t('attack.thief_attack.types.steal_army'), 'thief_steal_army_information'],
+                      [t('attack.thief_attack.types.steal_building'), 'thief_steal_building_information'],
+                      [t('attack.thief_attack.types.steal_research'), 'thief_steal_research_information'],
+                      [t('attack.thief_attack.types.steal_goods'), 'thief_steal_goods'],
+                      [t('attack.thief_attack.types.poison_water'), 'thief_poison_water'],
+                      [t('attack.thief_attack.types.set_fire'), 'thief_set_fire']
                     ], {}, { class: "form-select" } %>
                   </div>
 
                   <div class="mb-3">
-                    <%= form.label :to_user_game_id, "Empire #", class: "form-label" %>
+                    <%= form.label :to_user_game_id, t('attack.thief_attack.empire_label'), class: "form-label" %>
                     <%= form.text_field :to_user_game_id, value: params[:to_user_game_id], class: "form-control", maxlength: 5, size: 3 %>
                   </div>
 
@@ -196,17 +196,17 @@
                     <%= form.label :thieve, @data[:soldiers][:thieve][:name], class: "form-label" %>
                     <div class="input-group">
                       <%= form.text_field :thieve, value: 0, class: "form-control", maxlength: 10 %>
-                      <span class="input-group-text">You have <%= number_with_delimiter(@data[:user_data][:thieve][:count]) %></span>
+                      <span class="input-group-text"><%= t('attack.army_attack.you_have', count: number_with_delimiter(@data[:user_data][:thieve][:count])) %></span>
                     </div>
                   </div>
 
                   <div class="mb-3 form-check">
                     <%= form.check_box :send_all, class: "form-check-input", id: "thief_send_all" %>
-                    <%= form.label :send_all, "Send All Thieves", class: "form-check-label", for: "thief_send_all" %>
+                    <%= form.label :send_all, t('attack.thief_attack.send_all'), class: "form-check-label", for: "thief_send_all" %>
                   </div>
 
                   <div class="text-center">
-                    <%= form.submit "Attack", class: "btn btn-danger" %>
+                    <%= form.submit t('attack.thief_attack.attack_btn'), class: "btn btn-danger" %>
                   </div>
                 <% end %>
               </div>

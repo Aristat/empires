@@ -1,24 +1,23 @@
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Great Wall</h5>
+    <h5 class="mb-0"><%= t('wall.title') %></h5>
   </div>
   <div class="card-body">
     <p>
-      Wall provides extra protection for your empire.<br>
-      You currently have <%= number_with_delimiter(@user_game.wall) %> units of wall which provide you with
-      <span class="h4 fw-bold"><%= number_with_delimiter(@data[:user_data][:wall_protection]) %>%</span> extra protection.<br>
-      You need <%= number_with_delimiter(@data[:user_data][:total_wall]) %> units of wall to have 100% extra defense.
+      <%= t('wall.current_wall', count: number_with_delimiter(@user_game.wall)) %>
+      <span class="h4 fw-bold"><%= t('wall.extra_protection', percent: number_with_delimiter(@data[:user_data][:wall_protection])) %></span><br>
+      <%= t('wall.wall_needed', count: number_with_delimiter(@data[:user_data][:total_wall])) %>
     </p>
 
     <%= form_with url: user_game_path(@user_game), method: :put, class: "mt-4" do |f| %>
 
       <div class="card">
         <div class="card-header">
-          <strong>Percentage of builders you want to dedicate to wall construction:</strong>
+          <strong><%= t('wall.builder_percentage') %></strong>
         </div>
         <div class="card-body">
           <div class="mb-3">
-            <%= f.label :wall_build_per_turn, "Builder Percentage:", class: "form-label" %>
+            <%= f.label :wall_build_per_turn, t('wall.builder_percentage_label'), class: "form-label" %>
             <div class="input-group">
               <%= f.number_field :wall_build_per_turn,
                   value: @user_game.wall_build_per_turn,
@@ -29,8 +28,11 @@
           </div>
 
           <p class="text-muted">
-            <%= @data[:user_data][:wall_builders] %> out of <%= @data[:user_data][:num_builders] %> builders will construct <%= @data[:user_data][:wall_build] %> units of wall every month.<br>
-            Wall construction monthly cost:
+            <%= t('wall.builders_info',
+                wall_builders: @data[:user_data][:wall_builders],
+                num_builders: @data[:user_data][:num_builders],
+                wall_build: @data[:user_data][:wall_build]) %><br>
+            <%= t('wall.monthly_cost') %>
             <%= number_with_delimiter(@data[:user_data][:wall_build] * @data[:game_data][:wall_use_gold]) %> gold,
             <%= number_with_delimiter(@data[:user_data][:wall_build] * @data[:game_data][:wall_use_wood]) %> wood,
             <%= number_with_delimiter(@data[:user_data][:wall_build] * @data[:game_data][:wall_use_iron]) %> iron,
@@ -40,11 +42,11 @@
           <hr>
 
           <p class="text-muted">
-            Cost to construct 1 unit of wall is: <%= number_with_delimiter(@data[:game_data][:wall_use_gold]) %> gold, <%= number_with_delimiter(@data[:game_data][:wall_use_wood]) %> wood, <%= number_with_delimiter(@data[:game_data][:wall_use_iron]) %> iron and <%= number_with_delimiter(@data[:game_data][:wall_use_wine]) %> wine
+            <%= t('wall.unit_cost') %> <%= number_with_delimiter(@data[:game_data][:wall_use_gold]) %> gold, <%= number_with_delimiter(@data[:game_data][:wall_use_wood]) %> wood, <%= number_with_delimiter(@data[:game_data][:wall_use_iron]) %> iron and <%= number_with_delimiter(@data[:game_data][:wall_use_wine]) %> wine
           </p>
 
           <div class="text-center">
-            <%= f.submit "Update", class: "btn btn-primary" %>
+            <%= f.submit t('wall.update'), class: "btn btn-primary" %>
           </div>
         </div>
       </div>
@@ -57,30 +59,30 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="wallHelpModalLabel">Wall Help</h5>
+        <h5 class="modal-title" id="wallHelpModalLabel"><%= t('wall.help_modal.title') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>The Great Wall provides additional protection for your empire against attacks. The protection percentage is calculated based on your total land and current wall units.</p>
+        <p><%= t('wall.help_modal.description') %></p>
 
-        <h6>How it works:</h6>
+        <h6><%= t('wall.help_modal.how_it_works') %></h6>
         <ul>
-          <li>You need 5% of your total land in wall units for 100% protection</li>
-          <li>Builders will automatically construct wall units each turn</li>
-          <li>You can adjust the percentage of builders dedicated to wall construction</li>
-          <li>Each wall unit costs resources to build</li>
+          <li><%= t('wall.help_modal.item1') %></li>
+          <li><%= t('wall.help_modal.item2') %></li>
+          <li><%= t('wall.help_modal.item3') %></li>
+          <li><%= t('wall.help_modal.item4') %></li>
         </ul>
 
-        <h6>Resource Costs:</h6>
+        <h6><%= t('wall.help_modal.resource_costs') %></h6>
         <ul>
-          <li>Gold: <%= number_with_delimiter(@data[:game_data][:wall_use_gold]) %> per unit</li>
-          <li>Wood: <%= number_with_delimiter(@data[:game_data][:wall_use_wood]) %> per unit</li>
-          <li>Iron: <%= number_with_delimiter(@data[:game_data][:wall_use_iron]) %> per unit</li>
-          <li>Wine: <%= number_with_delimiter(@data[:game_data][:wall_use_wine]) %> per unit</li>
+          <li>Gold: <%= number_with_delimiter(@data[:game_data][:wall_use_gold]) %> <%= t('wall.help_modal.per_unit') %></li>
+          <li>Wood: <%= number_with_delimiter(@data[:game_data][:wall_use_wood]) %> <%= t('wall.help_modal.per_unit') %></li>
+          <li>Iron: <%= number_with_delimiter(@data[:game_data][:wall_use_iron]) %> <%= t('wall.help_modal.per_unit') %></li>
+          <li>Wine: <%= number_with_delimiter(@data[:game_data][:wall_use_wine]) %> <%= t('wall.help_modal.per_unit') %></li>
         </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('wall.help_modal.close') %></button>
       </div>
     </div>
   </div>
