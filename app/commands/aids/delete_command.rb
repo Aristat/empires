@@ -27,7 +27,7 @@ module Aids
 
     def cancel_aid(transfer_queue)
       if transfer_queue.turns_remaining != TransferQueue::DEFAULT_TURNS_REMAINING ||
-         transfer_queue.created_at > CANCEL_TIME_LIMIT.ago
+         transfer_queue.created_at > CANCEL_TIME_LIMIT.since
         @errors << I18n.t('aids.errors.cannot_cancel')
         return
       end

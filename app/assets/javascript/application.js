@@ -63,10 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       }
 
-      // Hide sibling panes
+      // Hide sibling panes (scope to direct children to avoid stripping nested tab panes)
       const tabContent = target.parentElement;
       if (tabContent) {
-        tabContent.querySelectorAll(".tab-pane").forEach(function (p) {
+        tabContent.querySelectorAll(":scope > .tab-pane").forEach(function (p) {
           p.classList.remove("show", "active");
         });
       }
