@@ -577,6 +577,7 @@ en:
       aid_cancelled: "Aid to empire #%{id} has been cancelled."
     errors:
       empire_not_found: "Empire #%{id} not found."
+      cannot_send_to_self: "You cannot send aid to yourself."
       aid_cooldown: "You are only allowed to send aid to the same person once every 4 hours."
       cannot_send_negative: "Cannot send negative %{resource}."
       not_enough_resource: "You can only send %{amount} %{resource}."

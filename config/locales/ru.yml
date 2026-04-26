@@ -577,6 +577,7 @@ ru:
       aid_cancelled: "Помощь для империи #%{id} отменена."
     errors:
       empire_not_found: "Империя #%{id} не найдена."
+      cannot_send_to_self: "Нельзя отправлять помощь самому себе."
       aid_cooldown: "Вы можете отправлять помощь одному игроку не чаще одного раза в 4 часа."
       cannot_send_negative: "Нельзя отправлять отрицательное количество %{resource}."
       not_enough_resource: "Вы можете отправить только %{amount} %{resource}."

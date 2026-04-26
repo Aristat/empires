@@ -44,6 +44,11 @@ module Aids
         return
       end
 
+      if to_user_game.id == user_game.id
+        @errors << I18n.t('aids.errors.cannot_send_to_self')
+        return
+      end
+
       recent_aid = TransferQueue.joins(:user_game)
                                .where(user_games: { user_id: user_game.user_id })
                                .where(to_user_game_id: to_user_game_id, transfer_type: :aid)
