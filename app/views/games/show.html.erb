@@ -160,19 +160,19 @@
                     <td class="align-middle text-center p-3"><strong><%= t('game.land.total') %></strong></td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Mountain Land">⛰️</span>
+                        <%= image_tag "resources/mountain.png", alt: "Mountain Land", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.m_land) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Forest Land">🌲</span>
+                        <%= image_tag "resources/forest.png", alt: "Forest Land", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.f_land) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Plains Land">🌾</span>
+                        <%= image_tag "resources/plains.png", alt: "Plains Land", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.p_land) %></span>
                       </div>
                     </td>
@@ -181,19 +181,19 @@
                     <td class="align-middle text-center p-3"><strong><%= t('game.land.free') %></strong></td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji res-emoji--free mb-1" role="img" aria-label="Free Mountain">⛰️</span>
+                        <%= image_tag "resources/mountain.png", alt: "Free Mountain", width: 20, height: 20, class: "mb-1", style: "opacity:0.45" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@data[:user_data][:free_mountains]) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji res-emoji--free mb-1" role="img" aria-label="Free Forest">🌲</span>
+                        <%= image_tag "resources/forest.png", alt: "Free Forest", width: 20, height: 20, class: "mb-1", style: "opacity:0.45" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@data[:user_data][:free_forest]) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji res-emoji--free mb-1" role="img" aria-label="Free Plains">🌾</span>
+                        <%= image_tag "resources/plains.png", alt: "Free Plains", width: 20, height: 20, class: "mb-1", style: "opacity:0.45" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@data[:user_data][:free_plains]) %></span>
                       </div>
                     </td>
@@ -210,19 +210,19 @@
                   <tr>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Wood">🪵</span>
+                        <%= image_tag "resources/wood.png", alt: "Wood", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.wood) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Food">🍖</span>
+                        <%= image_tag "resources/food.png", alt: "Food", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.food) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Iron">⚙️</span>
+                        <%= image_tag "resources/iron.png", alt: "Iron", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.iron) %></span>
                       </div>
                     </td>
@@ -230,19 +230,19 @@
                   <tr>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Tools">🔨</span>
+                        <%= image_tag "resources/tools.png", alt: "Tools", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.tools) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Wine">🍷</span>
+                        <%= image_tag "resources/wine.png", alt: "Wine", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.wine) %></span>
                       </div>
                     </td>
                     <td class="text-center p-3">
                       <div class="d-flex flex-column align-items-center">
-                        <span class="res-emoji mb-1" role="img" aria-label="Horses">🐴</span>
+                        <%= image_tag "resources/horses.png", alt: "Horses", width: 20, height: 20, class: "mb-1" %>
                         <span class="fw-semibold"><%= number_with_delimiter(@user_game.horses) %></span>
                       </div>
                     </td>
