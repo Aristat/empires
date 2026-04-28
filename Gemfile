@@ -47,6 +47,9 @@ gem 'thruster', require: false
 # entities positions
 gem 'acts_as_list'
 
+# Redis distributed locking
+gem 'redis'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'debug', platforms: %i[ mri windows ], require: 'debug/prelude'
@@ -78,4 +81,5 @@ group :test do
 
   gem 'faker'
   gem 'webmock'
+  gem 'mock_redis'
 end

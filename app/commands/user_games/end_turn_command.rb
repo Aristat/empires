@@ -116,7 +116,7 @@ module UserGames
     def call
       return false if @user_game.current_turns <= 0
 
-      @user_game.with_lock do
+      result = RedisLockService.new(key: "lock:user_game:#{@user_game.id}", timeout: 30).call_with_lock do
         process_public_trade
         calculate_builders
         hunters_production
@@ -160,9 +160,11 @@ module UserGames
         @user_game.trades_this_turn = 0
         @user_game.save!
         UserGames::UpdateScoreCommand.new(user_game: @user_game).call
+
+        true
       end
 
-      true
+      result == true
     end
 
     private
