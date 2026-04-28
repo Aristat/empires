@@ -74,50 +74,15 @@ module UserGames
     UNPAID_DESERTION_RATE = 0.1
 
     def initialize(user_game:)
+      super()
       @user_game = user_game
-      @data = PrepareDataCommand.new(user_game: @user_game).call
-      @messages = []
-
-      temp_turn = @user_game.turn + 1
-      @month = temp_turn % 12 + 1
-      @year = (temp_turn / 12).floor + GAME_START_YEAR
-
-      # remaining
-      @r_people = @user_game.people
-      @r_wood = @user_game.wood
-      @r_food = @user_game.food
-      @r_iron = @user_game.iron
-      @r_gold = @user_game.gold
-      @r_tools = @user_game.tools
-      @r_wine = @user_game.wine
-      @r_horses = @user_game.horses
-      @r_bows = @user_game.bows
-      @r_swords = @user_game.swords
-      @r_maces = @user_game.maces
-
-      # produced
-      @p_wood = 0
-      @p_food = 0
-      @p_iron = 0
-      @p_gold = 0
-      @p_tools = 0
-      @p_wine = 0
-      @p_horses = 0
-
-      # consumed
-      @c_wood = 0
-      @c_food = 0
-      @c_iron = 0
-      @c_gold = 0
-      @c_tools = 0
-      @c_wine = 0
     end
 
     def call
       return false if @user_game.current_turns <= 0
 
-      result = RedisLockService.new(key: "lock:user_game:#{@user_game.id}", timeout: 30).call_with_lock do
-        process_public_trade
+      setup
+      process_public_trade
         calculate_builders
         hunters_production
         farms_production
@@ -161,13 +126,34 @@ module UserGames
         @user_game.save!
         UserGames::UpdateScoreCommand.new(user_game: @user_game).call
 
-        true
-      end
-
-      result == true
+      true
     end
 
     private
+
+    def setup
+      @data = PrepareDataCommand.new(user_game: @user_game).call
+      @messages = []
+
+      temp_turn = @user_game.turn + 1
+      @month = temp_turn % 12 + 1
+      @year = (temp_turn / 12).floor + GAME_START_YEAR
+
+      @r_people = @user_game.people
+      @r_wood   = @user_game.wood
+      @r_food   = @user_game.food
+      @r_iron   = @user_game.iron
+      @r_gold   = @user_game.gold
+      @r_tools  = @user_game.tools
+      @r_wine   = @user_game.wine
+      @r_horses = @user_game.horses
+      @r_bows   = @user_game.bows
+      @r_swords = @user_game.swords
+      @r_maces  = @user_game.maces
+
+      @p_wood = @p_food = @p_iron = @p_gold = @p_tools = @p_wine = @p_horses = 0
+      @c_wood = @c_food = @c_iron = @c_gold = @c_tools = @c_wine = 0
+    end
 
     def add_message(message, color = nil)
       @messages << { text: message, color: color }

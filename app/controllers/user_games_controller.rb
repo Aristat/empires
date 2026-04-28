@@ -9,11 +9,12 @@ class UserGamesController < ApplicationController
   end
 
   def end_turn
-    render json: { success: false }, status: :unprocessable_entity and return if @user_game.blank?
+    lock_key = "lock:user_game:#{@user_game.id}"
+    success = RedisLockService.new(key: lock_key, timeout: 30).call_without_lock do
+      UserGames::EndTurnCommand.new(user_game: UserGame.find(@user_game.id)).call
+    end
 
-    command = UserGames::EndTurnCommand.new(user_game: @user_game)
-
-    if command.call
+    if success
       render json: { success: true }
     else
       render json: { success: false }, status: :unprocessable_entity

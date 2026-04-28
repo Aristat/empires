@@ -3,6 +3,15 @@
 class RedisLockService
   POLL_INTERVAL = 0.05 # seconds
 
+  def self.with_locks(*keys, timeout: 30, redis: REDIS_LOCK_CLIENT, &block)
+    key, *rest = keys.map(&:to_s).sort
+    return yield if key.nil?
+
+    new(key: key, timeout: timeout, redis: redis).call_without_lock do
+      rest.empty? ? yield : with_locks(*rest, timeout: timeout, redis: redis, &block)
+    end
+  end
+
   def initialize(key:, timeout: 30, redis: REDIS_LOCK_CLIENT)
     @key     = key
     @timeout = timeout
