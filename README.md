@@ -14,10 +14,10 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 - [x] Implement aid
 - [ ] Refactoring magic constants in game, prepare documentation, formulas, etc
 - [x] Improve buildings and other tables to related per Game to be able run multiple different games with different settings
-- [ ] Cover by specs and tests BE logic
+- [x] Cover by specs and tests BE logic
 - [ ] Cover by E2E tests FE logic
 - [ ] Implement CI/CD and deploy to cloud solution like EC2/Heroku/other place by Docker container
-- [ ] Implement LRU cache logic to reduce SQL queries
+- [x] Implement LRU cache logic to reduce SQL queries
 - [x] Move translations to I18n to support multi languages
 - [x] Add lockers to avoid parallel data insert/update to database per user
 
