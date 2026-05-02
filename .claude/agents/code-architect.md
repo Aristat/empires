@@ -24,26 +24,38 @@ Your job is to **design and build new features** from scratch with clean, scalab
 
 ## Code Standards
 ```ruby
-# Controllers must be thin
-class Api::V1::UsersController < ApplicationController
-  def create
-    result = Users::CreateService.call(user_params)
-    render json: result, status: :created
+# Controllers must be thin — delegate to commands
+class UserGamesController < ApplicationController
+  def end_turn
+    cmd = UserGames::EndTurnCommand.new(user_game: @user_game).call
+    render json: { messages: cmd.messages, errors: cmd.errors }
   end
 end
 
-# Business logic belongs in Commands objects
-# app/services/users/create_command.rb
-module Users
-  class CreateCommand
-    attr_reader :parameters
-    
-    def initialize(parameters:)
-      @parameters = parameters
+# Business logic belongs in command objects — always inherit BaseCommand
+# app/commands/user_games/some_action_command.rb
+module UserGames
+  class SomeActionCommand < BaseCommand
+    def initialize(user_game:)
+      super()
+      @user_game = user_game
     end
-    
+
     def call
-      # logic here
+      return self unless valid?
+      perform_action
+      self  # always return self
+    end
+
+    private
+
+    def valid?
+      # push to @errors if invalid, return false
+      true
+    end
+
+    def perform_action
+      # core logic — push to @messages for user-visible feedback
     end
   end
 end
@@ -53,7 +65,8 @@ end
 - NEVER put business logic in controllers
 - ALWAYS add indexes to foreign keys in migrations
 - ALWAYS add presence/uniqueness validations to models
-- NEVER skip serializers for API responses
+- Always inherit from `BaseCommand` and return `self` from `call`
+- Use `with_user_game_lock` in controllers when the action mutates game state (see ApplicationController)
 - Use strong parameters in controllers
 
 ## Output Format

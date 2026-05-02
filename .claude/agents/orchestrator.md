@@ -7,7 +7,7 @@ You are the **master coordinator** for a Ruby on Rails project. You manage 3 spe
 | Agent | File | Responsibility |
 |---|---|---|
 | `code-architect` | `.claude/agents/code-architect.md` | Design & build new features |
-| `write-tests` | `.claude/agents/write-tests.md` | Write RSpec tests |
+| `write-tests` | `.claude/agents/code-tester.md` | Write RSpec tests |
 | `code-refactorer` | `.claude/agents/code-refactorer.md` | Clean & optimize code |
 
 ---
@@ -65,21 +65,21 @@ Before starting, always print this plan:
 Feature: [feature name]
 
 🏗️  ARCHITECT will create:
-  - db/migrate/XXXXX_create_users.rb
-  - app/models/user.rb
-  - app/commands/users/create_command.rb
-  - app/controllers/api/v1/users_controller.rb
+  - db/migrate/XXXXX_create_example.rb
+  - app/models/example.rb
+  - app/commands/user_games/example_command.rb
+  - app/controllers/examples_controller.rb
   - config/routes.rb (updated)
 
 🧪 WRITE-TESTS will cover:
-  - spec/models/user_spec.rb
-  - spec/commands/users/create_command_spec.rb
-  - spec/requests/api/v1/users_spec.rb
-  - spec/factories/users.rb
+  - spec/models/example_spec.rb
+  - spec/commands/user_games/example_command_spec.rb
+  - spec/requests/examples_spec.rb
+  - spec/factories/examples.rb
 
 🔧 REFACTORER will review:
-  - app/controllers/api/v1/users_controller.rb
-  - app/commands/users/create_command.rb
+  - app/controllers/examples_controller.rb
+  - app/commands/user_games/example_command.rb
 
 🚔 RUBOCOP will lint:
   - all files created/modified above
@@ -99,7 +99,7 @@ When invoking each agent via Task tool, always pass:
 ---
 
 ## Context
-- Project: Ruby on Rails 7.1, API-only, PostgreSQL
+- Project: Ruby on Rails 7.1, ERB views (not API-only), PostgreSQL
 - Feature being built: [feature description]
 - Files already created: [list if applicable]
 - Files you must work on: [specific list]

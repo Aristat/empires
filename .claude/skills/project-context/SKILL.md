@@ -84,6 +84,23 @@ end
 - `Trades::MaxTradesCommand` — trade limits
 - `TrainQueues::LimitForTrainCommand` / `SoldiersLimitCommand`
 
+## Services
+- `app/services/redis_lock_service.rb` — distributed Redis lock used to prevent race conditions on concurrent game state mutations
+  - `RedisLockService.with_locks(*keys)` — acquires multiple locks in sorted-key order (deadlock-safe)
+  - `call_without_lock` — tries once, returns `false` if lock is held
+  - `call_with_lock(timeout:)` — polls until acquired or timeout expires
+
+## Controller Helpers (ApplicationController)
+- `with_user_game_lock(user_game)` — wraps a block in a Redis lock on `lock:user_game:<id>`, then re-fetches the record inside to avoid stale data. Use this in any controller action that mutates game state:
+```ruby
+def end_turn
+  with_user_game_lock do |user_game|
+    cmd = UserGames::EndTurnCommand.new(user_game: user_game).call
+    render json: { messages: cmd.messages, errors: cmd.errors }
+  end
+end
+```
+
 ## Testing Conventions
 - Specs in `spec/` mirroring `app/` structure
 - Factories in `spec/factories/`
