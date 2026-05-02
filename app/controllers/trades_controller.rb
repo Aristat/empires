@@ -3,10 +3,15 @@ class TradesController < ApplicationController
   before_action :set_user_game
 
   def local_buy
-    command = Trades::LocalBuyCommand.new(user_game: @user_game, local_buy_params: local_buy_params)
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = Trades::LocalBuyCommand.new(user_game: user_game, local_buy_params: local_buy_params)
+      command.call
+    end
 
-    if command.success?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.success?
       flash[:notice] = command.messages.join("\n")
     else
       flash[:alert] = command.errors.join("\n")
@@ -16,10 +21,15 @@ class TradesController < ApplicationController
   end
 
   def local_sell
-    command = Trades::LocalSellCommand.new(user_game: @user_game, local_sell_params: local_sell_params)
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = Trades::LocalSellCommand.new(user_game: user_game, local_sell_params: local_sell_params)
+      command.call
+    end
 
-    if command.success?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.success?
       flash[:notice] = command.messages.join("\n")
     else
       flash[:alert] = command.errors.join("\n")
@@ -29,10 +39,15 @@ class TradesController < ApplicationController
   end
 
   def global_sell
-    command = Trades::GlobalSellCommand.new(user_game: @user_game, global_sell_params: global_sell_params)
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = Trades::GlobalSellCommand.new(user_game: user_game, global_sell_params: global_sell_params)
+      command.call
+    end
 
-    if command.success?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.success?
       flash[:notice] = command.messages.join("\n")
     else
       flash[:alert] = command.errors.join("\n")
@@ -42,12 +57,15 @@ class TradesController < ApplicationController
   end
 
   def update_auto_trade
-    command = Trades::UpdateAutoTradeCommand.new(
-      user_game: @user_game, update_auto_trade_params: update_auto_trade_params
-    )
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = Trades::UpdateAutoTradeCommand.new(user_game: user_game, update_auto_trade_params: update_auto_trade_params)
+      command.call
+    end
 
-    if command.success?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.success?
       flash[:notice] = command.messages.join("\n")
     else
       flash[:alert] = command.errors.join("\n")
@@ -57,14 +75,18 @@ class TradesController < ApplicationController
   end
 
   def global_change_prices
-    transfer_queue = @user_game.transfer_queues.find(params[:transfer_queue_id])
+    command = nil
+    with_user_game_lock do |user_game|
+      transfer_queue = user_game.transfer_queues.find(params[:transfer_queue_id])
+      command = Trades::GlobalChangePricesCommand.new(
+        user_game: user_game, transfer_queue: transfer_queue, global_change_prices_params: global_change_prices_params
+      )
+      command.call
+    end
 
-    command = Trades::GlobalChangePricesCommand.new(
-      user_game: @user_game, transfer_queue: transfer_queue, global_change_prices_params: global_change_prices_params
-    )
-    command.call
-
-    if command.success?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.success?
       flash[:notice] = command.messages.join("\n") if command.messages.present?
     else
       flash[:alert] = command.errors.join("\n")
@@ -74,18 +96,22 @@ class TradesController < ApplicationController
   end
 
   def global_withdraw
-    transfer_queue = @user_game.transfer_queues.find(params[:transfer_queue_id])
-
-    command = Trades::GlobalWithdrawCommand.new(user_game: @user_game, transfer_queue: transfer_queue)
-    command.call
-
-    if command.success?
-      flash[:notice] = command.messages.join("\n") if command.messages.present?
-    else
-      flash[:alert] = command.errors.join("\n")
+    command = nil
+    with_user_game_lock do |user_game|
+      transfer_queue = user_game.transfer_queues.find(params[:transfer_queue_id])
+      command = Trades::GlobalWithdrawCommand.new(user_game: user_game, transfer_queue: transfer_queue)
+      command.call
     end
 
-    render json: { success: true }
+    if command.nil?
+      render json: { success: false, error: I18n.t('errors.server_busy') }
+    elsif command.success?
+      flash[:notice] = command.messages.join("\n") if command.messages.present?
+      render json: { success: true }
+    else
+      flash[:alert] = command.errors.join("\n")
+      render json: { success: false }
+    end
   end
 
   def global_market_data
@@ -94,20 +120,25 @@ class TradesController < ApplicationController
   end
 
   def global_buy
-    command = Trades::GlobalBuyCommand.new(
-      user_game: @user_game,
-      resource: params[:resource],
-      quantities: params[:quantities]
-    )
-    command.call
-
-    if command.success?
-      flash[:notice] = command.messages.join("\n") if command.messages.present?
-    else
-      flash[:alert] = command.errors.join("\n")
+    command = nil
+    with_user_game_lock do |user_game|
+      command = Trades::GlobalBuyCommand.new(
+        user_game: user_game,
+        resource: params[:resource],
+        quantities: params[:quantities]
+      )
+      command.call
     end
 
-    render json: { success: true }
+    if command.nil?
+      render json: { success: false, error: I18n.t('errors.server_busy') }
+    elsif command.success?
+      flash[:notice] = command.messages.join("\n") if command.messages.present?
+      render json: { success: true }
+    else
+      flash[:alert] = command.errors.join("\n")
+      render json: { success: false }
+    end
   end
 
   private

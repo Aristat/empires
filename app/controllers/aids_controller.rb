@@ -4,10 +4,15 @@ class AidsController < ApplicationController
   before_action :set_transfer_queue, only: [ :destroy ]
 
   def create
-    command = Aids::CreateCommand.new(user_game: @user_game, aid_params: aid_params)
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = Aids::CreateCommand.new(user_game: user_game, aid_params: aid_params)
+      command.call
+    end
 
-    if command.success?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.success?
       flash[:notice] = command.messages.join("\n")
     else
       flash[:alert] = command.errors.join("\n")
@@ -17,8 +22,17 @@ class AidsController < ApplicationController
   end
 
   def destroy
-    Aids::DeleteCommand.new(user_game: @user_game, transfer_queues: [@transfer_queue]).call
-    flash[:notice] = I18n.t('transfer_queues.messages.destroyed')
+    acquired = with_user_game_lock do |user_game|
+      Aids::DeleteCommand.new(user_game: user_game, transfer_queues: [@transfer_queue]).call
+      true
+    end
+
+    if acquired
+      flash[:notice] = I18n.t('transfer_queues.messages.destroyed')
+    else
+      flash[:alert] = I18n.t('errors.server_busy')
+    end
+
     redirect_to game_path(@user_game.game)
   end
 

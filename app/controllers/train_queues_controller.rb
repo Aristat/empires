@@ -4,10 +4,15 @@ class TrainQueuesController < ApplicationController
   before_action :set_train_queue, only: [:destroy]
 
   def create
-    command = TrainQueues::CreateCommand.new(user_game: @user_game, train_queue_params: train_queue_params)
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = TrainQueues::CreateCommand.new(user_game: user_game, train_queue_params: train_queue_params)
+      command.call
+    end
 
-    if command.failed?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.failed?
       flash[:alert] = command.errors.join("\n")
     else
       flash[:notice] = t('train_queues.messages.created')
@@ -17,10 +22,15 @@ class TrainQueuesController < ApplicationController
   end
 
   def destroy
-    command = TrainQueues::DeleteCommand.new(user_game: @user_game, train_queue: @train_queue)
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = TrainQueues::DeleteCommand.new(user_game: user_game, train_queue: @train_queue)
+      command.call
+    end
 
-    if command.failed?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.failed?
       flash[:alert] = command.errors.join("\n")
     else
       flash[:notice] = t('train_queues.messages.destroyed')
@@ -30,16 +40,21 @@ class TrainQueuesController < ApplicationController
   end
 
   def disband
-    command = TrainQueues::DisbandCommand.new(user_game: @user_game, train_queue_params: train_queue_params)
-    command.call
-
-    if command.failed?
-      flash[:alert] = command.errors.join("\n")
-    else
-      flash[:notice] = t('train_queues.messages.disband')
+    command = nil
+    with_user_game_lock do |user_game|
+      command = TrainQueues::DisbandCommand.new(user_game: user_game, train_queue_params: train_queue_params)
+      command.call
     end
 
-    render json: { success: true }
+    if command.nil?
+      render json: { success: false, error: I18n.t('errors.server_busy') }
+    elsif command.failed?
+      flash[:alert] = command.errors.join("\n")
+      render json: { success: false }
+    else
+      flash[:notice] = t('train_queues.messages.disband')
+      render json: { success: true }
+    end
   end
 
   private

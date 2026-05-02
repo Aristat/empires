@@ -4,10 +4,15 @@ class ExploreQueuesController < ApplicationController
   before_action :set_explore_queue, only: [ :destroy ]
 
   def create
-    command = ExploreQueues::CreateCommand.new(user_game: @user_game, explore_queue_params: explore_queue_params)
-    command.call
+    command = nil
+    with_user_game_lock do |user_game|
+      command = ExploreQueues::CreateCommand.new(user_game: user_game, explore_queue_params: explore_queue_params)
+      command.call
+    end
 
-    if command.failed?
+    if command.nil?
+      flash[:alert] = I18n.t('errors.server_busy')
+    elsif command.failed?
       flash[:alert] = command.errors.join("\n")
     end
 
@@ -15,8 +20,17 @@ class ExploreQueuesController < ApplicationController
   end
 
   def destroy
-    ExploreQueues::DeleteCommand.new(user_game: @user_game, explore_queues: [@explore_queue]).call
-    flash[:notice] = t('explore_queues.messages.destroyed')
+    acquired = with_user_game_lock do |user_game|
+      ExploreQueues::DeleteCommand.new(user_game: user_game, explore_queues: [@explore_queue]).call
+      true
+    end
+
+    if acquired
+      flash[:notice] = t('explore_queues.messages.destroyed')
+    else
+      flash[:alert] = I18n.t('errors.server_busy')
+    end
+
     redirect_to game_path(@user_game.game)
   end
 

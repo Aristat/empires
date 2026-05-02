@@ -5,8 +5,8 @@ class AttacksController < ApplicationController
 
   def army_attack
     command = nil
-    with_attack_locks(params[:to_user_game_id]) do
-      command = AttackQueues::CreateArmyAttackCommand.new(user_game: UserGame.find(@user_game.id), army_attack_params: army_attack_params)
+    with_attack_locks(params[:to_user_game_id]) do |user_game|
+      command = AttackQueues::CreateArmyAttackCommand.new(user_game: user_game, army_attack_params: army_attack_params)
       command.call
     end
     respond_command(command)
@@ -14,8 +14,8 @@ class AttacksController < ApplicationController
 
   def catapult_attack
     command = nil
-    with_attack_locks(params[:to_user_game_id]) do
-      command = AttackQueues::CreateCatapultAttackCommand.new(user_game: UserGame.find(@user_game.id), catapult_attack_params: catapult_attack_params)
+    with_attack_locks(params[:to_user_game_id]) do |user_game|
+      command = AttackQueues::CreateCatapultAttackCommand.new(user_game: user_game, catapult_attack_params: catapult_attack_params)
       command.call
     end
     respond_command(command)
@@ -23,8 +23,8 @@ class AttacksController < ApplicationController
 
   def thief_attack
     command = nil
-    with_attack_locks(params[:to_user_game_id]) do
-      command = AttackQueues::CreateThiefAttackCommand.new(user_game: UserGame.find(@user_game.id), thief_attack_params: thief_attack_params)
+    with_attack_locks(params[:to_user_game_id]) do |user_game|
+      command = AttackQueues::CreateThiefAttackCommand.new(user_game: user_game, thief_attack_params: thief_attack_params)
       command.call
     end
     respond_command(command)
@@ -32,8 +32,8 @@ class AttacksController < ApplicationController
 
   def cancel_attack
     command = nil
-    with_attack_locks do
-      command = AttackQueues::CancelAttackCommand.new(user_game: UserGame.find(@user_game.id), attack_queue: @attack_queue)
+    with_user_game_lock do |user_game|
+      command = AttackQueues::CancelAttackCommand.new(user_game: user_game, attack_queue: @attack_queue)
       command.call
     end
     respond_command(command)
@@ -41,10 +41,12 @@ class AttacksController < ApplicationController
 
   private
 
-  def with_attack_locks(to_user_game_id = nil, &block)
+  def with_attack_locks(to_user_game_id = nil)
     keys = ["lock:user_game:#{@user_game.id}"]
     keys << "lock:user_game:#{to_user_game_id}" if to_user_game_id.present?
-    RedisLockService.with_locks(*keys, timeout: 10, &block)
+    RedisLockService.with_locks(*keys, timeout: 10) do
+      yield UserGame.find(@user_game.id)
+    end
   end
 
   def respond_command(command)

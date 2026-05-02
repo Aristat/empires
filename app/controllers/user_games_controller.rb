@@ -9,9 +9,8 @@ class UserGamesController < ApplicationController
   end
 
   def end_turn
-    lock_key = "lock:user_game:#{@user_game.id}"
-    success = RedisLockService.new(key: lock_key, timeout: 30).call_without_lock do
-      UserGames::EndTurnCommand.new(user_game: UserGame.find(@user_game.id)).call
+    success = with_user_game_lock do |user_game|
+      UserGames::EndTurnCommand.new(user_game: user_game).call
     end
 
     if success
