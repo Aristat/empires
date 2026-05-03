@@ -6,20 +6,8 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 
 ## TODO list
 
-- [x] Finish research mechanic
-- [x] Implement scores tables
-- [x] Implement train army logic
-- [x] Implement attack logic
-- [x] Implement glob trade market
-- [x] Implement aid
-- [ ] Refactoring magic constants in game, prepare documentation, formulas, etc
-- [x] Improve buildings and other tables to related per Game to be able run multiple different games with different settings
-- [x] Cover by specs and tests BE logic
-- [ ] Cover by E2E tests FE logic
-- [ ] Implement CI/CD and deploy to cloud solution like EC2/Heroku/other place by Docker container
-- [x] Implement LRU cache logic to reduce SQL queries
-- [x] Move translations to I18n to support multi languages
-- [x] Add lockers to avoid parallel data insert/update to database per user
+- [] Implement alliances
+- [] Testing logic/balance with multiple users
 
 ## How to run the game
 
