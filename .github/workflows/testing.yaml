@@ -40,6 +40,8 @@ jobs:
         run: bundle exec rubocop --parallel
       - name: Zeitwerk
         run: bundle exec rake zeitwerk:check
+      - name: Build Tailwind CSS
+        run: bundle exec rails tailwindcss:build
       - name: Set up database schema
         run: bundle exec rake db:create db:schema:load --trace
       - name: Run tests
