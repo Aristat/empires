@@ -44,6 +44,7 @@ ru:
       management: "⚙️ Управление"
       aid: "🤝 Помощь"
       scores: "🏆 Рейтинг"
+      docs: "📖 Справка"
     summary:
       score: "Очки"
       population: "Население"
@@ -742,3 +743,23 @@ ru:
         overflow: "Из-за нехватки места для хранения вы потеряли %{wood} дерева, %{food} еды, %{iron} железа, %{tools} инструментов, %{wine} вина и %{horses} лошадей"
       aids:
         sent: "Помощь для игрока %{email} отправлена"
+
+  docs:
+    title: "Справка"
+    back_to_game: "К игре"
+    not_joined: "Вы не присоединились к этой игре."
+    nav:
+      home: "Главная"
+      basics: "Основы игры"
+      resources: "Ресурсы"
+      buildings: "Постройки"
+      wall: "Великая стена"
+      army: "Войска"
+      attack: "Атаки"
+      explore: "Исследование"
+      people: "Население"
+      research: "Исследования"
+      trade: "Торговля"
+      aid: "Помощь"
+      civs: "Цивилизации"
+      manage: "Управление"

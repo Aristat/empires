@@ -1,0 +1,148 @@
+<h2>Buildings</h2>
+
+<p>
+  Buildings are constructed by builders (provided by Tool Makers) using wood, iron, and gold.
+  Each building occupies a certain number of land squares of a specific type.
+  You are playing as <strong><%= @user_game.civilization.name %></strong> —
+  your civilization may modify some building stats shown below.
+</p>
+
+<%
+  land_labels = { 'forest' => 'Forest', 'plain' => 'Plain', 'mountain' => 'Mountain' }
+  civ_buildings = @user_game.civilization.settings['buildings'] || {}
+%>
+
+<h4>Production Buildings</h4>
+<table class="table table-bordered table-sm">
+  <thead>
+    <tr>
+      <th>Building</th>
+      <th class="text-center">Land</th>
+      <th class="text-center">Squares</th>
+      <th class="text-center">Workers</th>
+      <th class="text-center">Cost (W/I/G)</th>
+      <th class="text-center">Production</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% %w[hunter farm wood_cutter iron_mine gold_mine winery tool_maker weaponsmith stable mage_tower].each do |key| %>
+      <% b = @buildings[key] %>
+      <% next unless b %>
+      <%
+        civ_b = civ_buildings[key] || {}
+        squares    = (civ_b['squares']    || b.squares).to_i
+        workers    = (civ_b['workers']    || b.workers).to_i
+        production = (civ_b['production'] || b.production).to_f
+        prod_name  = b.settings['production_name'] || ''
+        land       = land_labels[b.land.to_s] || b.land.to_s.capitalize
+        cost_w     = b.cost_wood.to_i
+        cost_i     = b.cost_iron.to_i
+        cost_g     = b.cost_gold.to_i
+        modified   = civ_b.any?
+      %>
+      <tr class="<%= 'table-warning' if modified %>">
+        <td>
+          <strong><%= b.name %></strong>
+          <% if modified %><span class="badge bg-warning text-dark ms-1">civ bonus</span><% end %>
+        </td>
+        <td class="text-center"><%= land %></td>
+        <td class="text-center"><%= squares %></td>
+        <td class="text-center"><%= workers %></td>
+        <td class="text-center"><%= cost_w %>/<%= cost_i %>/<%= cost_g %></td>
+        <td class="text-center">
+          <% if production > 0 %>
+            <%= production.to_i == production ? production.to_i : production %> <%= prod_name %>
+          <% end %>
+          <% if key == 'tool_maker' %>
+            <br><small class="text-secondary">needs <%= b.settings['tool_wood_need'] || 2 %>W + <%= b.settings['tool_iron_need'] || 2 %>I per tool</small>
+          <% elsif key == 'winery' %>
+            <br><small class="text-secondary">needs <%= b.settings['wine_gold_need'] || 10 %> gold per wine</small>
+          <% elsif key == 'stable' %>
+            <br><small class="text-secondary">needs <%= (civ_b['food_need'] || b.settings['food_need'] || 100).to_i %> food per horse</small>
+          <% elsif key == 'mage_tower' %>
+            <br><small class="text-secondary">needs <%= (civ_b['research_gold_need'] || b.settings['research_gold_need'] || 100).to_i %> gold/tower</small>
+          <% end %>
+        </td>
+        <td>
+          <% if key == 'tool_maker' %>
+            Provides <%= (civ_b['num_builders'] || b.settings['num_builders'] || 6).to_i %> builders
+          <% elsif key == 'mage_tower' %>
+            Generates research points
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h4>Military &amp; Infrastructure</h4>
+<table class="table table-bordered table-sm">
+  <thead>
+    <tr>
+      <th>Building</th>
+      <th class="text-center">Land</th>
+      <th class="text-center">Squares</th>
+      <th class="text-center">Cost (W/I/G)</th>
+      <th>Special</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% %w[fort tower town_center market warehouse house].each do |key| %>
+      <% b = @buildings[key] %>
+      <% next unless b %>
+      <%
+        civ_b    = civ_buildings[key] || {}
+        squares  = (civ_b['squares'] || b.squares).to_i
+        land     = land_labels[b.land.to_s] || b.land.to_s.capitalize
+        cost_w   = b.cost_wood.to_i
+        cost_i   = b.cost_iron.to_i
+        cost_g   = b.cost_gold.to_i
+        modified = civ_b.any?
+      %>
+      <tr class="<%= 'table-warning' if modified %>">
+        <td>
+          <strong><%= b.name %></strong>
+          <% if modified %><span class="badge bg-warning text-dark ms-1">civ bonus</span><% end %>
+        </td>
+        <td class="text-center"><%= land %></td>
+        <td class="text-center"><%= squares %></td>
+        <td class="text-center"><%= cost_w %>/<%= cost_i %>/<%= cost_g %></td>
+        <td>
+          <% if key == 'fort' %>
+            Trains up to <%= (civ_b['max_units'] || b.settings['max_units'] || 15).to_i %> units; food upkeep: <%= b.food_eaten.to_i %>/turn
+          <% elsif key == 'tower' %>
+            Defense: <%= (civ_b['defense_points'] || b.settings['defense_points'] || 50).to_i %> pts (no upkeep)
+          <% elsif key == 'town_center' %>
+            +<%= (civ_b['people'] || b.people || 100).to_i %> population cap;
+            <%= (civ_b['resources_limit_increase'] || b.settings['resources_limit_increase'] || 1000).to_i %> storage;
+            <%= (civ_b['max_explorers'] || b.settings['max_explorers'] || 6).to_i %> max explorers;
+            1 thief + 1 catapult + 1 special unit slot
+          <% elsif key == 'market' %>
+            +<%= (civ_b['max_trades'] || b.settings['max_trades'] || 50).to_i %> local trades/turn
+          <% elsif key == 'warehouse' %>
+            +<%= (civ_b['supplies'] || b.settings['resources_limit_increase'] || 2500).to_i %> storage
+          <% elsif key == 'house' %>
+            +<%= (civ_b['people'] || b.people || 100).to_i %> population cap; food upkeep: <%= b.food_eaten.to_i %>/turn
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="alert alert-secondary mt-3">
+  <strong>Build cost = W/I/G</strong> — Wood / Iron / Gold required to construct one building.<br>
+  <strong>Squares</strong> — how many land squares of that type are used per building.<br>
+  Rows highlighted in yellow have bonuses or penalties applied by your civilization (<%= @user_game.civilization.name %>).
+</div>
+
+<h4>Builders</h4>
+<p>
+  Each Tool Maker provides
+  <%= @buildings['tool_maker']&.settings&.dig('num_builders') || 6 %>
+  builders (modified by civilization). You also start with
+  <%= Building::DEFAULT_NUM_BUILDERS %> default builders.
+  Builders require one tool each to work. If tools run out, only builders with tools will construct.
+  Building construction time (in builder-turns) equals the sum of wood and iron costs.
+</p>

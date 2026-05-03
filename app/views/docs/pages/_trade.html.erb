@@ -1,0 +1,57 @@
+<h2>Trade</h2>
+
+<h4>Local Trade</h4>
+<p>
+  Local trade lets you buy and sell goods with your own people at fixed prices.
+  The number of goods you can trade per turn depends on your markets:
+</p>
+<ul>
+  <li>Each <strong>Town Center</strong> allows <%= @buildings['town_center']&.settings&.dig('max_local_trades') || 100 %> local trades per turn.</li>
+  <li>Each <strong>Market</strong> allows an additional <%= @buildings['market']&.settings&.dig('max_trades') || 50 %> trades per turn.</li>
+  <li><em>Markets Output</em> research adds 10% more trades per level.</li>
+</ul>
+<p>
+  Local prices are set per game. A price multiplier applies based on your score relative to
+  other players — richer empires pay/receive slightly more.
+</p>
+
+<h4>Auto-Trade</h4>
+<p>
+  You can configure automatic trades that run every time you end a turn.
+  Available resources for auto-trade: wood, food, iron, tools.
+  Auto-trades count against your maximum local trade limit for that turn.
+  Set auto-buy and auto-sell quantities on the Local Trade tab.
+</p>
+
+<h4>Global Market</h4>
+<p>
+  The global market lets you trade with other players.
+  Resources available: wood, food, iron, tools, swords, bows, maces, horses, wine.
+</p>
+
+<p><strong>Selling on the global market:</strong></p>
+<ul>
+  <li>Your market capacity controls how many goods you can list per turn.</li>
+  <li>There is a <strong>5% seller fee</strong> deducted from proceeds when goods sell.</li>
+  <li>You set your own price (within the game's min/max bounds per resource).</li>
+  <li>Caravans take <strong>3 turns</strong> to arrive at the buyer.</li>
+  <li>You can withdraw unsold listings (10% withdrawal fee applies).</li>
+</ul>
+
+<p><strong>Buying on the global market:</strong></p>
+<ul>
+  <li>Browse active seller listings and place buy orders.</li>
+  <li>There is a <strong>5% buyer fee</strong> added to the listed price.</li>
+  <li>Purchased goods travel for <strong>3 turns</strong> before arriving in your empire.</li>
+</ul>
+
+<div class="alert alert-info">
+  <strong>Tip:</strong> Wine cannot be traded on the global market — it can only be produced.
+  Use the global market to offload surplus iron or wood, and to buy missing weapons
+  (swords, bows, maces) rather than building a large weaponsmith workforce.
+</div>
+
+<h4>Aid (Gifts)</h4>
+<p>
+  See the <%= link_to "Aid page", game_docs_path(@game, page: 'aid') %> for sending resources directly to allied players.
+</p>

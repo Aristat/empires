@@ -44,6 +44,7 @@ en:
       management: "⚙️ Management"
       aid: "🤝 Aid"
       scores: "🏆 Scores"
+      docs: "📖 Docs"
     summary:
       score: "Score"
       population: "Population"
@@ -742,3 +743,23 @@ en:
         overflow: "Due to lack of storage space, you lost %{wood} wood, %{food} food, %{iron} iron, %{tools} tools, %{wine} wine and %{horses} horses"
       aids:
         sent: "Aid for player %{email} sent"
+
+  docs:
+    title: "Documentation"
+    back_to_game: "Back to Game"
+    not_joined: "You haven't joined this game."
+    nav:
+      home: "Home"
+      basics: "Game Basics"
+      resources: "Resources"
+      buildings: "Buildings"
+      wall: "Great Wall"
+      army: "Army Units"
+      attack: "Attacking"
+      explore: "Exploring"
+      people: "Population"
+      research: "Research"
+      trade: "Trade"
+      aid: "Aid"
+      civs: "Civilizations"
+      manage: "Management"

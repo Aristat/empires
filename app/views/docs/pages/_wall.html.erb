@@ -1,0 +1,55 @@
+<h2>Great Wall</h2>
+
+<p>
+  The Great Wall provides additional defense against all types of attack.
+  Wall protection is calculated as a percentage based on how many wall units you have
+  relative to your total land.
+</p>
+
+<h4>How It Works</h4>
+<ul>
+  <li>You need <strong>5% of your total land</strong> in wall units for 100% extra protection.</li>
+  <li>Protection % = <code>(current wall / max wall) × 100</code>, capped at 100%.</li>
+  <li>Wall protection adds that percentage to your defense points during combat.</li>
+  <li>The wall slowly decays each turn — there is a 25% chance per turn of decay occurring.</li>
+  <li>When decay happens: <code>wall × random(1..100) / 750</code> units are lost (minimum 10 wall before decay applies).</li>
+</ul>
+
+<h4>Building the Wall</h4>
+<p>
+  On the Wall tab in the game, set the percentage of your builders you want to dedicate to wall construction.
+  Wall builders work separately from building-queue builders.
+  <strong>25 builders</strong> produce 1 wall unit per turn.
+  Wall construction consumes the following resources (per wall unit):
+</p>
+
+<%
+  wall_gold = @game.wall_use_gold || 100
+  wall_iron = @game.wall_use_iron || 2
+  wall_wood = @game.wall_use_wood || 10
+  wall_wine = @game.wall_use_wine || 0
+%>
+
+<table class="table table-bordered table-sm" style="max-width:350px">
+  <thead><tr><th>Resource</th><th class="text-center">Per Wall Unit</th></tr></thead>
+  <tbody>
+    <tr><td>Gold</td><td class="text-center"><%= wall_gold %></td></tr>
+    <tr><td>Iron</td><td class="text-center"><%= wall_iron %></td></tr>
+    <tr><td>Wood</td><td class="text-center"><%= wall_wood %></td></tr>
+    <% if wall_wine.to_i > 0 %>
+      <tr><td>Wine</td><td class="text-center"><%= wall_wine %></td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="alert alert-info">
+  <strong>Tip:</strong> Keep building wall units even after reaching 100% — wall decay means
+  you need a constant trickle of construction to maintain full protection.
+  Allocating 5–10% of your builders to the wall is usually sufficient once you reach maximum.
+</div>
+
+<h4>Civilization Note</h4>
+<p>
+  The <strong>Chinese</strong> civilization has different wall resource costs.
+  If you are playing as Chinese, check your Wall tab for the actual costs.
+</p>

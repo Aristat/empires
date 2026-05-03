@@ -1,0 +1,161 @@
+<h2>Army Units</h2>
+
+<p>
+  You are playing as <strong><%= @user_game.civilization.name %></strong>.
+  Your civilization may modify some unit stats — rows with a <span class="badge bg-warning text-dark">civ bonus</span> label are affected.
+</p>
+
+<%
+  civ_soldiers = @user_game.civilization.settings['soldiers'] || {}
+
+  def fmt_num(v)
+    return '' if v.nil?
+    f = v.to_f
+    f == f.to_i ? f.to_i.to_s : f.to_s
+  end
+%>
+
+<h4>Standard Units</h4>
+<table class="table table-bordered table-sm">
+  <thead>
+    <tr>
+      <th>Unit</th>
+      <th class="text-center">Trains in</th>
+      <th class="text-center">Attack</th>
+      <th class="text-center">Defense</th>
+      <th class="text-center">Upkeep/turn</th>
+      <th class="text-center">Required to Train</th>
+      <th class="text-center">Land Taken</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% %w[swordsman archer horseman macemen trained_peasant].each do |key| %>
+      <% s = @soldiers[key] %>
+      <% next unless s %>
+      <%
+        civ_s    = civ_soldiers[key] || {}
+        turns    = (civ_s['turns']          || s.turns).to_i
+        atk      = (civ_s['attack_points']  || s.attack_points).to_f
+        def_pts  = (civ_s['defense_points'] || s.defense_points).to_f
+        gpt      = (civ_s['gold_per_turn']  || s.gold_per_turn).to_f
+        food     = (civ_s['food_eaten']     || s.food_eaten).to_f
+        land     = (civ_s['take_land']      || s.take_land).to_f
+        t_swords = (civ_s['train_swords']   || s.train_swords).to_i
+        t_bows   = (civ_s['train_bows']     || s.train_bows).to_i
+        t_maces  = (civ_s['train_maces']    || s.train_maces).to_i
+        t_horses = (civ_s['train_horses']   || s.train_horses).to_i
+        t_gold   = (civ_s['train_gold']     || s.train_gold).to_i
+        modified = civ_s.any?
+        disabled = turns.to_i == -1
+
+        train_parts = []
+        train_parts << "#{t_swords} sword" if t_swords > 0
+        train_parts << "#{t_bows} bow" if t_bows > 0
+        train_parts << "#{t_maces} mace" if t_maces > 0
+        train_parts << "#{t_horses} horse" if t_horses > 0
+        train_parts << "#{t_gold} gold" if t_gold > 0
+        train_str = train_parts.any? ? train_parts.join(', ') : 'nothing'
+      %>
+      <tr class="<%= 'table-warning' if modified %><%= ' table-secondary text-muted' if disabled %>">
+        <td>
+          <strong><%= s.name %></strong>
+          <% if modified && !disabled %><span class="badge bg-warning text-dark ms-1">civ bonus</span><% end %>
+          <% if disabled %><span class="badge bg-secondary ms-1">disabled</span><% end %>
+        </td>
+        <td class="text-center"><%= disabled ? '—' : "#{turns} turns" %></td>
+        <td class="text-center"><%= fmt_num(atk) %></td>
+        <td class="text-center"><%= fmt_num(def_pts) %></td>
+        <td class="text-center"><%= fmt_num(gpt) %> gold<br><%= fmt_num(food) %> food</td>
+        <td class="text-center"><%= train_str %></td>
+        <td class="text-center"><%= fmt_num(land) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h4>Special Units (1 per Town Center)</h4>
+<table class="table table-bordered table-sm">
+  <thead>
+    <tr>
+      <th>Unit</th>
+      <th class="text-center">Trains in</th>
+      <th class="text-center">Attack</th>
+      <th class="text-center">Defense</th>
+      <th class="text-center">Upkeep/turn</th>
+      <th class="text-center">Required to Train</th>
+      <th class="text-center">Land Taken</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% %w[unique_unit catapult thieve tower].each do |key| %>
+      <% s = @soldiers[key] %>
+      <% next unless s %>
+      <%
+        civ_s    = civ_soldiers[key] || {}
+        name     = civ_s['name']     || s.name
+        turns    = (civ_s['turns']          || s.turns).to_i
+        atk      = (civ_s['attack_points']  || s.attack_points).to_f
+        def_pts  = (civ_s['defense_points'] || s.defense_points).to_f
+        gpt      = (civ_s['gold_per_turn']  || s.gold_per_turn).to_f
+        food     = (civ_s['food_eaten']     || s.food_eaten).to_f
+        land     = (civ_s['take_land']      || s.take_land).to_f
+        t_swords = (civ_s['train_swords']   || s.train_swords).to_i
+        t_bows   = (civ_s['train_bows']     || s.train_bows).to_i
+        t_maces  = (civ_s['train_maces']    || s.train_maces).to_i
+        t_horses = (civ_s['train_horses']   || s.train_horses).to_i
+        t_gold   = (civ_s['train_gold']     || s.train_gold).to_i
+        t_wood   = (civ_s['train_wood']     || s.train_wood).to_i
+        t_iron   = (civ_s['train_iron']     || s.train_iron).to_i
+        wood_pt  = s.settings['wood_per_turn'].to_f
+        iron_pt  = s.settings['iron_per_turn'].to_f
+        modified = key == 'unique_unit' || civ_s.any?
+        disabled = turns == -1
+
+        train_parts = []
+        train_parts << "#{t_swords} sword" if t_swords > 0
+        train_parts << "#{t_bows} bow" if t_bows > 0
+        train_parts << "#{t_maces} mace" if t_maces > 0
+        train_parts << "#{t_horses} horse" if t_horses > 0
+        train_parts << "#{t_gold} gold" if t_gold > 0
+        train_parts << "#{t_wood} wood" if t_wood > 0
+        train_parts << "#{t_iron} iron" if t_iron > 0
+        train_str = train_parts.any? ? train_parts.join(', ') : 'nothing'
+      %>
+      <tr class="<%= 'table-warning' if modified && !disabled %><%= ' table-secondary text-muted' if disabled %>">
+        <td>
+          <strong><%= name %></strong>
+          <% if key == 'unique_unit' %><span class="badge bg-info text-dark ms-1">your civ</span><% end %>
+          <% if disabled %><span class="badge bg-secondary ms-1">disabled</span><% end %>
+        </td>
+        <td class="text-center">
+          <% if key == 'tower' %>permanent<% elsif disabled %>—<% else %><%= turns %> turns<% end %>
+        </td>
+        <td class="text-center"><%= fmt_num(atk) %></td>
+        <td class="text-center"><%= fmt_num(def_pts) %></td>
+        <td class="text-center">
+          <%= fmt_num(gpt) %> gold<br>
+          <%= fmt_num(food) %> food
+          <% if wood_pt > 0 %><br><%= fmt_num(wood_pt) %> wood<% end %>
+          <% if iron_pt > 0 %><br><%= fmt_num(iron_pt) %> iron<% end %>
+        </td>
+        <td class="text-center"><%= train_str %></td>
+        <td class="text-center"><%= fmt_num(land) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="alert alert-secondary">
+  <strong>Land Taken</strong> — land conquered per unit when winning an army attack.<br>
+  <strong>Special Units</strong> — Catapult, Thief, and Unique Unit are limited to 1 per Town Center.<br>
+  <strong>Tower</strong> — defense-only building, cannot attack; no upkeep cost.<br>
+  <strong>Catapult upkeep</strong> is paid in wood and iron, not gold.
+</div>
+
+<h4>Army Capacity</h4>
+<p>
+  Forts hold <%= @buildings['fort']&.settings&.dig('max_units') || 15 %> units each.
+  Town Centers hold <%= @buildings['town_center']&.settings&.dig('max_units') || 10 %> units each.
+  Soldiers over capacity desert at a rate of <strong>25% of the excess per turn</strong>.
+  Soldiers who cannot be paid their gold upkeep also desert (10% of the unpaid amount).
+</p>

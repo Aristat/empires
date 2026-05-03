@@ -1,0 +1,121 @@
+<h2>Resources</h2>
+
+<p>Resources are produced by buildings each turn and consumed by population, army, and construction.</p>
+
+<% resources = [
+  {
+    key: 'gold',
+    name: 'Gold',
+    produced_by: 'Gold Mines, Local/Global Market sales',
+    used_for: 'Building construction, army upkeep, research, training soldiers',
+    notes: 'The main currency. Running out of gold causes soldiers to desert.'
+  },
+  {
+    key: 'food',
+    name: 'Food',
+    produced_by: 'Farms (months 4–10 only), Hunters (year-round)',
+    used_for: 'Feeding population and army, sending explorers',
+    notes: 'If food runs out, population starves. Farms do not produce in winter.'
+  },
+  {
+    key: 'wood',
+    name: 'Wood',
+    produced_by: 'Wood Cutters',
+    used_for: 'Building construction, bows, maces, tools, heating in winter, wall construction, catapult upkeep',
+    notes: 'Wood is consumed for heating during winter months (Nov–Feb). Shortage causes people to freeze.'
+  },
+  {
+    key: 'iron',
+    name: 'Iron',
+    produced_by: 'Iron Mines',
+    used_for: 'Building construction, swords, maces, tools, catapult production and upkeep, wall construction',
+    notes: 'Used heavily for weapons and construction.'
+  },
+  {
+    key: 'tools',
+    name: 'Tools',
+    produced_by: 'Tool Makers (need 2 wood + 2 iron per tool)',
+    used_for: 'Builders need tools to construct buildings',
+    notes: 'Tools wear out — about 10–20% of builder tools degrade in months 5 and 10. Always keep a surplus.'
+  },
+  {
+    key: 'wine',
+    name: 'Wine',
+    produced_by: 'Wineries (need 10 gold per wine)',
+    used_for: 'Boosts army attack power when attacking (1 wine per soldier)',
+    notes: 'Wine cannot be traded or sent as aid. The only way to get wine is to produce it.'
+  },
+  {
+    key: 'horses',
+    name: 'Horses',
+    produced_by: 'Stables (need 100 food per horse)',
+    used_for: 'Training Horsemen, sending exploration parties further, some special units',
+    notes: 'Using horses with explorers extends the exploration trip, discovering more land.'
+  },
+  {
+    key: 'swords',
+    name: 'Swords',
+    produced_by: 'Weaponsmiths (need 25 iron per sword)',
+    used_for: 'Training Swordsmen, Horsemen, and some civilization special units',
+    notes: 'Set weaponsmith to produce swords from the Management screen.'
+  },
+  {
+    key: 'bows',
+    name: 'Bows',
+    produced_by: 'Weaponsmiths (need 25 wood per bow)',
+    used_for: 'Training Archers and some civilization special units',
+    notes: ''
+  },
+  {
+    key: 'maces',
+    name: 'Maces',
+    produced_by: 'Weaponsmiths (need 6 wood + 6 iron per mace)',
+    used_for: 'Training Macemen',
+    notes: 'Cheapest weapon to produce per unit.'
+  },
+] %>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th style="width:10%">Resource</th>
+      <th style="width:30%">Produced By</th>
+      <th style="width:30%">Used For</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% resources.each do |r| %>
+      <tr>
+        <td><strong><%= r[:name] %></strong></td>
+        <td><%= r[:produced_by] %></td>
+        <td><%= r[:used_for] %></td>
+        <td class="text-secondary"><small><%= r[:notes] %></small></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h4>Storage Limits</h4>
+<p>
+  Resources are capped by your storage capacity. Each <strong>Town Center</strong> provides
+  <%= @buildings['town_center']&.settings&.dig('resources_limit_increase') || 1000 %> storage.
+  Each <strong>Warehouse</strong> provides
+  <%= @buildings['warehouse']&.settings&.dig('resources_limit_increase') || 2500 %> storage.
+  The <em>Space Effectiveness</em> research increases storage by 1% per level.
+  Resources over the cap are lost at the end of each turn.
+</p>
+
+<h4>Weaponsmith Production</h4>
+<p>
+  Each Weaponsmith can produce one type of weapon per turn. Set the production mix on the
+  Management screen. Costs per weapon for this game:
+</p>
+<% ws = @buildings['weaponsmith'] %>
+<% if ws %>
+  <ul>
+    <li>1 Bow = <%= ws.settings['bow_wood_need'] || 25 %> wood</li>
+    <li>1 Sword = <%= ws.settings['sword_iron_need'] || 25 %> iron</li>
+    <li>1 Mace = <%= ws.settings['mace_wood_need'] || 6 %> wood + <%= ws.settings['mace_iron_need'] || 6 %> iron</li>
+  </ul>
+<% end %>

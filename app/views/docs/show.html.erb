@@ -1,0 +1,49 @@
+<% content_for :title, "Documentation — Empires" %>
+<% content_for :container_class, "container-fluid px-3" %>
+
+<%
+  nav_pages = [
+    ['home',      t('docs.nav.home')],
+    ['basics',    t('docs.nav.basics')],
+    ['resources', t('docs.nav.resources')],
+    ['buildings', t('docs.nav.buildings')],
+    ['wall',      t('docs.nav.wall')],
+    ['army',      t('docs.nav.army')],
+    ['attack',    t('docs.nav.attack')],
+    ['explore',   t('docs.nav.explore')],
+    ['people',    t('docs.nav.people')],
+    ['research',  t('docs.nav.research')],
+    ['trade',     t('docs.nav.trade')],
+    ['aid',       t('docs.nav.aid')],
+    ['civs',      t('docs.nav.civs')],
+    ['manage',    t('docs.nav.manage')],
+  ]
+%>
+
+<div class="row">
+  <div class="col-md-2">
+    <div class="card mb-3">
+      <div class="card-header"><strong><%= t('docs.title') %></strong></div>
+      <div class="p-2">
+        <ul class="nav nav-pills flex-column">
+          <% nav_pages.each do |page_key, page_name| %>
+            <li class="nav-item">
+              <%= link_to page_name,
+                    game_docs_path(@game, page: page_key),
+                    class: "nav-link w-100 text-start py-1 #{'active' if @page == page_key}" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <%= link_to "← #{t('docs.back_to_game')}", game_path(@game), class: "btn btn-sm btn-outline-secondary w-100" %>
+  </div>
+
+  <div class="col-md-10">
+    <div class="card">
+      <div class="card-body">
+        <%= render "docs/pages/#{@page}" %>
+      </div>
+    </div>
+  </div>
+</div>

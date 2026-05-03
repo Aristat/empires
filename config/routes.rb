@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'games/:game_id/docs(/:page)', to: 'docs#show', as: :game_docs
+
   resources :user_games, only: [:update] do
     member do
       post :end_turn

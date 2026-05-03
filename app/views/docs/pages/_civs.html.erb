@@ -1,0 +1,135 @@
+<h2>Civilizations</h2>
+
+<p>
+  There are <%= @civilizations.count %> civilizations in this game.
+  You are playing as <strong><%= @user_game.civilization.name %></strong>.
+  Each civilization has a unique special unit (replacing the generic "Unique Unit" slot)
+  and modifies certain building and game parameters.
+</p>
+
+<%
+  def_soldiers = @soldiers
+  land_display = {'forest' => 'Forest', 'plain' => 'Plain', 'mountain' => 'Mountain'}
+%>
+
+<% @civilizations.each do |civ| %>
+  <%
+    civ_buildings = civ.settings['buildings'] || {}
+    civ_soldiers  = civ.settings['soldiers']  || {}
+    civ_game      = civ.settings['game']      || {}
+    is_current    = civ.id == @user_game.civilization_id
+
+    unique_base = def_soldiers['unique_unit']
+    unique_mods = civ_soldiers['unique_unit'] || {}
+    unique_name = unique_mods['name'] || 'Unique Unit'
+    unique_atk  = (unique_mods['attack_points']  || unique_base&.attack_points).to_f
+    unique_def  = (unique_mods['defense_points'] || unique_base&.defense_points).to_f
+    unique_turns= (unique_mods['turns']          || unique_base&.turns).to_i
+    unique_land = (unique_mods['take_land']      || unique_base&.take_land).to_f
+    unique_gpt  = (unique_mods['gold_per_turn']  || unique_base&.gold_per_turn).to_f
+    unique_food = (unique_mods['food_eaten']     || unique_base&.food_eaten).to_f
+    t_gold   = (unique_mods['train_gold']   || unique_base&.train_gold).to_i
+    t_swords = (unique_mods['train_swords'] || unique_base&.train_swords).to_i
+    t_bows   = (unique_mods['train_bows']   || unique_base&.train_bows).to_i
+    t_horses = (unique_mods['train_horses'] || unique_base&.train_horses).to_i
+
+    train_parts = []
+    train_parts << "#{t_swords} sword" if t_swords > 0
+    train_parts << "#{t_bows} bow" if t_bows > 0
+    train_parts << "#{t_horses} horse" if t_horses > 0
+    train_parts << "#{t_gold} gold" if t_gold > 0
+    train_str = train_parts.any? ? train_parts.join(', ') : '1000 gold'
+  %>
+
+  <div class="card mb-4 <%= 'border-warning' if is_current %>">
+    <div class="card-header d-flex align-items-center gap-2">
+      <strong><%= civ.name %></strong>
+      <% if is_current %>
+        <span class="badge bg-warning text-dark">Your Civilization</span>
+      <% end %>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-5">
+          <h6>Special Unit: <%= unique_name %></h6>
+          <table class="table table-sm table-bordered">
+            <tbody>
+              <tr><td>Attack Points</td><td class="text-end"><%= unique_atk.to_i == unique_atk ? unique_atk.to_i : unique_atk %></td></tr>
+              <tr><td>Defense Points</td><td class="text-end"><%= unique_def.to_i == unique_def ? unique_def.to_i : unique_def %></td></tr>
+              <tr><td>Trains in</td><td class="text-end"><%= unique_turns %> turns</td></tr>
+              <tr><td>Required to Train</td><td class="text-end"><%= train_str %></td></tr>
+              <tr><td>Upkeep</td><td class="text-end"><%= unique_gpt.to_i == unique_gpt ? unique_gpt.to_i : unique_gpt %> gold, <%= unique_food.to_i == unique_food ? unique_food.to_i : unique_food %> food</td></tr>
+              <tr><td>Land Taken</td><td class="text-end"><%= unique_land %></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-md-7">
+          <% if civ_buildings.any? || civ_game.any? || (civ_soldiers.except('unique_unit').any?) %>
+            <h6>Civilization Bonuses &amp; Penalties</h6>
+            <ul class="mb-0" style="font-size:0.875rem">
+              <% civ_buildings.each do |bkey, mods| %>
+                <% b = @buildings[bkey] %>
+                <% mods.each do |mkey, mval| %>
+                  <%
+                    label = case mkey
+                    when 'squares'    then "#{b&.name || bkey}: #{mval} squares (vs #{b&.squares&.to_i})"
+                    when 'production' then "#{b&.name || bkey}: #{mval} production (vs #{b&.production&.to_f})"
+                    when 'workers'    then "#{b&.name || bkey}: #{mval} workers (vs #{b&.workers&.to_i})"
+                    when 'people'     then "#{b&.name || bkey}: #{mval} people per building"
+                    when 'num_builders' then "#{b&.name || bkey}: #{mval} builders per building"
+                    when 'max_units'  then "#{b&.name || bkey}: #{mval} max units"
+                    when 'max_explorers' then "#{b&.name || bkey}: #{mval} max explorers"
+                    when 'max_trades' then "#{b&.name || bkey}: #{mval} max trades"
+                    when 'food_need'  then "#{b&.name || bkey}: #{mval} food per horse"
+                    when 'supplies'   then "#{b&.name || bkey}: #{mval} storage capacity"
+                    when 'defense_points' then "#{b&.name || bkey}: #{mval} defense pts"
+                    when 'cost_wood'  then "#{b&.name || bkey}: costs #{mval} wood"
+                    when 'cost_iron'  then "#{b&.name || bkey}: costs #{mval} iron"
+                    when 'research_gold_need' then "#{b&.name || bkey}: #{mval} gold per research point"
+                    else "#{b&.name || bkey}.#{mkey} = #{mval}"
+                    end
+                  %>
+                  <li><%= label %></li>
+                <% end %>
+              <% end %>
+              <% civ_game.each do |gkey, gval| %>
+                <%
+                  glabel = case gkey
+                  when 'people_burn_one_wood'   then "1 wood heats #{gval} people (winter)"
+                  when 'people_eat_one_food'     then "1 food feeds #{gval} people"
+                  when 'pop_increase_modifier'   then "Population growth ×#{gval}"
+                  when 'extra_food_per_land'     then "Extra food production per land: #{gval}"
+                  when 'wall_use_gold'           then "Wall: #{gval} gold per unit"
+                  when 'wall_use_iron'           then "Wall: #{gval} iron per unit"
+                  when 'wall_use_wood'           then "Wall: #{gval} wood per unit"
+                  when 'wall_use_wine'           then "Wall: #{gval} wine per unit"
+                  else "#{gkey} = #{gval}"
+                  end
+                %>
+                <li><%= glabel %></li>
+              <% end %>
+              <% civ_soldiers.except('unique_unit').each do |skey, smods| %>
+                <% s = @soldiers[skey] %>
+                <% smods.each do |mkey, mval| %>
+                  <%
+                    slabel = case mkey
+                    when 'attack_points'  then "#{s&.name || skey}: #{mval} attack pts"
+                    when 'defense_points' then "#{s&.name || skey}: #{mval} defense pts"
+                    when 'turns'          then mval.to_i == -1 ? "#{s&.name || skey}: disabled" : "#{s&.name || skey}: #{mval} turns to train"
+                    when 'take_land'      then "#{s&.name || skey}: #{mval} land taken"
+                    else "#{s&.name || skey}.#{mkey} = #{mval}"
+                    end
+                  %>
+                  <li><%= slabel %></li>
+                <% end %>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-secondary"><em>No special building or game bonuses.</em></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

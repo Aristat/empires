@@ -1,0 +1,68 @@
+<h2>Exploring</h2>
+
+<p>
+  Explorers are sent from Town Centers to discover new land for your empire.
+  Each Town Center provides
+  <strong><%= @buildings['town_center']&.settings&.dig('max_explorers') || 6 %> maximum explorers</strong>
+  and <%= @buildings['town_center']&.settings&.dig('food_per_explorer') || 5 %> food per explorer per trip.
+</p>
+
+<h4>Explorer Trip Length</h4>
+<table class="table table-bordered table-sm" style="max-width:350px">
+  <thead><tr><th>Horses</th><th class="text-center">Trip Length (turns)</th></tr></thead>
+  <tbody>
+    <tr><td>No horses</td><td class="text-center">6</td></tr>
+    <tr><td>1× horses</td><td class="text-center">8</td></tr>
+    <tr><td>2× horses</td><td class="text-center">10</td></tr>
+    <tr><td>3× horses</td><td class="text-center">12</td></tr>
+  </tbody>
+</table>
+<p>
+  Longer trips with horses discover <strong>more land per explorer</strong>.
+  The horse multiplier scales exploration output roughly proportionally to trip length.
+  Horses are consumed (1 horse per explorer for each horse tier).
+</p>
+
+<h4>Land Type Distribution (base per explorer)</h4>
+<table class="table table-bordered table-sm" style="max-width:400px">
+  <thead>
+    <tr>
+      <th>Land Type</th>
+      <th class="text-center">Base Chance</th>
+      <th class="text-center">Focus Multiplier</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Mountains</td><td class="text-center">~13%</td><td class="text-center">3×</td></tr>
+    <tr><td>Forest</td><td class="text-center">~26%</td><td class="text-center">2.5×</td></tr>
+    <tr><td>Plains</td><td class="text-center">~58%</td><td class="text-center">2×</td></tr>
+  </tbody>
+</table>
+<p>
+  When you focus on a specific land type, the focus multiplier applies to that type while
+  the others get a <strong>penalty of ~0.33×</strong>.
+  The actual land found has some randomness — results vary between roughly ⅓ and the full base amount.
+</p>
+
+<h4>Minimum Party Size</h4>
+<p>You need at least <strong>4 explorers</strong> per expedition.</p>
+
+<h4>Efficiency Penalty</h4>
+<p>
+  Large empires get an efficiency penalty on exploration.
+  Once your total land exceeds <strong>500,000 squares</strong>, efficiency drops:
+  <code>efficiency = (100 − (land / 500k)) / 100</code>, with a minimum of 1%.
+  The <em>Explorers</em> research offsets this by adding 1% per level.
+</p>
+
+<h4>Minimum Explorers Requirement</h4>
+<p>
+  You need enough food to send explorers.
+  Food cost = (food per explorer) × (number of explorers) × (trip length in turns).
+</p>
+
+<div class="alert alert-info">
+  <strong>Tip:</strong> Early in the game, always keep explorers running. Build more Town Centers
+  to unlock more explorer slots. Send 3× horses once you have a stable supply to maximize
+  land discovery per expedition.
+</div>

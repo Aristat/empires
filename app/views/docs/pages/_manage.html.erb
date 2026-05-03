@@ -1,0 +1,61 @@
+<h2>Management Tips</h2>
+
+<h4>Early Game (turns 1–500)</h4>
+<ol>
+  <li>Build <strong>5–10 Tool Makers</strong> immediately — set their production to 30–50% to conserve resources.</li>
+  <li>Build <strong>Wood Cutters</strong> and <strong>Iron Mines</strong> — you need a steady supply of both.</li>
+  <li>Build <strong>Town Centers</strong> — each one unlocks 6 explorers, plus thief/catapult/special unit slots.</li>
+  <li>Build <strong>Farms</strong> and <strong>Hunters</strong> to feed your growing population and exploration parties.</li>
+  <li>Always keep explorers running — land is everything early on.</li>
+  <li>Set food ratio to <strong>Very High</strong> or <strong>Maximum</strong> to grow population fast.</li>
+  <li>Build <strong>Houses</strong> if you're running out of population capacity before you have enough Town Centers.</li>
+</ol>
+
+<h4>Mid Game</h4>
+<ol>
+  <li>Build <strong>Mage Towers</strong> once you have reliable gold income and spare plains land. Start research immediately.</li>
+  <li>Build <strong>Warehouses</strong> if resources are hitting the storage cap — lost resources are wasted turns.</li>
+  <li>Build <strong>Markets</strong> to increase local trade volume and access the global market.</li>
+  <li>Build <strong>Stables</strong> and <strong>Weaponsmiths</strong> when ready to train army.</li>
+  <li>Build <strong>Forts</strong> before training large numbers of regular units.</li>
+</ol>
+
+<h4>Army Management</h4>
+<ul>
+  <li>Never train army if you can't afford the upkeep — unpaid soldiers desert at 10% per turn.</li>
+  <li>Keep fort capacity in mind: soldiers over the cap desert at 25% per turn.</li>
+  <li>Catapults and Thieves require Town Center space (1 per center) — plan Town Center count accordingly.</li>
+  <li><em>Army Upkeep Cost</em> research (max 50 levels) cuts upkeep by up to 50% — a huge long-term saving.</li>
+  <li><em>Army Training Cost</em> research (max 50 levels) cuts training weapon requirements by up to 50%.</li>
+</ul>
+
+<h4>Resource Management</h4>
+<ul>
+  <li>Watch your storage cap — check the status bar. Overflow is silently lost.</li>
+  <li>Tools wear out in months 5 and 10 (10–20% of builder tools). Keep a buffer of tools.</li>
+  <li>Winter (months 11–2): make sure you have enough wood for heating. 1 wood heats ~100 people.</li>
+  <li>Farms don't produce in winter (months 11–3) — have Hunters or stored food to cover the gap.</li>
+  <li>Wine can't be traded — if you want to use wine in attacks, you must produce it yourself.</li>
+</ul>
+
+<h4>Building Status (Production %)</h4>
+<p>
+  Production buildings (farms, hunters, mines, etc.) can be set to a production percentage
+  from the Builders tab. Reducing production saves resources at the cost of lower output.
+  This is useful for Tool Makers early on (set to 30–50% so they don't drain all your wood/iron).
+</p>
+
+<h4>Research Priorities</h4>
+<ul>
+  <li><strong>Cap first:</strong> <em>Military Losses</em>, <em>Army Upkeep Cost</em>, <em>Army Training Cost</em> all cap at 50 — max these before over-investing in uncapped types.</li>
+  <li><strong>Early production:</strong> Food Production and Wood Production pay dividends throughout the game.</li>
+  <li><strong>Explorers:</strong> Excellent if you're still in the land-growth phase.</li>
+  <li><strong>Markets Output:</strong> Valuable if you rely on local trade for resource balance.</li>
+</ul>
+
+<h4>Protection Period</h4>
+<p>
+  You have <strong><%= @game.settings['protection_turns'] || 200 %> turns of protection</strong> when starting.
+  Use this window entirely for building your economy. Do not train army yet — focus on
+  land, population, and production infrastructure.
+</p>

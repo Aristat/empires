@@ -1,0 +1,38 @@
+<h2>Welcome to Empires Documentation</h2>
+
+<p>
+  You are playing as <strong><%= @user_game.civilization.name %></strong> in Game #<%= @game.id %>.
+  Use the navigation on the left to browse topics.
+</p>
+
+<hr>
+
+<div class="row">
+  <div class="col-md-6">
+    <h5>Getting Started</h5>
+    <ul>
+      <li><%= link_to "Game Basics", game_docs_path(@game, page: 'basics') %> — turns, land, how to grow</li>
+      <li><%= link_to "Resources", game_docs_path(@game, page: 'resources') %> — gold, food, iron, wood and more</li>
+      <li><%= link_to "Buildings", game_docs_path(@game, page: 'buildings') %> — what to build and where</li>
+      <li><%= link_to "Population", game_docs_path(@game, page: 'people') %> — managing your people</li>
+      <li><%= link_to "Management", game_docs_path(@game, page: 'manage') %> — tips for new players</li>
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <h5>Advanced Topics</h5>
+    <ul>
+      <li><%= link_to "Army Units", game_docs_path(@game, page: 'army') %> — all unit stats and costs</li>
+      <li><%= link_to "Attacking", game_docs_path(@game, page: 'attack') %> — army, catapult and thief attacks</li>
+      <li><%= link_to "Research", game_docs_path(@game, page: 'research') %> — all 18 research types</li>
+      <li><%= link_to "Trade", game_docs_path(@game, page: 'trade') %> — local and global market</li>
+      <li><%= link_to "Civilizations", game_docs_path(@game, page: 'civs') %> — all 8 civilizations and bonuses</li>
+    </ul>
+  </div>
+</div>
+
+<hr>
+
+<div class="alert alert-info">
+  <strong>Note:</strong> All numbers shown in this documentation reflect the actual settings of Game #<%= @game.id %>.
+  Values may differ from other games if the game was set up with custom parameters.
+</div>
