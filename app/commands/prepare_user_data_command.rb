@@ -60,8 +60,6 @@ class PrepareUserDataCommand < BaseCommand
 
     user_data[:attack_queues] = user_game.attack_queues.includes(to_user_game: :user).order(created_at: :desc)
 
-    prepare_users
-
     user_data
   end
 
@@ -385,31 +383,5 @@ class PrepareUserDataCommand < BaseCommand
     user_data[:catapult_defense_power] = catapult_defense_power + (catapult_defense_power * (@user_game.catapults_strength_researches / 100.0)).round
     user_data[:thieves_attack_power] = thieves_attack_power + (thieves_attack_power * (@user_game.thieves_strength_researches / 100.0)).round
     user_data[:thieves_defense_power] = thieves_defense_power + (thieves_defense_power * (@user_game.thieves_strength_researches / 100.0)).round
-  end
-
-  def prepare_users
-    users = []
-    online_users = 0
-    user_game.game.user_games.includes(:user, :civilization).order(score: :desc).each_with_index do |user_game, index|
-      online = user_game.updated_at >= 10.minutes.ago
-      online_users += 1 if online
-
-      research_levels = UserGame::RESEARCHES.keys.sum { user_game.send("#{_1}_researches").to_i }
-
-      users << {
-        index: index,
-        id: user_game.id,
-        email: user_game.user.email,
-        score: user_game.score,
-        civilization: user_game.civilization.name,
-        total_land: user_game.m_land + user_game.f_land + user_game.p_land,
-        research_levels: research_levels,
-        online: online,
-        under_protection: user_game.protection_turns > 0,
-        protection_turns_remaining: user_game.protection_turns
-      }
-    end
-    user_data[:users] = users
-    user_data[:online_users] = online_users
   end
 end

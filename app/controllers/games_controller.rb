@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_game
-  before_action :set_user_game, only: [:show]
+  before_action :set_user_game, only: [:show, :scores]
   before_action :update_turns, only: [:show]
 
   def show
@@ -14,6 +14,11 @@ class GamesController < ApplicationController
     @year = (@user_game.turn / 12).to_i + 1000
 
     @next_turn_seconds = @game.seconds_per_turn - (Time.current - @user_game.last_turn_at).to_i
+  end
+
+  def scores
+    cmd = Games::PrepareScoresCommand.new(game: @game, current_user_game: @user_game).call
+    @scores_data = cmd.scores_data
   end
 
   def select_civilization

@@ -482,6 +482,7 @@ en:
       poison_water: "Poison Water"
     action_btn: "Actions"
     actions_for: "Actions for %{name} (%{id})"
+    back_to_game: "Back to Game"
 
   select_civilization:
     title: "Select Your Civilization"

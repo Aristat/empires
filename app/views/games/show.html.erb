@@ -122,9 +122,7 @@
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link w-100 text-start" id="scores-tab" data-bs-toggle="tab" data-bs-target="#scores" type="button" role="tab" aria-controls="scores" aria-selected="false">
-            <%= t('game.tabs.scores') %>
-          </button>
+          <%= link_to t('game.tabs.scores'), scores_game_path(@game), class: 'nav-link w-100 text-start' %>
         </li>
       </ul>
     </div>
@@ -285,17 +283,6 @@
         </div>
         <div class="tab-pane fade" id="aid" role="tabpanel" aria-labelledby="aid-tab">
           <%= render 'aid', user_game: @user_game %>
-        </div>
-        <div class="tab-pane fade" id="scores" role="tabpanel" aria-labelledby="scores-tab">
-          <%
-            show_scores_data = {
-              total_players: @data[:user_data][:users].length,
-              online_players: @data[:user_data][:online_users],
-              current_user_game_id: @user_game.id,
-              players: @data[:user_data][:users].map { |u| u.merge(rank: u[:index] + 1) }
-            }
-          %>
-          <%= render 'scores', scores_data: show_scores_data, show_actions: true %>
         </div>
       </div>
     </div>

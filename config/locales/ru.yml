@@ -482,6 +482,7 @@ ru:
       poison_water: "Отравить воду"
     action_btn: "Действия"
     actions_for: "Действия для %{name} (%{id})"
+    back_to_game: "Вернуться в игру"
 
   select_civilization:
     title: "Выберите цивилизацию"
