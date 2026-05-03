@@ -1,10 +1,6 @@
-<h2>Army Units</h2>
+<h2><%= t('docs.pages.army.title') %></h2>
 
-<p>
-  Base stats for all units are shown below. Civilizations may modify attack/defense points,
-  training turns, or training costs for certain units — see
-  <%= link_to "Civilizations", game_docs_path(@game, page: 'civs') %>.
-</p>
+<p><%= t('docs.pages.army.intro_html', civs_link: link_to(t('docs.nav.civs'), game_docs_path(@game, page: 'civs'))) %></p>
 
 <% def fmt_num(v)
      return '' if v.nil?
@@ -13,17 +9,17 @@
    end
 %>
 
-<h4>Standard Units</h4>
+<h4><%= t('docs.pages.army.standard_heading') %></h4>
 <table class="table table-bordered table-sm">
   <thead>
     <tr>
-      <th>Unit</th>
-      <th class="text-center">Trains in</th>
-      <th class="text-center">Attack</th>
-      <th class="text-center">Defense</th>
-      <th class="text-center">Upkeep/turn</th>
-      <th class="text-center">Required to Train</th>
-      <th class="text-center">Land Taken</th>
+      <th><%= t('docs.pages.army.table.unit') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.trains_in') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.attack') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.defense') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.upkeep') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.required') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.land_taken') %></th>
     </tr>
   </thead>
   <tbody>
@@ -41,10 +37,10 @@
       %>
       <tr>
         <td><strong><%= s.name %></strong></td>
-        <td class="text-center"><%= s.turns.to_i %> turns</td>
+        <td class="text-center"><%= s.turns.to_i %> <%= t('docs.pages.army.turns_unit') %></td>
         <td class="text-center"><%= fmt_num(s.attack_points) %></td>
         <td class="text-center"><%= fmt_num(s.defense_points) %></td>
-        <td class="text-center"><%= fmt_num(s.gold_per_turn) %> gold<br><%= fmt_num(s.food_eaten) %> food</td>
+        <td class="text-center"><%= fmt_num(s.gold_per_turn) %> <%= t('docs.pages.army.gold_unit') %><br><%= fmt_num(s.food_eaten) %> <%= t('docs.pages.army.food_unit') %></td>
         <td class="text-center"><%= train_str %></td>
         <td class="text-center"><%= fmt_num(s.take_land) %></td>
       </tr>
@@ -52,17 +48,17 @@
   </tbody>
 </table>
 
-<h4>Special Units (1 per Town Center)</h4>
+<h4><%= t('docs.pages.army.special_heading') %></h4>
 <table class="table table-bordered table-sm">
   <thead>
     <tr>
-      <th>Unit</th>
-      <th class="text-center">Trains in</th>
-      <th class="text-center">Attack</th>
-      <th class="text-center">Defense</th>
-      <th class="text-center">Upkeep/turn</th>
-      <th class="text-center">Required to Train</th>
-      <th class="text-center">Land Taken</th>
+      <th><%= t('docs.pages.army.table.unit') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.trains_in') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.attack') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.defense') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.upkeep') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.required') %></th>
+      <th class="text-center"><%= t('docs.pages.army.table.land_taken') %></th>
     </tr>
   </thead>
   <tbody>
@@ -85,24 +81,24 @@
       %>
       <tr>
         <td>
-          <strong><%= key == 'unique_unit' ? 'Special Unit' : s.name %></strong>
+          <strong><%= key == 'unique_unit' ? t('docs.pages.army.special_unit_label') : s.name %></strong>
           <% if key == 'unique_unit' %>
-            <br><small class="text-secondary">name &amp; stats vary by civilization</small>
+            <br><small class="text-secondary"><%= t('docs.pages.army.vary_by_civ') %></small>
           <% end %>
         </td>
         <td class="text-center">
-          <% if key == 'tower' %>permanent
+          <% if key == 'tower' %><%= t('docs.pages.army.permanent') %>
           <% elsif s.turns.to_i == -1 %>—
-          <% else %><%= s.turns.to_i %> turns
+          <% else %><%= s.turns.to_i %> <%= t('docs.pages.army.turns_unit') %>
           <% end %>
         </td>
         <td class="text-center"><%= fmt_num(s.attack_points) %></td>
         <td class="text-center"><%= fmt_num(s.defense_points) %></td>
         <td class="text-center">
-          <%= fmt_num(s.gold_per_turn) %> gold<br>
-          <%= fmt_num(s.food_eaten) %> food
-          <% if wood_pt > 0 %><br><%= fmt_num(wood_pt) %> wood<% end %>
-          <% if iron_pt > 0 %><br><%= fmt_num(iron_pt) %> iron<% end %>
+          <%= fmt_num(s.gold_per_turn) %> <%= t('docs.pages.army.gold_unit') %><br>
+          <%= fmt_num(s.food_eaten) %> <%= t('docs.pages.army.food_unit') %>
+          <% if wood_pt > 0 %><br><%= fmt_num(wood_pt) %> <%= t('docs.pages.army.wood_unit') %><% end %>
+          <% if iron_pt > 0 %><br><%= fmt_num(iron_pt) %> <%= t('docs.pages.army.iron_unit') %><% end %>
         </td>
         <td class="text-center"><%= train_str %></td>
         <td class="text-center"><%= fmt_num(s.take_land) %></td>
@@ -112,16 +108,10 @@
 </table>
 
 <div class="alert alert-secondary">
-  <strong>Land Taken</strong> — land conquered per unit when winning an army attack.<br>
-  <strong>Special Units</strong> — Catapult, Thief, and Special Unit are limited to 1 per Town Center.<br>
-  <strong>Tower</strong> — defense-only structure, cannot attack; no upkeep cost.<br>
-  <strong>Catapult upkeep</strong> is paid in wood and iron, not gold.
+  <%= t('docs.pages.army.notes_html') %>
 </div>
 
-<h4>Army Capacity</h4>
-<p>
-  Forts hold <%= @buildings['fort']&.settings&.dig('max_units') || 15 %> units each.
-  Town Centers hold <%= @buildings['town_center']&.settings&.dig('max_units') || 10 %> units each.
-  Soldiers over capacity desert at <strong>25% of the excess per turn</strong>.
-  Soldiers who cannot be paid their gold upkeep also desert (10% of the unpaid amount).
-</p>
+<h4><%= t('docs.pages.army.capacity.heading') %></h4>
+<p><%= t('docs.pages.army.capacity.desc_html',
+         fort_units: @buildings['fort']&.settings&.dig('max_units') || 15,
+         tc_units: @buildings['town_center']&.settings&.dig('max_units') || 10) %></p>

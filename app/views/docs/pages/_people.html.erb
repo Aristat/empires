@@ -1,76 +1,51 @@
-<h2>Population</h2>
+<h2><%= t('docs.pages.people.title') %></h2>
 
-<p>
-  Population is your workforce. Buildings need workers; without enough people,
-  some buildings will not produce anything when you end a turn.
-</p>
+<p><%= t('docs.pages.people.intro') %></p>
 
-<h4>Population Cap</h4>
-<p>
-  Your maximum population is determined by <strong>Houses</strong> and <strong>Town Centers</strong>.
-  Each House provides <%= @buildings['house']&.people&.to_i || 100 %> population cap.
-  Each Town Center provides <%= @buildings['town_center']&.people&.to_i || 100 %> population cap.
-  The minimum population is always 100 (you can never go below this).
-</p>
+<h4><%= t('docs.pages.people.cap.heading') %></h4>
+<p><%= t('docs.pages.people.cap.desc_html',
+         house_pop: @buildings['house']&.people&.to_i || 100,
+         tc_pop: @buildings['town_center']&.people&.to_i || 100) %></p>
 
-<h4>Population Growth</h4>
-<p>
-  Population growth is controlled by your <strong>Food Ratio</strong> setting (set on the Management screen).
-  Higher ratios consume more food but grow your population faster.
-</p>
+<h4><%= t('docs.pages.people.growth.heading') %></h4>
+<p><%= t('docs.pages.people.growth.desc') %></p>
 <table class="table table-bordered table-sm">
   <thead>
     <tr>
-      <th class="text-center">Food Ratio</th>
-      <th class="text-center">Population Change / Turn</th>
-      <th class="text-center">Food Multiplier</th>
+      <th class="text-center"><%= t('docs.pages.people.growth.table.ratio') %></th>
+      <th class="text-center"><%= t('docs.pages.people.growth.table.change') %></th>
+      <th class="text-center"><%= t('docs.pages.people.growth.table.multiplier') %></th>
     </tr>
   </thead>
   <tbody>
-    <tr><td class="text-center">Very Low (−2)</td><td class="text-center">−200 to −100</td><td class="text-center">0.45×</td></tr>
-    <tr><td class="text-center">Low (−1)</td><td class="text-center">−100 to −50</td><td class="text-center">0.75×</td></tr>
-    <tr><td class="text-center">Normal (0)</td><td class="text-center">−30 to +50</td><td class="text-center">1×</td></tr>
-    <tr><td class="text-center">High (+1)</td><td class="text-center">+50 to +100</td><td class="text-center">1.5×</td></tr>
-    <tr><td class="text-center">Very High (+2)</td><td class="text-center">+100 to +200</td><td class="text-center">2.5×</td></tr>
-    <tr><td class="text-center">Maximum (+3)</td><td class="text-center">+200 to +400</td><td class="text-center">4×</td></tr>
-    <tr><td class="text-center">Extreme (+4)</td><td class="text-center">+400 to +800</td><td class="text-center">8×</td></tr>
+    <tr><td class="text-center"><%= t('docs.pages.people.growth.very_low') %></td><td class="text-center">−200 to −100</td><td class="text-center">0.45×</td></tr>
+    <tr><td class="text-center"><%= t('docs.pages.people.growth.low') %></td><td class="text-center">−100 to −50</td><td class="text-center">0.75×</td></tr>
+    <tr><td class="text-center"><%= t('docs.pages.people.growth.normal') %></td><td class="text-center">−30 to +50</td><td class="text-center">1×</td></tr>
+    <tr><td class="text-center"><%= t('docs.pages.people.growth.high') %></td><td class="text-center">+50 to +100</td><td class="text-center">1.5×</td></tr>
+    <tr><td class="text-center"><%= t('docs.pages.people.growth.very_high') %></td><td class="text-center">+100 to +200</td><td class="text-center">2.5×</td></tr>
+    <tr><td class="text-center"><%= t('docs.pages.people.growth.maximum') %></td><td class="text-center">+200 to +400</td><td class="text-center">4×</td></tr>
+    <tr><td class="text-center"><%= t('docs.pages.people.growth.extreme') %></td><td class="text-center">+400 to +800</td><td class="text-center">8×</td></tr>
   </tbody>
 </table>
-<p class="text-secondary"><small>Growth is divided by 10,000 so actual net change per turn depends on your total population.</small></p>
+<p class="text-secondary"><small><%= t('docs.pages.people.growth.footnote') %></small></p>
 
-<h4>Food Consumption</h4>
-<p>
-  Population eats food every turn based on the food ratio and game settings.
-  Your civilization may modify how many people one unit of food feeds.
-  If your food supply runs out:
-</p>
+<h4><%= t('docs.pages.people.food.heading') %></h4>
+<p><%= t('docs.pages.people.food.desc') %></p>
 <ul>
-  <li><strong>7% of your population starves</strong> each turn food is negative.</li>
-  <li>Soldiers on campaigns survive at a 95% rate when food runs out.</li>
+  <li><%= t('docs.pages.people.food.starve_html') %></li>
+  <li><%= t('docs.pages.people.food.soldiers') %></li>
 </ul>
 
-<h4>Winter Heating</h4>
-<p>
-  During winter months (November–February, turns 11–2), people consume wood for heating.
-  Default: 1 wood heats approximately <strong>100–125 people</strong> (depends on game settings).
-  If there is not enough wood for heating, some people will <strong>freeze</strong>:
-  the number of people without heat divided by 8 will die each winter turn.
-</p>
+<h4><%= t('docs.pages.people.winter.heading') %></h4>
+<p><%= t('docs.pages.people.winter.desc_html') %></p>
 
-<h4>Working Population</h4>
-<p>
-  At most <strong>50%</strong> of your population can work as construction builders.
-  The remaining population fills jobs in production buildings.
-  If you have more jobs than workers, some buildings will be idle — watch the status
-  panel in the Builders tab for a warning.
-</p>
+<h4><%= t('docs.pages.people.working.heading') %></h4>
+<p><%= t('docs.pages.people.working.desc_html') %></p>
 
-<h4>Civilization Modifiers</h4>
-<p>Some civilizations change population mechanics:</p>
+<h4><%= t('docs.pages.people.civ_mods.heading') %></h4>
+<p><%= t('docs.pages.people.civ_mods.desc') %></p>
 <ul>
-  <li><strong>Franks</strong> — slower population growth (0.80× modifier)</li>
-  <li><strong>Mongols</strong> — faster growth (1.4×), people eat less food</li>
-  <li><strong>Chinese</strong> — fastest growth (2.0×)</li>
-  <li><strong>Byzantines</strong> — people eat less food (1 food per 60 people)</li>
-  <li><strong>Vikings</strong> — 1 wood heats 125 people (more efficient heating)</li>
+  <% %w[franks mongols chinese byzantines vikings].each do |civ| %>
+    <li><%= t("docs.pages.people.civ_mods.#{civ}_html") %></li>
+  <% end %>
 </ul>

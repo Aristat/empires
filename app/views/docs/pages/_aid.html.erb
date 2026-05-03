@@ -1,26 +1,21 @@
-<h2>Aid</h2>
+<h2><%= t('docs.pages.aid.title') %></h2>
 
-<p>
-  Aid lets you send resources directly to another player as a gift.
-  This is useful for helping allies grow or survive difficult situations.
-</p>
+<p><%= t('docs.pages.aid.intro') %></p>
 
-<h4>Resources You Can Send</h4>
-<p>wood, food, iron, gold, tools, maces, swords, bows, horses, wine</p>
+<h4><%= t('docs.pages.aid.resources.heading') %></h4>
+<p><%= t('docs.pages.aid.resources.list') %></p>
 
-<h4>How Aid Works</h4>
+<h4><%= t('docs.pages.aid.how.heading') %></h4>
 <ul>
-  <li>Aid is subject to a <strong>5% merchant fee</strong> — the recipient receives 95% of what you send.</li>
-  <li>Aid uses your local trade capacity (counts against your max trades for that turn).</li>
-  <li>Goods take <strong>3 turns</strong> to arrive.</li>
-  <li>You can only send aid to a specific player once every <strong>4 hours</strong>.</li>
+  <li><%= t('docs.pages.aid.how.fee_html') %></li>
+  <li><%= t('docs.pages.aid.how.capacity') %></li>
+  <li><%= t('docs.pages.aid.how.turns_html') %></li>
+  <li><%= t('docs.pages.aid.how.cooldown_html') %></li>
 </ul>
 
 <div class="alert alert-info">
-  <strong>Tip:</strong> Coordinate with alliance members to share resources efficiently.
-  Sending iron and tools to a new alliance member helps them build faster.
-  Sending food can help an empire survive a food shortage before their farms come online.
+  <%= t('docs.pages.aid.tip_html') %>
 </div>
 
-<h4>Canceling Aid</h4>
-<p>You can cancel an aid caravan while it is still en route on the Aid tab. The goods will be returned to you.</p>
+<h4><%= t('docs.pages.aid.cancel.heading') %></h4>
+<p><%= t('docs.pages.aid.cancel.desc') %></p>

@@ -1,25 +1,24 @@
-<h2>Buildings</h2>
+<h2><%= t('docs.pages.buildings.title') %></h2>
 
-<p>
-  Buildings are constructed by builders (provided by Tool Makers) using wood, iron, and gold.
-  Each building occupies a certain number of land squares of a specific type.
-  Base stats are shown below — your civilization may modify some values
-  (see <%= link_to "Civilizations", game_docs_path(@game, page: 'civs') %>).
-</p>
+<p><%= t('docs.pages.buildings.intro_html', civs_link: link_to(t('docs.nav.civs'), game_docs_path(@game, page: 'civs'))) %></p>
 
-<% land_labels = { 'forest' => 'Forest', 'plain' => 'Plain', 'mountain' => 'Mountain' } %>
+<% land_labels = {
+  'forest'   => t('docs.pages.buildings.land_types.forest'),
+  'plain'    => t('docs.pages.buildings.land_types.plain'),
+  'mountain' => t('docs.pages.buildings.land_types.mountain')
+} %>
 
-<h4>Production Buildings</h4>
+<h4><%= t('docs.pages.buildings.production_heading') %></h4>
 <table class="table table-bordered table-sm">
   <thead>
     <tr>
-      <th>Building</th>
-      <th class="text-center">Land</th>
-      <th class="text-center">Squares</th>
-      <th class="text-center">Workers</th>
-      <th class="text-center">Cost (W/I/G)</th>
-      <th class="text-center">Production</th>
-      <th>Notes</th>
+      <th><%= t('docs.pages.buildings.table.building') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.land') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.squares') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.workers') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.cost') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.production') %></th>
+      <th><%= t('docs.pages.buildings.table.notes') %></th>
     </tr>
   </thead>
   <tbody>
@@ -42,22 +41,22 @@
             <%= prod == prod.to_i ? prod.to_i : prod %> <%= prod_name %>
           <% end %>
           <% if key == 'tool_maker' %>
-            <br><small class="text-secondary">needs <%= b.settings['tool_wood_need'] || 2 %>W + <%= b.settings['tool_iron_need'] || 2 %>I per tool</small>
+            <br><small class="text-secondary"><%= t('docs.pages.buildings.notes.tool_maker_cost', wood: b.settings['tool_wood_need'] || 2, iron: b.settings['tool_iron_need'] || 2) %></small>
           <% elsif key == 'winery' %>
-            <br><small class="text-secondary">needs <%= b.settings['wine_gold_need'] || 10 %> gold per wine</small>
+            <br><small class="text-secondary"><%= t('docs.pages.buildings.notes.winery_cost', gold: b.settings['wine_gold_need'] || 10) %></small>
           <% elsif key == 'stable' %>
-            <br><small class="text-secondary">needs <%= b.settings['food_need'] || 100 %> food per horse</small>
+            <br><small class="text-secondary"><%= t('docs.pages.buildings.notes.stable_cost', food: b.settings['food_need'] || 100) %></small>
           <% elsif key == 'mage_tower' %>
-            <br><small class="text-secondary">needs <%= b.settings['research_gold_need'] || 100 %> gold/tower</small>
+            <br><small class="text-secondary"><%= t('docs.pages.buildings.notes.mage_tower_cost', gold: b.settings['research_gold_need'] || 100) %></small>
           <% end %>
         </td>
         <td>
           <% if key == 'tool_maker' %>
-            Provides <%= b.settings['num_builders'] || 6 %> builders
+            <%= t('docs.pages.buildings.notes.tool_maker_builders', count: b.settings['num_builders'] || 6) %>
           <% elsif key == 'weaponsmith' %>
-            Bow: <%= b.settings['bow_wood_need'] || 25 %>W &middot; Sword: <%= b.settings['sword_iron_need'] || 25 %>I &middot; Mace: <%= b.settings['mace_wood_need'] || 6 %>W+<%= b.settings['mace_iron_need'] || 6 %>I
+            <%= t('docs.pages.buildings.notes.weaponsmith_note', bow_wood: b.settings['bow_wood_need'] || 25, sword_iron: b.settings['sword_iron_need'] || 25, mace_wood: b.settings['mace_wood_need'] || 6, mace_iron: b.settings['mace_iron_need'] || 6) %>
           <% elsif key == 'mage_tower' %>
-            Generates research points
+            <%= t('docs.pages.buildings.notes.mage_tower_prod') %>
           <% end %>
         </td>
       </tr>
@@ -65,15 +64,15 @@
   </tbody>
 </table>
 
-<h4>Military &amp; Infrastructure</h4>
+<h4><%= t('docs.pages.buildings.military_heading') %></h4>
 <table class="table table-bordered table-sm">
   <thead>
     <tr>
-      <th>Building</th>
-      <th class="text-center">Land</th>
-      <th class="text-center">Squares</th>
-      <th class="text-center">Cost (W/I/G)</th>
-      <th>Special</th>
+      <th><%= t('docs.pages.buildings.table.building') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.land') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.squares') %></th>
+      <th class="text-center"><%= t('docs.pages.buildings.table.cost') %></th>
+      <th><%= t('docs.pages.buildings.table.special') %></th>
     </tr>
   </thead>
   <tbody>
@@ -87,20 +86,17 @@
         <td class="text-center"><%= b.cost_wood.to_i %>/<%= b.cost_iron.to_i %>/<%= b.cost_gold.to_i %></td>
         <td>
           <% if key == 'fort' %>
-            Trains up to <%= b.settings['max_units'] || 15 %> units; food upkeep: <%= b.food_eaten.to_i %>/turn
+            <%= t('docs.pages.buildings.notes.fort_note', max_units: b.settings['max_units'] || 15, food: b.food_eaten.to_i) %>
           <% elsif key == 'tower' %>
-            Defense: <%= b.settings['defense_points'] || 50 %> pts (no upkeep)
+            <%= t('docs.pages.buildings.notes.tower_note', pts: b.settings['defense_points'] || 50) %>
           <% elsif key == 'town_center' %>
-            +<%= b.people.to_i %> population cap;
-            <%= b.settings['resources_limit_increase'] || 1000 %> storage;
-            <%= b.settings['max_explorers'] || 6 %> max explorers;
-            1 thief + 1 catapult + 1 special unit slot
+            <%= t('docs.pages.buildings.notes.town_center_note', pop: b.people.to_i, storage: b.settings['resources_limit_increase'] || 1000, explorers: b.settings['max_explorers'] || 6) %>
           <% elsif key == 'market' %>
-            +<%= b.settings['max_trades'] || 50 %> local trades/turn
+            <%= t('docs.pages.buildings.notes.market_note', trades: b.settings['max_trades'] || 50) %>
           <% elsif key == 'warehouse' %>
-            +<%= b.settings['resources_limit_increase'] || 2500 %> storage
+            <%= t('docs.pages.buildings.notes.warehouse_note', storage: b.settings['resources_limit_increase'] || 2500) %>
           <% elsif key == 'house' %>
-            +<%= b.people.to_i %> population cap; food upkeep: <%= b.food_eaten.to_i %>/turn
+            <%= t('docs.pages.buildings.notes.house_note', pop: b.people.to_i, food: b.food_eaten.to_i) %>
           <% end %>
         </td>
       </tr>
@@ -109,16 +105,10 @@
 </table>
 
 <div class="alert alert-secondary mt-3">
-  <strong>Cost = W/I/G</strong> — Wood / Iron / Gold to construct one building.<br>
-  <strong>Squares</strong> — land squares of that type used per building.<br>
-  Civilization bonuses may change squares, production, workers, or other values — see
-  <%= link_to "Civilizations", game_docs_path(@game, page: 'civs') %> for details.
+  <%= t('docs.pages.buildings.legend_html', civs_link: link_to(t('docs.nav.civs'), game_docs_path(@game, page: 'civs'))) %>
 </div>
 
-<h4>Builders</h4>
-<p>
-  Each Tool Maker provides <%= @buildings['tool_maker']&.settings&.dig('num_builders') || 6 %> builders,
-  plus <%= Building::DEFAULT_NUM_BUILDERS %> default builders at the start.
-  Builders require one tool each to work.
-  Building construction time (in builder-turns) equals the sum of the building's wood and iron costs.
-</p>
+<h4><%= t('docs.pages.buildings.builders.heading') %></h4>
+<p><%= t('docs.pages.buildings.builders.desc_html',
+         per_maker: @buildings['tool_maker']&.settings&.dig('num_builders') || 6,
+         base_count: Building::DEFAULT_NUM_BUILDERS) %></p>

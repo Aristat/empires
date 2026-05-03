@@ -1,64 +1,42 @@
-<h2>Game Basics</h2>
+<h2><%= t('docs.pages.basics.title') %></h2>
 
-<h4>Turns</h4>
-<p>
-  Empires is a turn-based game — each turn represents one month of in-game time.
-  You accumulate turns over time and spend them to advance the game.
-  The maximum number of stored turns is <%= @game.max_turns %>.
-  New turns arrive every <%= @game.seconds_per_turn / 60 %> minutes.
-</p>
-<p>
-  When you end a turn, all production runs, armies move, buildings advance in the queue,
-  explorers return, and resources are consumed. The calendar starts at year 1000 A.D.
-</p>
+<h4><%= t('docs.pages.basics.turns.heading') %></h4>
+<p><%= t('docs.pages.basics.turns.p1_html', max_turns: @game.max_turns, minutes: @game.seconds_per_turn / 60) %></p>
+<p><%= t('docs.pages.basics.turns.p2') %></p>
 
-<h4>Land</h4>
-<p>There are three types of land, each used for different buildings:</p>
+<h4><%= t('docs.pages.basics.land.heading') %></h4>
+<p><%= t('docs.pages.basics.land.desc') %></p>
 <table class="table table-bordered table-sm">
   <thead>
-    <tr><th>Type</th><th>Used For</th></tr>
+    <tr>
+      <th><%= t('docs.pages.basics.land.table_type') %></th>
+      <th><%= t('docs.pages.basics.land.table_used_for') %></th>
+    </tr>
   </thead>
   <tbody>
-    <tr><td><strong>Mountains</strong></td><td>Iron Mines, Gold Mines</td></tr>
-    <tr><td><strong>Forest</strong></td><td>Wood Cutters, Hunters</td></tr>
-    <tr><td><strong>Plains</strong></td><td>Farms, Houses, Forts, Town Centers, Warehouses, Markets, Mage Towers, Weaponsmiths, Tool Makers, Wineries, Stables, Towers</td></tr>
+    <tr><td><strong><%= t('docs.pages.basics.land.mountains') %></strong></td><td><%= t('docs.pages.basics.land.mountains_used') %></td></tr>
+    <tr><td><strong><%= t('docs.pages.basics.land.forest') %></strong></td><td><%= t('docs.pages.basics.land.forest_used') %></td></tr>
+    <tr><td><strong><%= t('docs.pages.basics.land.plains') %></strong></td><td><%= t('docs.pages.basics.land.plains_used') %></td></tr>
   </tbody>
 </table>
-<p>
-  You gain land by <strong>exploring</strong> (send explorers from town centers) or by
-  <strong>conquering</strong> it from other empires. At the start of the game, exploring is
-  almost always more efficient than attacking — army upkeep is expensive and you need a
-  large force to take significant land.
-</p>
+<p><%= t('docs.pages.basics.land.gain_html') %></p>
 
-<h4>Getting Started</h4>
+<h4><%= t('docs.pages.basics.getting_started.heading') %></h4>
 <ol>
-  <li>Build <strong>Tool Makers</strong> first (5–10 is a good start) — each provides builders for construction.</li>
-  <li>Build <strong>Wood Cutters</strong> and <strong>Iron Mines</strong> so you can construct more buildings.</li>
-  <li>Build <strong>Town Centers</strong> to unlock explorers, thieves, catapults, and special units.</li>
-  <li>Build <strong>Farms</strong> and <strong>Hunters</strong> to feed your growing population and explorers.</li>
-  <li>Send <strong>explorers</strong> constantly — land is your most important resource early on.</li>
-  <li>Set food ratios to <strong>High</strong> or <strong>Very High</strong> so your population grows fast.</li>
-  <li>Join an <strong>alliance</strong> for protection while you build up your empire.</li>
-  <li>Once you have steady income and spare land, build <strong>Mage Towers</strong> for research.</li>
-  <li>Build <strong>Weapons</strong> and train <strong>Army</strong> only after you have a solid economy.</li>
+  <% t('docs.pages.basics.getting_started.steps_html').each do |step| %>
+    <li><%= step %></li>
+  <% end %>
 </ol>
 
-<h4>Seasons</h4>
-<p>The in-game calendar affects production:</p>
+<h4><%= t('docs.pages.basics.seasons.heading') %></h4>
+<p><%= t('docs.pages.basics.seasons.desc') %></p>
 <ul>
-  <li><strong>Farms</strong> only produce food during months April–October (months 4–10).</li>
-  <li><strong>Winter</strong> (November–February, months 11–2): people consume wood for heating. If you run out of wood, people freeze and die.</li>
+  <li><%= t('docs.pages.basics.seasons.farms_html') %></li>
+  <li><%= t('docs.pages.basics.seasons.winter_html') %></li>
 </ul>
 
-<h4>Protection</h4>
-<p>
-  New players start with <strong><%= @game.settings['protection_turns'] || 200 %> turns of protection</strong>,
-  during which they cannot be attacked. Use this time to build up your economy.
-</p>
+<h4><%= t('docs.pages.basics.protection.heading') %></h4>
+<p><%= t('docs.pages.basics.protection.desc_html', turns: @game.settings['protection_turns'] || 200) %></p>
 
-<h4>Scoring</h4>
-<p>
-  Your score reflects the total strength of your empire — resources, buildings, army, and research all contribute.
-  Score also affects attack mechanics: attacking a much weaker player gives fewer victory points and suffers run penalties.
-</p>
+<h4><%= t('docs.pages.basics.scoring.heading') %></h4>
+<p><%= t('docs.pages.basics.scoring.desc') %></p>

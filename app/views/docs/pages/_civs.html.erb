@@ -1,11 +1,11 @@
-<h2>Civilizations</h2>
+<h2><%= t('docs.pages.civs.title') %></h2>
 
 <p>
-  There are <%= @civilizations.count %> civilizations in this game.
-  <% if @user_game %>You are playing as <strong><%= @user_game.civilization.name %></strong>.<% end %>
-  Each civilization has a unique special unit and modifies certain building, soldier, or game parameters.
-  <span style="color:var(--accent-green)">Green</span> = better than default &nbsp;
-  <span style="color:var(--accent-red)">Red</span> = worse than default.
+  <%= t('docs.pages.civs.count_html', count: @civilizations.count) %>
+  <% if @user_game %><%= t('docs.pages.civs.playing_as_html', name: @user_game.civilization.name) %><% end %>
+  <%= t('docs.pages.civs.desc') %>
+  <span style="color:var(--accent-green)"><%= t('docs.pages.civs.green_label') %></span> <%= t('docs.pages.civs.green_desc') %> &nbsp;
+  <span style="color:var(--accent-red)"><%= t('docs.pages.civs.red_label') %></span> <%= t('docs.pages.civs.red_desc') %>.
 </p>
 
 <%
@@ -67,7 +67,7 @@
     <div class="card-header d-flex align-items-center gap-2">
       <strong><%= civ.name %></strong>
       <% if is_current %>
-        <span class="badge bg-warning text-dark">Your Civilization</span>
+        <span class="badge bg-warning text-dark"><%= t('docs.pages.civs.your_civ') %></span>
       <% end %>
     </div>
     <div class="card-body">
@@ -75,15 +75,15 @@
 
         <%# ── Special unit ── %>
         <div class="col-md-4">
-          <h6 class="mb-2">Special Unit: <strong><%= unique_name %></strong></h6>
+          <h6 class="mb-2"><%= t('docs.pages.civs.special_unit_label', name: unique_name) %></h6>
           <table class="table table-sm table-bordered mb-0">
             <tbody>
-              <tr><td>Attack</td><td class="text-end"><%= fmt(unique_atk) %></td></tr>
-              <tr><td>Defense</td><td class="text-end"><%= fmt(unique_def) %></td></tr>
-              <tr><td>Trains in</td><td class="text-end"><%= unique_turns %> turns</td></tr>
-              <tr><td>Train cost</td><td class="text-end"><%= train_str %></td></tr>
-              <tr><td>Upkeep</td><td class="text-end"><%= fmt(unique_gpt) %> gold, <%= fmt(unique_food) %> food</td></tr>
-              <tr><td>Land taken</td><td class="text-end"><%= unique_land %></td></tr>
+              <tr><td><%= t('docs.pages.civs.attack') %></td><td class="text-end"><%= fmt(unique_atk) %></td></tr>
+              <tr><td><%= t('docs.pages.civs.defense') %></td><td class="text-end"><%= fmt(unique_def) %></td></tr>
+              <tr><td><%= t('docs.pages.civs.trains_in') %></td><td class="text-end"><%= unique_turns %> <%= t('docs.pages.civs.turns_unit') %></td></tr>
+              <tr><td><%= t('docs.pages.civs.train_cost') %></td><td class="text-end"><%= train_str %></td></tr>
+              <tr><td><%= t('docs.pages.civs.upkeep') %></td><td class="text-end"><%= fmt(unique_gpt) %> <%= t('docs.pages.civs.gold_unit') %>, <%= fmt(unique_food) %> <%= t('docs.pages.civs.food_unit') %></td></tr>
+              <tr><td><%= t('docs.pages.civs.land_taken') %></td><td class="text-end"><%= unique_land %></td></tr>
             </tbody>
           </table>
         </div>
@@ -92,13 +92,13 @@
         <div class="col-md-8">
           <% has_bonuses = civ_buildings.any? || civ_game.any? || civ_soldiers.except('unique_unit').any? %>
           <% if has_bonuses %>
-            <h6 class="mb-2">Bonuses &amp; Penalties</h6>
+            <h6 class="mb-2"><%= t('docs.pages.civs.bonuses_heading') %></h6>
             <table class="table table-sm mb-0" style="font-size:0.83rem">
               <thead>
                 <tr>
-                  <th>What</th>
-                  <th class="text-center">Civ value</th>
-                  <th class="text-center">Default</th>
+                  <th><%= t('docs.pages.civs.col_what') %></th>
+                  <th class="text-center"><%= t('docs.pages.civs.col_civ_value') %></th>
+                  <th class="text-center"><%= t('docs.pages.civs.col_default') %></th>
                 </tr>
               </thead>
               <tbody>
@@ -126,24 +126,8 @@
                         else nil
                         end
 
-                      attr_label = case mkey
-                        when 'squares'            then "#{b&.name || bkey} — squares"
-                        when 'production'         then "#{b&.name || bkey} — production"
-                        when 'workers'            then "#{b&.name || bkey} — workers"
-                        when 'people'             then "#{b&.name || bkey} — people"
-                        when 'num_builders'       then "#{b&.name || bkey} — builders/building"
-                        when 'max_units'          then "#{b&.name || bkey} — max units"
-                        when 'max_explorers'      then "#{b&.name || bkey} — max explorers"
-                        when 'max_trades'         then "#{b&.name || bkey} — max trades"
-                        when 'food_need'          then "#{b&.name || bkey} — food per horse"
-                        when 'supplies'           then "#{b&.name || bkey} — storage"
-                        when 'defense_points'     then "#{b&.name || bkey} — defense pts"
-                        when 'cost_wood'          then "#{b&.name || bkey} — wood cost"
-                        when 'cost_iron'          then "#{b&.name || bkey} — iron cost"
-                        when 'research_gold_need' then "#{b&.name || bkey} — gold/research pt"
-                        else "#{b&.name || bkey}.#{mkey}"
-                        end
-
+                      label_key = t("docs.pages.civs.labels.#{mkey}", default: mkey)
+                      attr_label = "#{b&.name || bkey} — #{label_key}"
                       color = default_val ? civ_color(mkey, mval, default_val, building_higher_better, building_lower_better) : ''
                     %>
                     <tr>
@@ -172,18 +156,7 @@
                     game_higher = %w[people_eat_one_food people_burn_one_wood pop_increase_modifier extra_food_per_land]
                     game_lower  = %w[wall_use_gold wall_use_iron wall_use_wood wall_use_wine]
                     game_color  = game_default ? civ_color(gkey, gval, game_default, game_higher, game_lower) : ''
-
-                    game_label = case gkey
-                      when 'people_eat_one_food'   then 'People per 1 food'
-                      when 'people_burn_one_wood'  then 'People per 1 wood (winter)'
-                      when 'pop_increase_modifier' then 'Population growth ×'
-                      when 'extra_food_per_land'   then 'Extra food per land'
-                      when 'wall_use_gold'         then 'Wall — gold per unit'
-                      when 'wall_use_iron'         then 'Wall — iron per unit'
-                      when 'wall_use_wood'         then 'Wall — wood per unit'
-                      when 'wall_use_wine'         then 'Wall — wine per unit'
-                      else gkey
-                      end
+                    game_label  = t("docs.pages.civs.game_labels.#{gkey}", default: gkey)
                   %>
                   <tr>
                     <td><%= game_label %></td>
@@ -211,20 +184,14 @@
 
                       if mkey == 'turns' && mval.to_i == -1
                         sol_color = 'var(--accent-red)'
-                        sol_val_display = 'disabled'
+                        sol_val_display = t('docs.pages.civs.disabled')
                       else
                         sol_color = sol_default ? civ_color(mkey, mval, sol_default, sol_higher, sol_lower) : ''
                         sol_val_display = fmt(mval)
                       end
 
-                      sol_label = case mkey
-                        when 'attack_points'  then "#{s&.name || skey} — attack pts"
-                        when 'defense_points' then "#{s&.name || skey} — defense pts"
-                        when 'turns'          then "#{s&.name || skey} — training turns"
-                        when 'take_land'      then "#{s&.name || skey} — land taken"
-                        when 'gold_per_turn'  then "#{s&.name || skey} — gold/turn"
-                        else "#{s&.name || skey}.#{mkey}"
-                        end
+                      sol_label_key = t("docs.pages.civs.labels.#{mkey}", default: mkey)
+                      sol_label = "#{s&.name || skey} — #{sol_label_key}"
                     %>
                     <tr>
                       <td><%= sol_label %></td>
@@ -237,9 +204,10 @@
               </tbody>
             </table>
           <% else %>
-            <p class="text-secondary mt-2"><em>No building or game bonuses.</em></p>
+            <p class="text-secondary mt-2"><em><%= t('docs.pages.civs.no_bonuses') %></em></p>
           <% end %>
         </div>
+
       </div>
     </div>
   </div>
