@@ -33,5 +33,7 @@
 
 .playwright-mcp
 
+.deprecated_code
+
 /app/assets/builds/*
 !/app/assets/builds/.keep
