@@ -6,8 +6,8 @@ In my free time I port the game from cloudfusion to rails. Original source code 
 
 ## TODO list
 
-- [] Implement alliances
-- [] Testing logic/balance with multiple users
+- [ ] Implement alliances
+- [ ] Testing logic/balance with multiple users
 
 ## How to run the game
 
