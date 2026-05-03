@@ -21,6 +21,23 @@ RSpec.describe 'Games', type: :request do
         get scores_game_path(game)
         expect(response.body).to include(user.email)
       end
+
+      it 'highlights the current user row with table-info' do
+        get scores_game_path(game)
+        expect(response.body).to include('table-info')
+      end
+
+      it 'renders players in score-descending order' do
+        other_user = create(:user)
+        create(:user_game, user: other_user, game: game, civilization: game.civilizations.second, score: 999_999)
+        user_game.update!(score: 1)
+
+        get scores_game_path(game)
+
+        other_pos = response.body.index(other_user.email)
+        user_pos  = response.body.index(user.email)
+        expect(other_pos).to be < user_pos
+      end
     end
 
     context 'when authenticated as a non-participant (spectator)' do
