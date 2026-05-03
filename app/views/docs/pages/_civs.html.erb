@@ -2,14 +2,13 @@
 
 <p>
   There are <%= @civilizations.count %> civilizations in this game.
-  You are playing as <strong><%= @user_game.civilization.name %></strong>.
+  <% if @user_game %>You are playing as <strong><%= @user_game.civilization.name %></strong>.<% end %>
   Each civilization has a unique special unit (replacing the generic "Unique Unit" slot)
   and modifies certain building and game parameters.
 </p>
 
 <%
   def_soldiers = @soldiers
-  land_display = {'forest' => 'Forest', 'plain' => 'Plain', 'mountain' => 'Mountain'}
 %>
 
 <% @civilizations.each do |civ| %>
@@ -17,7 +16,7 @@
     civ_buildings = civ.settings['buildings'] || {}
     civ_soldiers  = civ.settings['soldiers']  || {}
     civ_game      = civ.settings['game']      || {}
-    is_current    = civ.id == @user_game.civilization_id
+    is_current    = @user_game && civ.id == @user_game.civilization_id
 
     unique_base = def_soldiers['unique_unit']
     unique_mods = civ_soldiers['unique_unit'] || {}

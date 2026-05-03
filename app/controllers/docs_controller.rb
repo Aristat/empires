@@ -1,5 +1,4 @@
 class DocsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_game
   before_action :set_user_game
 
@@ -21,7 +20,6 @@ class DocsController < ApplicationController
   end
 
   def set_user_game
-    @user_game = current_user.user_games.find_by(game: @game)
-    redirect_to root_path, alert: t('docs.not_joined') if @user_game.nil?
+    @user_game = current_user&.user_games&.find_by(game: @game)
   end
 end
